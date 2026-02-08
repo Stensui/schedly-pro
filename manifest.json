@@ -1,0 +1,15 @@
+{
+  "name": "Schedly Pro",
+  "short_name": "Schedly",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/591/591576.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

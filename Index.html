@@ -1,0 +1,2336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Schedly Pro | Full System</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    
+    
+    <style>
+        :root { --accent: #D4AF37; --bg: #050505; --card: #111111; --text: #ffffff; --error: #ff5f57; --success: #4cd964; --maint: #ff9f0a; --sidebar: #080808; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+        .status-indicator { position: fixed; top: 20px; right: 20px; z-index: 5000; }
+        .badge { padding: 8px 14px; border-radius: 30px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+       .badge.online { color: var(--success); border-color: var(--success); }
+        .badge.online .dot { background: var(--success); box-shadow: 0 0 10px var(--success); }
+        .view { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; padding: 20px; z-index: 10; }
+        .view.active { display: flex; flex-direction: column; }
+        .auth-box { background: var(--card); padding: 40px 30px; border-radius: 32px; border: 1px solid rgba(212,175,55,0.15); width: 100%; max-width: 420px; text-align: center; margin: auto; position: relative; }
+        .strength-bar { height: 100%; width: 0%; transition: 0.3s; border-radius: 2px; }
+        .weak { background-color: #ff5f57 !important; } .mid { background-color: #ff9f0a !important; } .strong { background-color: #4cd964 !important; }
+        input, select, textarea { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 16px; border: 1px solid #222; background: #000; color: #fff; outline: none; }
+        .btn {
+    background: var(--accent); /* #D4AF37 */
+    color: #000;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 12px;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+    transform: translateY(-2px);
+}
+        .admin-layout { display: flex; height: 100vh; width: 100vw; }
+        .sidebar { width: 80px; background: var(--sidebar); border-right: 1px solid #151515; display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 30px; z-index: 100; }
+        .nav-item { color: #333; font-size: 24px; cursor: pointer; padding: 12px; border-radius: 16px; }
+        .nav-item.active { color: var(--accent); background: rgba(212,175,55,0.08); }
+        .main-panel { flex: 1; padding: 40px; overflow-y: auto; background: #000; }
+        .admin-card { display: none; } .admin-card.active { display: block; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .stat-item { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #222; text-align: center; }
+        .list-container { background: #080808; border-radius: 20px; border: 1px solid #111; margin-bottom: 25px; }
+        .item-row { padding: 18px 25px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; }
+        #maint-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%); z-index: 10000; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .maint-timer { font-family: monospace; font-size: 42px; font-weight: 800; color: var(--accent); }
+        .badge.maintenance { color: var(--maint); border-color: var(--maint); }
+        .badge.maintenance .dot { background: var(--maint); box-shadow: 0 0 10px var(--maint); }
+        .badge.terminated { color: var(--error); border-color: var(--error); }
+        .badge.terminated .dot { background: var(--error); box-shadow: 0 0 10px var(--error); }
+       .gender-option {
+    flex: 1;
+    cursor: pointer;
+}
+
+.gender-option input {
+    display: none;
+}
+
+.gender-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+    color: #888;
+}
+
+
+.gender-option input[value="Male"]:checked + .gender-card {
+    border-color: #2196F3;
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196F3;
+    transform: scale(1.05);
+}
+
+
+.gender-option input[value="Female"]:checked + .gender-card {
+    border-color: #E91E63;
+    background: rgba(233, 30, 99, 0.1);
+    color: #E91E63;
+    transform: scale(1.05);
+}
+
+
+.terms-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.terms-wrapper input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    cursor: pointer;
+}
+
+.terms-wrapper label {
+    font-size: 12px;
+    color: #aaa;
+    cursor: pointer;
+    white-space: nowrap; 
+}
+        #term-screen {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 99999; 
+    display: none; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   }
+
+         .id-card {
+    background: linear-gradient(135deg, #1e1e1e 0%, #111 100%);
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+} 
+
+.subject-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.subject-card {
+    background: #111;
+    border: 1px solid #222;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.subject-card:hover { 
+    border-color: var(--accent); 
+    background: #1a1a1a;
+    transform: translateY(-2px);
+}
+
+.subject-card b { 
+    display: block; 
+    color: white; 
+    font-size: 14px; 
+    margin-bottom: 5px; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
+
+.subject-card small { 
+    color: #666; 
+    font-size: 10px; 
+    display: block; 
+}
+
+
+.main-logo {
+    width: 80px; 
+    height: auto;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5)); /* Gold glow effect */
+}
+
+.brand-font {
+    font-family: 'Inter', sans-serif;
+    color: var(--accent); 
+    letter-spacing: 2px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+#splash-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #050505; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+    transition: opacity 0.5s ease, visibility 0.5s;
+}
+
+.splash-content { text-align: center; }
+
+.splash-logo {
+    width: 120px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.splash-text {
+    font-size: 24px;
+    letter-spacing: 4px;
+    margin-top: 15px;
+    font-weight: 800;
+}
+
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+
+.loader-bar {
+    width: 150px;
+    height: 3px;
+    background: #222;
+    margin: 20px auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    animation: load 2.5s forwards;
+}
+
+@keyframes load {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+
+.warning-active {
+    animation: shake 0.5s infinite;
+    color: var(--error) !important;
+}
+
+.modal {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.85); 
+    z-index: 9999;
+    display: none; 
+    justify-content: center; 
+    align-items: center;
+    backdrop-filter: blur(8px);
+    padding: 20px;
+}
+
+.modal-content {
+    background: #0a0a0a; 
+    padding: 30px; 
+    border-radius: 28px;
+    border: 1px solid #222; 
+    width: 100%; 
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+
+.task-item {
+    background: #151515; 
+    padding: 14px; 
+    border-radius: 14px;
+    margin-bottom: 10px; 
+    display: flex; 
+    justify-content: space-between;
+    align-items: center; 
+    border: 1px solid #1a1a1a;
+    font-size: 13px;
+    color: #eee;
+}
+
+.add-btn-small {
+    background: var(--accent);
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+
+
+.id-top { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+
+.profile-circle {
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+}
+
+.id-info h2 { margin: 0; font-size: 18px; color: white; }
+.id-info p { margin: 0; font-size: 12px; color: var(--accent); }
+
+.id-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    border-top: 1px solid #222;
+    padding-top: 15px;
+}
+
+.detail-item small { display: block; color: #555; font-size: 9px; margin-bottom: 2px; }
+.detail-item p { margin: 0; font-size: 12px; color: #ccc; }
+
+.id-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 20px;
+}
+
+.badge {
+    background: rgba(76, 217, 100, 0.1);
+    color: #4cd964;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+#st-mini-qr { width: 50px; height: 50px; border-radius: 5px; background: white; padding: 2px; }
+
+.main-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns sa mobile */
+    padding: 10px 0;
+}
+
+/* Kapag nasa Desktop (Windows EXE), magiging 4 columns */
+@media (min-width: 768px) {
+    .main-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .full-span {
+        grid-column: span 4 !important; /* Full width sa desktop */
+    }
+}
+
+/* Ang itsura ng bawat button (Card) */
+.nav-card {
+    background: #111; /* existing card color mo */
+    border: 1px solid #222;
+    padding: 20px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Sa left side ang icons at text */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efekto kapag pinindot */
+.nav-card:active {
+    transform: scale(0.95);
+    background: #1a1a1a;
+    border-color: var(--accent);
+}
+
+.nav-card b {
+    font-size: 13px;
+    margin-top: 10px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-card small {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.card-icon {
+    font-size: 24px;
+}
+
+
+#map-container {
+    width: 100%;
+    height: 200px;
+    border-radius: 20px;
+    margin-top: 15px;
+    border: 1px solid #333;
+}
+
+.team-card {
+        background: #0d0d0d; 
+        border: 1px solid #1a1a1a; 
+        padding: 15px; 
+        border-radius: 20px; 
+        text-align: center;
+    }
+
+    </style>
+</head>
+<body>
+    
+    
+    <div class="status-indicator"><div id="global-badge" class="badge online"><div class="dot"></div><span id="global-status-text">Server: Online</span></div></div>
+    <div id="student-alert-banner" style="display:none; position:fixed; top:0; left:0; width:100%; background:var(--accent); color:#000; padding:12px; text-align:center; font-weight:800; z-index:4000;">📢 UNIVERSITY ANNOUNCEMENT! Open the bell.</div>
+
+       <div id="splash-screen">
+    <div class="splash-content">
+        <img src="https://i.postimg.cc/bY74X2V5/schedly-logo.png" 
+             alt="Schedly Logo" 
+             class="splash-logo">
+        
+        <h1 class="splash-text">SCHEDLY <span style="color:var(--accent)">PRO</span></h1>
+        <div class="loader-bar">
+            <div class="progress"></div>
+        </div>
+    </div>
+</div>
+
+<div id="scr-study" class="view" style="background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: none;">
+    <div style="padding: 20px;">
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border: 1px solid #444; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; padding: 0 20px;">
+        <h2 style="color: white; letter-spacing: 2px; font-weight: 800;">STUDY MODE</h2>
+        
+        <div style="background: #111; margin-top: 20px; padding: 40px 20px; border-radius: 30px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div id="timer-input-wrapper">
+                <input type="number" id="custom-min" value="25" min="1" max="120" style="background: none; border: none; color: var(--accent); font-size: 80px; font-weight: 800; width: 160px; text-align: center; outline: none;">
+                <p style="color: var(--accent); font-weight: bold; margin-top: -10px; font-size: 12px; letter-spacing: 2px;">MINUTES</p>
+            </div>
+
+            <h1 id="timer-display" style="font-size: 90px; color: var(--accent); margin: 0; display: none; font-family: monospace;">25:00</h1>
+            
+            <p id="timer-status" style="color: #666; margin: 20px 0; font-size: 13px;">Set your focus goal</p>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="timer-btn" onclick="toggleTimer()" style="background: var(--success); color: black; border: none; padding: 15px 35px; border-radius: 15px; font-weight: 800; cursor: pointer; flex: 1; max-width: 150px;">START</button>
+                <button onclick="resetTimer()" style="background: #222; color: white; border: 1px solid #444; padding: 15px 35px; border-radius: 15px; cursor: pointer; flex: 1; max-width: 150px;">RESET</button>
+            </div>
+        </div>
+        
+        <p style="margin-top: 30px; color: #444; font-size: 11px; font-style: italic;">"Stay focused, your future self will thank you."</p>
+    </div>
+</div>
+
+<div id="scr-notes" class="view" style="display: none; background: var(--bg); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column;">
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a;">
+        <button onclick="exitNotes()" style="background: #222; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
+        <h3 id="notes-title" style="color: var(--accent); margin: 0; font-weight: 800;">MY LAB NOTES</h3>
+        <button onclick="createNewNote()" id="add-note-btn" style="background: var(--accent); color: black; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer;">+ NEW</button>
+    </div>
+
+    <div id="notes-list-container" style="flex: 1; padding: 15px; overflow-y: auto; display: block;">
+        <div id="notes-grid" style="display: grid; gap: 10px;"></div>
+    </div>
+
+    <div id="notes-editor-container" style="flex: 1; padding: 15px; display: none; flex-direction: column;">
+        <div style="display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #111; border-radius: 10px; overflow-x: auto;">
+            <button onclick="formatNote('bold')" style="font-weight: bold; padding: 5px 10px; background: #222; color: white; border: none; border-radius: 5px;">B</button>
+            <button onclick="formatNote('italic')" style="font-style: italic; padding: 5px 10px; background: #222; color: white; border: none; border-radius: 5px;">I</button>
+            <input type="color" onchange="formatNote('foreColor', this.value)" style="width: 30px; height: 30px; border: none; background: none; cursor: pointer;">
+            <button onclick="deleteCurrentNote()" style="margin-left: auto; background: var(--error); color: white; border: none; padding: 5px 10px; border-radius: 5px;">Delete</button>
+        </div>
+        
+       <input type="text" id="edit-note-title" oninput="saveCurrentNote()" placeholder="Note Title..." style="background: none; border: none; border-bottom: 1px solid #222; color: var(--accent); font-size: 20px; font-weight: bold; margin-bottom: 15px; outline: none; padding: 5px 0; width: 100%;">
+        <div id="edit-note-body" contenteditable="true" style="flex: 1; color: #ccc; font-size: 16px; outline: none; line-height: 1.6; overflow-y: auto;" oninput="saveCurrentNote()"></div>
+    </div>
+</div>
+
+   <div id="scr-peer" class="view" style="display: none; background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column;">
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a;">
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
+        <h3 style="color: var(--accent); margin: 0; font-weight: 800; letter-spacing: 2px;">PEER BOARD</h3>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <div style="padding: 20px; background: #111; margin: 15px; border-radius: 20px; border: 1px solid #222;">
+        <textarea id="peer-input" placeholder="Anong ganap sa campus? Post ka dito..." 
+            style="width: 100%; height: 80px; background: none; border: none; color: white; outline: none; resize: none; font-family: inherit; font-size: 14px;"></textarea>
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+            <button onclick="addPost()" style="background: var(--accent); color: black; border: none; padding: 10px 25px; border-radius: 12px; font-weight: 800; cursor: pointer;">POST</button>
+        </div>
+    </div>
+
+    <div id="peer-feed" style="flex: 1; padding: 0 20px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
+        </div>
+</div>
+
+<div id="scr-about" class="view" style="display:none; flex-direction: column; background: #000; min-height: 100vh; width: 100%;">
+    
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #1a1a1a;">
+        <button onclick="showView('scr-student')" style="background: #111; border: 1px solid #222; color: white; width: 40px; height: 40px; border-radius: 12px; cursor: pointer;">←</button>
+        <div>
+            <h2 style="margin:0; font-size: 16px; color: #fff;">ABOUT US</h2>
+            <p style="margin:0; font-size: 10px; color: var(--accent); font-weight: bold;">SCHEDLY PRO v1.0</p>
+        </div>
+    </div>
+
+    <div style="padding: 20px; overflow-y: auto; flex: 1;">
+        
+        <div style="background: #111; border: 1px solid #222; padding: 25px; border-radius: 24px; margin-bottom: 25px; border-left: 4px solid var(--accent);">
+            <h3 style="color: white; margin: 0 0 10px 0; font-size: 18px;">Hello, Fellow Students! 👋</h3>
+            <p style="color: #ccc; font-size: 13px; line-height: 1.6; margin: 0;">
+                We built <b>Schedly Pro</b> because we know how tough it is to balance academic life. 
+                Our goal is to give you a digital home where your schedules, tasks, and friends are all in one place. 
+                <br><br>
+                Whether you're tracking a deadline or looking for a quick update in the Peer Board, we're here to make your student journey a little bit easier. <b></b>
+            </p>
+        </div>
+
+        <div style="background: #0d0d0d; border: 1px solid #1a1a1a; padding: 20px; border-radius: 24px; margin-bottom: 25px; text-align: center;">
+            <p style="color: #666; font-size: 11px; margin-bottom: 15px; font-weight: bold;">CONNECT WITH US</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <a href="https://www.facebook.com/profile.php?id=61586943834900" target="_blank" style="text-decoration: none; background: #1877F2; color: white; padding: 12px; border-radius: 12px; font-size: 11px; font-weight: bold;">FB PAGE</a>
+                <a href="mailto:YourSchedly@gmail.com" style="text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #333;">YourSchedly@gmail.com</a>
+                <a href="tel:+639928072368" style="text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #333;">+639928072368</a>
+                <div style="background: #111; color: #444; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #222;">WEBSITE (Soon)</div>
+            </div>
+        </div>
+
+        <p style="color: #444; font-size: 11px; font-weight: 800; letter-spacing: 2px; margin-bottom: 15px; text-align: center;">MEET THE DEVELOPERS</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            
+            <div style="grid-column: span 2; background: #111; border: 1px solid var(--accent); padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 15px;">
+                <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--accent); color: black; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;">SJ</div>
+                <div>
+                    <h4 style="margin:0; color: white; font-size: 14px;">STEPHEN JOHN O. JAYNOS</h4>
+                    <p style="margin:0; font-size: 10px; color: var(--accent); font-weight: bold;">Lead Developer / UI Designer</p>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">JOHN JOSHUA SUMILANG</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+            <div class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">ALEXANDRA VILLASIS</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+            <div class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">ARBY CASTILLO</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+            <div class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">ARVIE ARSENIA</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+            <div class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">CHRISTIAN A. SIBOLINO</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+            <div class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">CYRUZ AMARO</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+            <div style="grid-column: span 2;" class="team-card">
+                <h4 style="color: white; font-size: 12px; margin: 0;">FARHAN PANINGBATAN</h4>
+                <p style="color: #555; font-size: 9px; margin: 0;">Developer</p>
+            </div>
+
+        </div>
+
+        <p style="text-align: center; color: #222; font-size: 9px; margin-top: 40px;">&copy; 2026 Schedly Pro Ecosystem. All Rights Reserved.</p>
+    </div>
+</div>
+
+  <div id="scr-login" class="view active">
+    <div class="auth-box" style="padding: 40px 20px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            
+            <img src="https://i.postimg.cc/bY74X2V5/schedly-logo.png" 
+                 alt="Schedly Logo" 
+                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/2693/2693507.png'"
+                 style="width: 150px; height: auto; display: inline-block; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(212,175,55,0.4));">
+
+            <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: 3px; color: #fff;">
+                SCHEDLY <span style="color:var(--accent)">PRO</span>
+            </h1>
+            
+            <p style="font-size: 11px; color: var(--accent); margin-top: 8px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.9;">
+                Your Daily Academic Partner
+            </p>
+            
+            <div style="width: 40px; height: 2px; background: var(--accent); margin: 15px auto; border-radius: 2px;"></div>
+        </div>
+
+        <div style="width: 100%; max-width: 280px; margin: 0 auto;">
+            <input type="text" id="log-u" placeholder="Username" style="margin-bottom: 10px;">
+            <input type="password" id="log-p" placeholder="Password" style="margin-bottom: 20px;">
+            <button class="btn" onclick="handleLogin()" style="width: 100%;">Sign In</button>
+            
+            <p onclick="showView('scr-reg')" style="color:gray; cursor:pointer; font-size:11px; margin-top:25px; text-align: center;">
+                Don't have an account? <span style="color:var(--accent); font-weight: bold;">REGISTER</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+    <div id="scr-reg" class="view">
+    <div class="auth-box">
+        <h2>CREATE ACCOUNT</h2>
+        <input type="text" id="reg-n" placeholder="Full Name">
+        <input type="text" id="reg-u" placeholder="Username">
+        <input type="tel" id="reg-phone" placeholder="Contact Number" maxlength="11">
+
+        <input type="text" id="reg-address" placeholder="Home Address (City/Province)">
+
+        <div style="display: flex; gap: 10px; width: 100%; margin-top: 10px;">
+            <div style="flex: 1.2; text-align: left;">
+                <label style="font-size: 10px; color: #aaa;">Birthdate</label>
+                <input type="date" id="reg-birthdate" style="width: 100%; margin-top: 5px;">
+            </div>
+            
+            <div style="flex: 1; text-align: left;">
+                <label style="font-size: 10px; color: #aaa;">Gender</label>
+                <div style="display: flex; gap: 5px; margin-top: 5px;">
+                    <label class="gender-option">
+                        <input type="radio" name="reg-gender" value="Male" checked>
+                        <div class="gender-card">♂️</div>
+                    </label>
+                    <label class="gender-option">
+                        <input type="radio" name="reg-gender" value="Female">
+                        <div class="gender-card">♀️</div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <select id="reg-level" style="margin-top: 15px;">
+            <option value="" disabled selected>Select Academic Level</option>
+            <option value="Grade 11">Grade 11</option>
+            <option value="Grade 12">Grade 12</option>
+            <option value="College">College</option>
+        </select>
+
+        <input type="email" id="reg-e" placeholder="Email Address">
+        <input type="password" id="reg-p" placeholder="Password">
+        <input type="password" id="reg-cp" placeholder="Confirm Password">
+
+        <div class="terms-wrapper">
+    <input type="checkbox" id="reg-agree" onclick="handleTermsClick(event)">
+    <label for="reg-agree">I agree to the <span style="color: var(--accent); text-decoration: underline;">Terms & Conditions</span></label>
+         </div> 
+
+        <button class="btn" onclick="handleRegister()">Register</button>
+        <p onclick="showView('scr-login')" style="cursor:pointer; font-size:11px; margin-top: 10px;">BACK</p>
+    </div>
+</div>
+  
+<div id="scr-student" class="view">
+    <div class="main-panel" style="padding: 0;">
+        
+        <div style="margin-bottom: 25px;">
+            <h1 style="font-size: 26px; margin: 0; color: var(--accent); font-weight: 800;">Schedly Pro</h1>
+            <p style="font-size: 11px; color: #666; letter-spacing: 1px;">STUDENT ECOSYSTEM v1.0</p>
+        </div>
+
+        <div class="main-grid">
+            
+            <div class="nav-card full-span" style="grid-column: span 2; border-color: var(--accent); background: linear-gradient(135deg, #111, #080808);" onclick="openProfile()">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div id="user-initial" style="width:55px; height:55px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; color:black; font-weight:900; font-size:22px; box-shadow: 0 0 15px rgba(212,175,55,0.2);">?</div>
+                    <div>
+                        <b id="dash-user-name" style="margin:0; font-size:16px; display:block;">Loading...</b>
+                        <small id="dash-user-strand" style="display:block; color: var(--accent);">Fetching Details</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="openTasks()">
+                <span class="card-icon">📋</span>
+                <b>Tasks</b>
+                <small>Reminders</small>
+            </div>
+
+            <div class="nav-card" onclick="openSchedules()">
+                <span class="card-icon">⏰</span>
+                <b>Schedules</b>
+                <small>Room & Time</small>
+            </div>
+
+            <div class="nav-card" onclick="openStudyMode()">
+                <span class="card-icon">⏳</span>
+                <b>Study Mode</b>
+                <small>Focus Timer</small>
+            </div>
+
+            <div class="nav-card" onclick="showView('scr-notes'); renderNotes();">
+             <span class="card-icon">🗒️</span>
+             <b>My Notes</b>
+             <small>Personal Lab</small>
+            </div>
+
+            <div class="nav-card" onclick="showView('scr-peer'); renderPosts();">
+              <span class="card-icon">🤝</span>
+              <b>Peer Board</b>
+              <small>Market/Borrow</small>
+            </div>
+
+            <div class="nav-card" onclick="openShortcuts()">
+                <span class="card-icon">🔗</span>
+                <b>Shortcuts</b>
+                <small>Quick Access</small>
+            </div>
+
+            <div class="nav-card" onclick="openAbout()">
+                <span class="card-icon">ℹ️</span>
+                <b>About Us</b>
+                <small>The Team</small>
+            </div>
+
+            <div class="nav-card full-span" style="grid-column: span 2; border-color: #333; background: rgba(255,95,87,0.05);" onclick="triggerLogout()">
+                <b style="color:var(--error); margin:0; width:100%; text-align:center;">🚪 Logout System</b>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="scr-activate" class="view">
+        <div class="auth-box">
+            <h2>ACTIVATE ACCOUNT</h2>
+            <p style="font-size:12px; color:gray; margin-bottom:20px;">Please enter your unique activation key or scan your QR card.</p>
+            
+            <div id="reader" style="width:100%; border-radius:15px; overflow:hidden; margin-bottom:10px;"></div>
+            <button id="cam-btn" class="btn" style="background:#222; color:white; margin-bottom:15px;" onclick="startScanner()">📷 SCAN QR CODE</button>
+            
+            <input type="text" id="act-key" placeholder="Enter Key (e.g. SCH-XXXXXX)" style="text-align:center; letter-spacing:2px;">
+            <button class="btn" onclick="verifyActivation()">ACTIVATE NOW</button>
+            
+            <p onclick="location.reload()" style="color:gray; cursor:pointer; font-size:11px; margin-top:20px;">LOGOUT</p>
+        </div>
+    </div>
+
+   <div id="scr-admin" class="view" style="padding:0;">
+    <div class="admin-layout">
+        <div class="sidebar">
+            <div class="nav-item active" onclick="admTab('dash', this)">⚙️</div>
+            <div class="nav-item" onclick="admTab('ann', this)">📢</div>
+            <div class="nav-item" onclick="admTab('keys', this)">🔑</div>
+            <div class="nav-item" onclick="admTab('users', this)">👥</div>
+            <div class="nav-item" onclick="logoutSystem()">🚪</div>
+        </div>
+
+        
+        <div class="main-panel">
+           <div id="adm-dash" class="admin-card active">
+    <h2>SYSTEM CONFIG</h2>
+    <select id="sys-state">
+        <option value="normal">🟢 ONLINE</option>
+        <option value="maintenance">🟡 MAINTENANCE</option>
+        <option value="terminated">🔴 TERMINATED</option> </select>
+    <input type="datetime-local" id="sys-time-end">
+    <textarea id="sys-msg-in" placeholder="Message for students..."></textarea>
+    <button class="btn" onclick="updateSys()">APPLY CHANGES</button>
+        </div>
+            
+            <div id="adm-ann" class="admin-card">
+                <h2>BROADCAST</h2>
+                <textarea id="ann-msg-in" placeholder="Announcement..."></textarea>
+                <input type="datetime-local" id="ann-time-end">
+                <button class="btn" onclick="postAnnouncement()">LAUNCH</button>
+            </div>
+
+            <div id="adm-keys" class="admin-card">
+                <h2>ACTIVATION KEYS</h2>
+                <div class="stat-grid">
+                    <div class="stat-item"><span id="count-key-unused">0</span><small>Valid</small></div>
+                    <div class="stat-item"><span id="count-key-used" style="color:var(--error)">0</span><small>Used</small></div>
+                </div>
+                <button class="btn" onclick="genKey()">+ GENERATE KEY</button>
+                
+                <div id="key-card-container" style="display:none; margin-top:20px; text-align:center;">
+                    <div id="capture-area" style="background:white; padding:20px; color:black; display:inline-block; border-radius:15px;">
+                        <div id="qrcode-display"></div>
+                        <h3 id="manual-code-text" style="font-family:monospace;"></h3>
+                    </div><br>
+                    <button class="btn" style="background:green; color:white; width:200px; margin-top:10px;" onclick="downloadKeyCard()">DOWNLOAD PNG</button>
+                </div>
+                <div id="list-keys-all" class="list-container" style="margin-top:20px;"></div>
+            </div>
+
+            <div id="adm-users" class="admin-card">
+                <h2>STUDENT DATABASE</h2>
+                <div class="stat-grid">
+                    <div class="stat-item"><span id="count-stud-active">0</span><small>Active</small></div>
+                    <div class="stat-item"><span id="count-stud-pending" style="color:var(--maint)">0</span><small>Pending</small></div>
+                </div>
+                <div id="list-users-all" class="list-container"></div>
+            </div>
+        </div> </div> </div> ```
+
+    <div id="maint-screen">
+        <div style="background:rgba(255,255,255,0.05); padding:40px; border-radius:30px; border:1px solid #333;">
+            <div style="font-size:60px;">🛠️</div>
+            <h2 id="maint-tag">SYSTEM OFFLINE</h2>
+            <p id="m-msg" style="color:gray;"></p>
+            <button class="btn" style="width:150px; margin-top:20px;" onclick="location.reload()">RECHECK</button>
+        </div>
+    </div>
+
+        <div id="term-screen">
+    <div style="background:rgba(255,95,87,0.05); padding:40px; border-radius:30px; border:1px solid var(--error); text-align:center; max-width:90%;">
+        <div style="font-size:60px;">⚠️</div>
+        <h2 style="color:var(--error); margin-top:10px;">Application Session Concluded</h2>
+        <p style="color:gray; font-size:14px; margin-bottom:25px;">Please contact your administrator for further information regarding this closure.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+            <button class="btn" style="width:220px; background:#1877f2; color:white;" onclick="window.location.href='YOUR_FB_LINK'">
+                Visit FB Page
+            </button>
+            <button class="btn" style="width:220px; background:var(--accent); color:black;" onclick="window.location.href='YOUR_WEBSITE_LINK'">
+                Visit Website
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="subject-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3 style="color:white; margin-bottom:15px;">Create New Subject</h3>
+            <input type="text" id="sub-name" placeholder="Subject Name (e.g. IT 101)" style="margin-bottom:10px;">
+            <input type="text" id="sub-desc" placeholder="Description / Schedule" style="margin-bottom:20px;">
+            <div style="display: flex; gap: 10px;">
+                <button onclick="saveSubject()" class="btn" style="background:var(--accent); color:black; font-weight:bold;">SAVE SUBJECT</button>
+                <button onclick="closeSubModal()" class="btn" style="background:#333; color:white;">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="task-modal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width: 450px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 id="modal-category-title" style="color:var(--accent); font-size: 18px;">Tasks</h2>
+                <button onclick="closeTaskModal()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <input type="text" id="new-task-input" placeholder="Anong task ito?" style="flex:1;">
+                <button onclick="saveTask()" class="add-btn-small" style="padding:10px 20px;">ADD</button>
+            </div>
+
+            <div id="task-list-container" style="max-height: 300px; overflow-y: auto;">
+                </div>
+        </div>
+    </div>
+         
+      <div id="edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; backdrop-filter:blur(5px); padding: 20px;">
+    <div class="auth-box" style="width:100%; max-width:350px; background:#000; border:1px solid #222; padding:20px; border-radius:15px; text-align:center;">
+        <h3 style="color:var(--accent); margin-bottom:20px;">EDIT STUDENT</h3>
+        <input type="hidden" id="edit-id">
+        <div style="text-align:left; margin-bottom:10px;">
+            <label style="font-size:10px; color:gray; margin-left:5px;">FULL NAME</label>
+            <input type="text" id="edit-name" placeholder="Full Name" style="width:100%; background:#111; border:1px solid #222; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
+        </div>
+        <div style="text-align:left; margin-bottom:10px;">
+            <label style="font-size:10px; color:gray; margin-left:5px;">LEVEL / SECTION</label>
+            <input type="text" id="edit-level" placeholder="Level/Section" style="width:100%; background:#111; border:1px solid #222; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
+        </div>
+        <div style="text-align:left; margin-bottom:20px;">
+            <label style="font-size:10px; color:gray; margin-left:5px;">CONTACT NUMBER</label>
+            <input type="text" id="edit-phone" placeholder="Contact Number" style="width:100%; background:#111; border:1px solid #222; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
+        </div>
+        <button class="btn" onclick="saveStudentEdit()" style="width:100%; margin-bottom:10px;">SAVE CHANGES</button>
+        <button class="btn" style="width:100%; background:transparent; border:1px solid #333; color:#fff;" onclick="document.getElementById('edit-modal').style.display='none'">CANCEL</button>
+    </div>
+</div>
+
+<div id="profile-modal" class="modal" style="display:none; align-items: center; justify-content: center; background: rgba(0,0,0,0.95); z-index: 10001; position: fixed; top: 0; left: 0; width: 100%; height: 100%;">
+   <div class="modal-content" style="max-width: 450px; width: 92%; background: #000; border: 1px solid #222; position: relative; padding: 20px; border-radius: 20px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; margin: auto;">
+        
+        <button onclick="closeModal('profile-modal')" style="position: absolute; right: 15px; top: 15px; background: none; border: none; color: white; font-size: 24px; cursor: pointer; z-index: 10;">&times;</button>
+        
+        <h3 style="color: var(--accent); margin: 0; text-align: center; font-size: 16px; letter-spacing: 2px;">STUDENT PROFILE</h3>
+
+        <div id="id-card-capture" style="background: linear-gradient(135deg, #111 0%, #000 100%); border: 1px solid var(--accent); border-radius: 15px; padding: 20px; position: relative; flex-shrink: 0;">
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div style="position: relative;">
+                    <div class="avatar-wrapper" onclick="toggleActionMenu()" 
+                         style="width: 65px; height: 65px; border-radius: 50%; overflow: hidden; cursor: pointer; border: 2px solid var(--accent); background: var(--accent); display: flex; align-items: center; justify-content: center; position: relative; z-index: 1001;"> 
+                        <div id="st-initials" style="font-size: 24px; font-weight: 800; color: #000;">?</div>
+                        <img id="mainProfilePic" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+
+                    <div id="actionMenu" style="display: none; position: absolute; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; top: 70px; left: 0; z-index: 10005; min-width: 150px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden;">
+                        <button onclick="document.getElementById('imageUploader').click(); toggleActionMenu();" 
+                                style="width: 100%; padding: 12px; background: none; border: none; color: white; text-align: left; cursor: pointer; font-size: 11px; display: block; border-bottom: 1px solid #222;">
+                            📷 Change Photo
+                        </button>
+                        <button onclick="removeProfilePic(); toggleActionMenu();" 
+                                style="width: 100%; padding: 12px; background: none; border: none; color: #ff4444; text-align: left; cursor: pointer; font-size: 11px; display: block;">
+                            🗑️ Remove Photo
+                        </button>
+                    </div>
+                </div>
+
+                <div style="flex: 1;">
+    <h2 id="st-name" style="margin: 0; font-size: 16px; color: #fff; text-transform: uppercase;">LOADING...</h2>
+    <p id="st-level" style="margin: 0; font-size: 11px; color: var(--accent);">-</p>
+    <p id="bioDisplay" onclick="openBioEditor()" style="margin-top: 5px; font-size: 10px; color: #888; font-style: italic; cursor: pointer; border-bottom: 1px dashed #444; display: inline-block;">Tap to add bio...</p>
+</div>
+</div> 
+
+<div style="margin-top: 15px; border-top: 1px solid #222; padding-top: 10px;">
+    <p style="font-size: 10px; color: gray; margin: 2px 0;">USER: <span id="st-user" style="color: #fff;">-</span></p>
+    <p style="font-size: 10px; color: gray; margin: 2px 0;">CONTACT: <span id="st-phone" style="color: #fff;">-</span></p>
+</div>
+<img id="st-mini-qr" src="" style="position: absolute; bottom: 15px; right: 15px; width: 45px; height: 45px; border: 1px solid #fff; border-radius: 4px; background: white;">
+<input type="file" id="imageUploader" hidden accept="image/*" onchange="handleImageUpload(event)">
+</div> <div style="background: #0a0a0a; padding: 15px; border-radius: 12px; border: 1px solid #1a1a1a; margin-top: 15px;">
+    <p style="color: var(--accent); font-size: 10px; font-weight: bold; margin-bottom: 10px;">👤 1. PERSONAL INFORMATION</p>
+    
+    <label style="font-size: 9px; color: #555;">Full Name (Locked)</label>
+    <input type="text" id="info-name" disabled style="width: 100%; background: #050505; color: #555; border: 1px solid #222; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+        <div style="flex: 1;">
+            <label style="font-size: 9px; color: #555;">Birthdate (Editable)</label>
+            <input type="date" id="info-birthdate" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+        </div>
+        <div style="flex: 1;">
+            <label style="font-size: 9px; color: #555;">Gender (Editable)</label>
+            <select id="info-gender" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+    </div>
+
+    <label style="font-size: 9px; color: #555;">Personal Contact (Editable)</label>
+    <input type="tel" id="info-personal-contact" placeholder="09xxxxxxxxx" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+
+    <label style="font-size: 9px; color: #555;">Email Address (Editable)</label>
+    <input type="email" id="info-email" placeholder="Email" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+    
+    <label style="font-size: 9px; color: #555;">Home Address (Editable)</label>
+    <textarea id="info-address" rows="2" placeholder="Complete Address" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px; resize: none;"></textarea>
+</div>
+
+        <div style="background: #0a0a0a; padding: 15px; border-radius: 12px; border: 1px solid #1a1a1a;">
+            <p style="color: var(--accent); font-size: 10px; font-weight: bold; margin-bottom: 10px;">🏫 2. SCHOOL INFORMATION</p>
+            <label style="font-size: 9px; color: #555;">School Name (Editable)</label>
+            <input type="text" id="info-school" placeholder="School Name" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px; margin-bottom: 8px;">
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                <div style="flex: 1;">
+                    <label style="font-size: 9px; color: #555;">Level (Locked)</label>
+                    <input type="text" id="info-level" disabled style="width: 100%; background: #050505; color: #555; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 9px; color: #555;">Section (Locked)</label>
+                    <input type="text" id="info-section" disabled style="width: 100%; background: #050505; color: #555; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+                </div>
+            </div>
+            <label style="font-size: 9px; color: #555;">Strand / Course (Editable)</label>
+            <input type="text" id="info-strand" placeholder="e.g. STEM" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+        </div>
+
+        <div style="background: #0a0a0a; padding: 15px; border-radius: 12px; border: 1px solid #1a1a1a;">
+            <p style="color: var(--accent); font-size: 10px; font-weight: bold; margin-bottom: 10px;">🚨 3. EMERGENCY CONTACTS</p>
+            <div style="margin-bottom: 10px;">
+                <label style="font-size: 8px; color: #444;">PERSON 1</label>
+                <input type="text" id="info-guardian-1" placeholder="Guardian 1" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px; margin-bottom: 5px;">
+                <input type="tel" id="info-emergency-1" placeholder="Phone Number" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+            </div>
+            <div>
+                <label style="font-size: 8px; color: #444;">PERSON 2</label>
+                <input type="text" id="info-guardian-2" placeholder="Guardian 2" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px; margin-bottom: 5px;">
+                <input type="tel" id="info-emergency-2" placeholder="Phone Number" style="width: 100%; background: #000; color: #fff; border: 1px solid #222; padding: 8px; border-radius: 6px;">
+            </div>
+        </div>
+
+        <div style="background: #0a0a0a; border-radius: 12px; border: 1px solid #1a1a1a; padding: 10px;">
+            <p style="color: var(--accent); font-size: 11px; font-weight: bold; margin-bottom: 8px;">📍 LIVE CAMPUS LOCATION</p>
+            <div id="map-container" style="height: 180px; width: 100%; border-radius: 10px; background: #111; border: 1px solid #222;"></div>
+        </div>
+
+        <button onclick="saveStudentInformation()" style="width: 100%; padding: 15px; background: var(--accent); color: #000; font-weight: 800; border: none; border-radius: 12px; cursor: pointer;">💾 SAVE UPDATES</button>
+        <button onclick="triggerLogout()" style="width: 100%; padding: 12px; background: transparent; color: #ff4444; border: 1px solid #440000; border-radius: 12px; font-size: 11px;">LOGOUT ACCOUNT</button>
+    </div>
+</div>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, addDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_4YemXc1kELejpQizgg2AFeYiPDHUEGM",
+        authDomain: "schedly-pro-178d5.firebaseapp.com",
+        projectId: "schedly-pro-178d5",
+        storageBucket: "schedly-pro-178d5.firebasestorage.app",
+        messagingSenderId: "368476521535",
+        appId: "1:368476521535:web:594cbdb4fb761c83ad648a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
+    const finalAlarm = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock_beeping.ogg');
+   
+   const peerCollection = collection(db, "peer_posts");
+
+// 1. TAGA-DISPLAY (onSnapshot)
+onSnapshot(peerCollection, (snapshot) => {
+    const feed = document.getElementById('peer-feed');
+    if (!feed) return;
+    
+    let allPosts = [];
+    snapshot.forEach((doc) => {
+        allPosts.push({ id: doc.id, ...doc.data() });
+    });
+    
+    // Bago sa taas
+    allPosts.sort((a, b) => b.createdAt - a.createdAt);
+
+    feed.innerHTML = '';
+    
+    // Kunin ang current user para sa Delete button logic
+    const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
+
+    allPosts.forEach((post) => {
+        const postDiv = document.createElement('div');
+        postDiv.style = "background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; position: relative;";
+        
+        
+        const isOwner = currentUser && (currentUser.uid === post.senderId);
+
+       
+        const displayImg = (post.senderImg && post.senderImg !== "null") 
+            ? post.senderImg 
+            : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.senderName)}&background=random&color=fff`;
+
+        postDiv.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <img src="${displayImg}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                <div>
+                    <div style="color: white; font-size: 14px; font-weight: 800;">@${post.senderName}</div>
+                    <div style="color: #444; font-size: 10px;">${post.timeDisplay}</div>
+                </div>
+            </div>
+            <div style="color: #ccc; font-size: 15px; line-height: 1.6;">${post.text}</div>
+            
+            ${isOwner ? `<button onclick="deletePost('${post.id}')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: #ff4444; cursor: pointer; font-size: 20px;">&times;</button>` : ''}
+        `;
+        feed.appendChild(postDiv);
+    });
+});
+    
+    let userRole = 'none';
+    let loggedInUserDoc = ""; 
+    let currentSubId = "";
+    let taskListener = null;
+    let timerInterval = null;
+    let audioCtx = null;
+    let timeLeft = 0;
+    let ringInterval = null;
+    let notes = JSON.parse(localStorage.getItem('schedly_notes_list')) || [];
+    let activeNoteId = null; 
+    let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
+    let html5QrCode;
+
+    const playRingingSound = (stop = false) => {
+    if (stop) {
+        if (ringInterval) {
+            clearInterval(ringInterval);
+            ringInterval = null;
+        }
+        if (audioCtx) {
+            audioCtx.close();
+            audioCtx = null;
+        }
+        return;
+    }
+
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Kung wala pang ringInterval, gumawa ng loop
+    if (!ringInterval) {
+        ringInterval = setInterval(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }, 400); 
+    }
+};
+
+ function initSystem() {
+   window.userRole = localStorage.getItem('appUserRole') || 'guest';
+   
+    onSnapshot(doc(db, "system-config", "global"), (snap) => {
+        const data = snap.data();
+        if (!data) return;
+
+        const statusText = document.getElementById('global-status-text');
+        const badge = document.getElementById('global-badge');
+        const mScreen = document.getElementById('maint-screen');
+        const tScreen = document.getElementById('term-screen');
+        const mMsg = document.getElementById('m-msg');
+
+        // Reset: Itago lahat at linisin ang classes
+        if(mScreen) mScreen.style.display = 'none';
+        if(tScreen) tScreen.style.display = 'none';
+        badge.className = "badge"; // Reset class name
+
+        if (data.state === 'terminated') {
+            badge.classList.add('terminated');
+            statusText.innerText = "Server: Terminated";
+            
+            if (window.userRole !== 'admin') {
+                if(tScreen) tScreen.style.display = 'flex';
+            }
+        } 
+       else if (data.state === 'maintenance') {
+    badge.classList.add('maintenance');
+    statusText.innerText = "Server: Maintenance";
+    
+    if (window.userRole !== 'admin') {
+        if(mScreen) {
+            mScreen.style.display = 'flex';
+            if(mMsg) mMsg.innerText = data.duration || "We’re currently performing scheduled maintenance to improve your experience.";
+        }
+    }
+}
+        else {
+            badge.classList.add('online');
+            statusText.innerText = "Server: Online";
+        }
+    });
+}
+  
+
+   
+    onSnapshot(collection(db, "broadcasts"), (s) => {
+        const cont = document.getElementById('broadcast-container');
+        if(!cont) return;
+        cont.innerHTML = "";
+        s.forEach(d => {
+            const b = d.data();
+            cont.innerHTML += `<div class="broadcast-item"><b>📢 ${b.title}:</b> ${b.message}</div>`;
+        });
+    });
+
+
+  window.handleLogin = async () => {
+    const u = document.getElementById('log-u').value;
+    const p = document.getElementById('log-p').value;
+    const loginBtn = document.querySelector('#scr-login .btn');
+
+    if(!u || !p) return alert("Please enter credentials.");
+
+    loginBtn.innerText = "VERIFYING...";
+    loginBtn.disabled = true;
+
+    try {
+        // 1. ADMIN BYPASS
+        if(u === 'admin' && p === 'admin123') { 
+            // DITO NATIN I-SESAVE ANG IDENTITY MO
+            window.userRole = 'admin'; 
+            localStorage.setItem('appUserRole', 'admin'); 
+            
+            showView('scr-admin'); 
+            loadAdminData(); 
+            return; 
+        }
+
+        // 2. STUDENT LOGIN
+        const q = query(collection(db, "users"), where("username", "==", u), where("password", "==", p));
+        const snap = await getDocs(q);
+
+        if(!snap.empty) {
+            const userDoc = snap.docs[0];
+            const userData = userDoc.data();
+            
+            // --- DITO ANG FIX ---
+            // 1. I-save ang buong data sa global variable natin
+            loggedInUserDoc = {
+                uid: userDoc.id,
+                ...userData
+            }; 
+            
+            // 2. I-save din sa localStorage para kung mag-refresh man, kilala pa rin si @hypens
+            localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
+            // --------------------
+
+            const savedPic = localStorage.getItem(`profile_pic_${userDoc.id}`);
+            const savedBio = localStorage.getItem(`bio_${userDoc.id}`);
+            window.updateProfileUI(savedPic);
+            if(savedBio) document.getElementById('bioDisplay').innerText = `"${savedBio}"`;
+           
+            window.userRole = 'student';
+            localStorage.setItem('appUserRole', 'student');
+
+            if(userData.isActivated) {
+                window.watchStudentProfile(userDoc.id); 
+                showView('scr-student'); 
+                window.loadSubjects();
+            } else {
+                showView('scr-activate'); 
+            }
+        } else {
+            alert("Invalid username or password.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Connection Error.");
+    } finally {
+        loginBtn.innerText = "SIGN IN";
+        loginBtn.disabled = false;
+    }
+};
+
+         window.openAddSubjectModal = () => document.getElementById('subject-modal').style.display = 'flex';
+    window.closeSubModal = () => document.getElementById('subject-modal').style.display = 'none';
+    window.closeTaskModal = () => document.getElementById('task-modal').style.display = 'none';
+
+    
+    window.saveSubject = async () => {
+        const name = document.getElementById('sub-name').value.trim();
+        const desc = document.getElementById('sub-desc').value.trim();
+        if(!name) return alert("Lagyan mo ng Subject Name!");
+
+        try {
+            await addDoc(collection(db, "subjects"), {
+                studentId: loggedInUserDoc, 
+                name: name,
+                desc: desc,
+                createdAt: new Date().toISOString()
+            });
+            document.getElementById('sub-name').value = "";
+            document.getElementById('sub-desc').value = "";
+            window.closeSubModal();
+        } catch (e) { alert("Error saving subject."); }
+    };
+
+    window.loadSubjects = () => {
+        const q = query(collection(db, "subjects"), where("studentId", "==", loggedInUserDoc));
+        onSnapshot(q, (snap) => {
+            const grid = document.getElementById('subject-grid');
+            grid.innerHTML = "";
+            snap.forEach(doc => {
+                const s = doc.data();
+                grid.innerHTML += `
+                    <div class="subject-card" onclick="window.openSubjectTasks('${doc.id}', '${s.name}')">
+                        <b>${s.name}</b>
+                        <small>${s.desc || 'No schedule set'}</small>
+                    </div>`;
+            });
+        });
+    };
+
+    
+    window.openSubjectTasks = (id, name) => {
+        currentSubId = id;
+        document.getElementById('modal-category-title').innerText = "📚 " + name;
+        document.getElementById('task-modal').style.display = 'flex';
+        window.loadTasks();
+    };
+
+    window.saveTask = async () => {
+    const input = document.getElementById('new-task-input');
+    if(!input.value.trim()) return;
+    
+    await addDoc(collection(db, "student_tasks"), {
+        subjectId: currentSubId,
+        taskName: input.value.trim()
+    });
+    
+    input.value = ""; 
+    
+};
+
+window.deleteTask = async (taskId) => {
+    if(confirm("Mark as done?")) {
+        await deleteDoc(doc(db, "student_tasks", taskId));
+    }
+};
+
+   window.loadTasks = () => {
+    const cont = document.getElementById('task-list-container');
+    
+    
+    if (taskListener) taskListener(); 
+
+    const q = query(collection(db, "student_tasks"), where("subjectId", "==", currentSubId));
+    
+    
+    taskListener = onSnapshot(q, (snap) => {
+        cont.innerHTML = "";
+        if(snap.empty) {
+            cont.innerHTML = "<p style='color:gray; font-size:12px; text-align:center;'>No tasks yet.</p>";
+            return;
+        }
+        snap.forEach(d => {
+            const t = d.data();
+            cont.innerHTML += `
+                <div class="task-item">
+                    <span>${t.taskName}</span>
+                    <button onclick="deleteTask('${d.id}')" style="background:none; border:none; color:var(--error); cursor:pointer; font-weight:bold;">✕</button>
+                </div>`;
+        });
+    });
+};
+
+    window.genKey = async () => {
+    // Gumawa ng random 6-character code
+    const code = "SCH-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    
+    try {
+        await addDoc(collection(db, "activation_codes"), { 
+            code: code, 
+            isUsed: false,
+            createdAt: new Date().toISOString()
+        });
+        
+        // UI Updates
+        document.getElementById('key-card-container').style.display = 'block';
+        document.getElementById('manual-code-text').innerText = code;
+        
+        // I-clear at gawan ng bagong QR Code
+        const qrContainer = document.getElementById('qrcode-display');
+        qrContainer.innerHTML = ""; 
+        new QRCode(qrContainer, { 
+            text: code, 
+            width: 150, 
+            height: 150,
+            colorDark : "#000000",
+            colorLight : "#ffffff"
+        });
+        
+        alert("New Key Generated: " + code);
+    } catch (e) {
+        alert("Error generating key: " + e.message);
+    }
+};
+
+  window.handleRegister = async () => {
+    // 1. Kunin ang mga basics
+    const n = document.getElementById('reg-n').value.trim();
+    const u = document.getElementById('reg-u').value.trim();
+    const ph = document.getElementById('reg-phone').value.trim();
+    const lvl = document.getElementById('reg-level').value; 
+    const e = document.getElementById('reg-e').value.trim();
+    const p = document.getElementById('reg-p').value;
+    const cp = document.getElementById('reg-cp').value;
+    const agree = document.getElementById('reg-agree').checked;
+
+    // 2. Kunin ang mga BAGONG fields (Address, Bday, at Gender Radio)
+    const addr = document.getElementById('reg-address').value.trim();
+    const bday = document.getElementById('reg-birthdate').value;
+    
+    // Ito ang kukuha sa napiling logo (♂️ o ♀️)
+    const gndrNode = document.querySelector('input[name="reg-gender"]:checked');
+    const gndr = gndrNode ? gndrNode.value : "Not Specified";
+
+    // 3. VALIDATIONS (Dapat may laman lahat bago mag-save)
+    if(!n || !u || !ph || !lvl || !e || !p || !cp || !addr || !bday) {
+        return alert("Fill up all fields, boss! Kailangan ang Address at Birthdate.");
+    }
+    if(p !== cp) return alert("Passwords do not match!");
+    if(!agree) return alert("Please agree to the Terms & Conditions.");
+
+    try {
+        // 4. CHECK KUNG MAY KATULAD NA USERNAME
+        const uSnap = await getDocs(query(collection(db, "users"), where("username", "==", u)));
+        if(!uSnap.empty) return alert("Username already taken.");
+
+        // 5. SAVE NA SA FIRESTORE
+        await addDoc(collection(db, "users"), { 
+            fullName: n, 
+            username: u, 
+            contactNumber: ph,
+            personalContact: ph,
+            level: lvl, 
+            email: e, 
+            password: p, 
+            
+            // Dito na papasok yung mga inputs nila kanina
+            address: addr,
+            birthdate: bday,
+            gender: gndr,
+            
+            isActivated: false,
+            dateRegistered: new Date().toISOString(),
+            bio: "Welcome to my profile!",
+            profilePic: null,
+            
+            // Default na blangko muna ang iba para sa Profile Page na lang i-edit
+            schoolName: "",
+            section: "",
+            strandCourse: "",
+            guardianName: "",
+            emergencyNumber: "",
+            guardianName2: "",
+            emergencyNumber2: ""
+        });
+
+        alert("Successfully Registered! Please login to activate."); 
+        showView('scr-login');
+        
+    } catch (err) {
+        console.error(err);
+        alert("Error: " + err.message);
+    }
+};
+
+    // ACTIVATION LOGIC (Para sa Student)
+    // Kinukuha ito tuwing login
+
+   window.verifyActivation = async () => {
+    const keyInput = document.getElementById('act-key').value.toUpperCase().trim();
+    
+    // Check kung may loggedInUserDoc (Dapat nakuha ito nung nag-login sa scr-login)
+    const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
+
+    if (!keyInput) return alert("Pakisulat o i-scan ang activation key.");
+    if (!currentUser || !currentUser.uid) return alert("Session error. Mag-login muli.");
+
+    try {
+        // 1. Hanapin ang key sa database na hindi pa gamit
+        const q = query(
+            collection(db, "activation_codes"), 
+            where("code", "==", keyInput), 
+            where("isUsed", "==", false)
+        );
+        const snap = await getDocs(q);
+
+        if (!snap.empty) {
+            const keyDoc = snap.docs[0];
+            const keyDocId = keyDoc.id;
+
+            // 2. I-update ang status ng User sa 'Activated'
+            // Gagamitin natin ang UID mula sa login kanina
+            await updateDoc(doc(db, "users", currentUser.uid), { 
+                isActivated: true,
+                activatedWith: keyInput,
+                dateActivated: new Date().toISOString()
+            });
+            
+            // 3. I-mark ang Key bilang 'USED' para hindi na magamit ng iba
+            await updateDoc(doc(db, "activation_codes", keyDocId), { 
+                isUsed: true,
+                usedBy: currentUser.username // Optional: track kung sino gumamit
+            });
+
+            // 4. I-update ang local data para hindi na bumalik sa activation screen
+            currentUser.isActivated = true;
+            localStorage.setItem('user_data', JSON.stringify(currentUser));
+            
+            alert("Account Activated! Welcome to Schedly Pro.");
+            
+            // I-redirect sa Student Dashboard
+            showView('scr-student');
+            window.watchStudentProfile(currentUser.uid);
+            window.loadSubjects();
+            
+        } else { 
+            alert("Maling Key o nagamit na ito ng iba. Kontakin ang Admin."); 
+        }
+    } catch (err) { 
+        console.error(err);
+        alert("Activation failed: " + err.message); 
+    }
+};
+
+    
+window.startScanner = () => {
+    // 1. Itago ang button para hindi mapindot nang paulit-ulit
+    document.getElementById('cam-btn').style.display = 'none';
+    
+    // 2. I-check kung may existing instance para i-clear muna (Safety check)
+    if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
+    }
+    
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        async (decodedText) => { 
+            try {
+                
+                document.getElementById('act-key').value = decodedText;
+                
+               
+                await html5QrCode.stop();
+                
+               
+                document.getElementById('reader').innerHTML = ""; 
+                
+                document.getElementById('cam-btn').style.display = 'block';
+                alert("QR Code Detected! Now click Activate.");
+            } catch (stopErr) {
+                console.warn("Stop error:", stopErr);
+            }
+        }
+    ).catch((err) => {
+        alert("Camera Error: " + err);
+        document.getElementById('cam-btn').style.display = 'block';
+    });
+};
+
+   window.loadAdminData = () => {
+    
+    onSnapshot(collection(db, "users"), (s) => {
+        const list = document.getElementById('list-users-all'); 
+        list.innerHTML = ""; // Nililinis ang listahan
+        
+        let activeCount = 0, pendingCount = 0;
+        
+        s.forEach(d => {
+            const u = d.data();
+            if(u.username === 'admin') return; 
+            
+            const isAct = u.isActivated;
+            if(isAct) activeCount++; else pendingCount++;
+
+            const statusLabel = isAct ? 
+                `<span style="color:var(--success); font-size:10px; border:1px solid var(--success); padding:2px 8px; border-radius:10px;">ACTIVE</span>` : 
+                `<span style="color:var(--maint); font-size:10px; border:1px solid var(--maint); padding:2px 8px; border-radius:10px;">PENDING</span>`;
+
+            // FIXED UI WITH EDIT AND REMOVE BUTTONS
+            list.innerHTML += `
+                <div class="item-row" style="flex-direction: column; align-items: flex-start; gap: 5px; padding: 15px; border-bottom: 1px solid #111;">
+                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                        <b style="font-size: 14px;">${u.fullName}</b>
+                        ${statusLabel}
+                    </div>
+                    <div style="font-size: 11px; color: gray; line-height: 1.6;">
+                        <span>📍 Level: ${u.level || 'N/A'}</span><br>
+                        <span>📞 Contact: ${u.contactNumber || 'No Number'}</span><br>
+                        <span>👤 User: ${u.username}</span><br>
+                        <span style="color:var(--accent); font-weight:bold;">🔑 Key: ${u.activatedWith || 'None'}</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px; width: 100%; margin-top: 10px;">
+                        <button onclick="openEditModal('${d.id}', '${u.fullName}', '${u.level || ''}', '${u.contactNumber || ''}')" 
+                                style="flex: 1; background: var(--accent); border: none; color: #000; padding: 8px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: bold;">
+                            EDIT INFO
+                        </button>
+                        
+                        <button onclick="deleteUser('${d.id}')" 
+                                style="flex: 1; background: none; border: 1px solid #333; color: var(--error); padding: 8px; border-radius: 8px; cursor: pointer; font-size: 10px;">
+                            REMOVE
+                        </button>
+                    </div>
+                </div>`;
+        });
+        
+        document.getElementById('count-stud-active').innerText = activeCount;
+        document.getElementById('count-stud-pending').innerText = pendingCount;
+    });
+
+    // 2. Sync Key Status
+    onSnapshot(collection(db, "activation_codes"), (s) => {
+        const list = document.getElementById('list-keys-all'); 
+        list.innerHTML = "";
+        let uCount = 0, usedCount = 0;
+        
+        s.forEach(d => {
+            const k = d.data();
+            const isUsed = k.isUsed;
+            if(isUsed) usedCount++; else uCount++;
+
+            const keyLabel = isUsed ? 
+                `<span style="color:#444; font-size:10px;">USED</span>` : 
+                `<span style="color:var(--success); font-size:10px;">VALID</span>`;
+
+            list.innerHTML += `
+                <div class="item-row" style="display: flex; justify-content: space-between; padding: 10px 15px;">
+                    <span style="font-family:monospace; font-weight:bold;">${k.code}</span>
+                    ${keyLabel}
+                </div>`;
+        });
+        document.getElementById('count-key-unused').innerText = uCount;
+        document.getElementById('count-key-used').innerText = usedCount;
+    });
+};
+
+   window.updateSys = async () => {
+    const s = document.getElementById('sys-state').value;
+    const t = document.getElementById('sys-time-end').value;
+    const m = document.getElementById('sys-msg-in').value;
+
+    try {
+        await updateDoc(doc(db, "system-config", "global"), {
+            state: s,
+            endTime: t,
+            duration: m // or msg
+        });
+        alert("System Updated!");
+    } catch (e) {
+        alert("Update failed: " + e.message);
+    }
+};
+
+    window.postAnnouncement = async () => {
+        const msg = document.getElementById('ann-msg-in').value;
+        const exp = new Date(document.getElementById('ann-time-end').value).getTime();
+        await setDoc(doc(db, "system-config", "broadcast"), { message: msg, expiry: exp, active: true });
+        alert("Broadcast Sent!");
+    };
+
+    function showMaint(data) {
+        document.getElementById('maint-screen').style.display = 'flex';
+        document.getElementById('m-msg').innerText = data.duration;     
+    }
+
+    window.showView = (id) => { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); };
+    window.admTab = (t, b) => { document.querySelectorAll('.admin-card').forEach(c => c.classList.remove('active')); document.getElementById('adm-'+t).classList.add('active'); };
+    window.checkStrength = (p) => {
+        const b = document.getElementById('strength-bar');
+        b.style.width = p.length*10 + "%";
+        b.className = p.length < 5 ? "strength-bar weak" : p.length < 9 ? "strength-bar mid" : "strength-bar strong";
+    };
+
+      window.downloadKeyCard = () => {
+    const area = document.getElementById('capture-area');
+    const code = document.getElementById('manual-code-text').innerText;
+    
+    if (!code) return alert("Generate a key muna!");
+
+    // Ito ang nag-co-convert ng HTML (QR + Text) para maging picture
+    html2canvas(area, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Key-${code}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }).catch(err => {
+        console.error("Download Error:", err);
+        alert("Hindi ma-download. Mag-screenshot na lang po muna.");
+    });
+};
+
+window.deleteUser = async (id) => {
+        if(confirm("Sigurado ka bang tatanggalin ang student na ito?")) {
+            try {
+                // Ginamit natin ang db variable na na-initialize na sa taas ng script mo
+                await deleteDoc(doc(db, "users", id));
+                alert("Student removed!");
+            } catch (e) {
+                console.error(e);
+                alert("Error deleting student.");
+            }
+        }
+    };
+
+     window.setSystemState = async (newState) => {
+    try {
+        await updateDoc(doc(db, "system-config", "global"), { state: newState });
+        alert("System status updated to: " + newState.toUpperCase());
+    } catch (e) {
+        alert("Error updating status: " + e.message);
+    }
+};
+
+    window.logoutSystem = () => {
+   
+    localStorage.removeItem('appUserRole');
+    
+    
+    window.userRole = 'guest';
+
+  
+    location.reload(); 
+};
+   
+window.watchStudentProfile = (docId) => {
+    onSnapshot(doc(db, "users", docId), (snap) => {
+        const userData = snap.data();
+        if (!userData) return;
+            
+            
+const dashName = document.getElementById('dash-user-name');
+
+if(dashName){
+    dashName.innerText =
+        userData.fullName ||
+        userData.username ||
+        "Student";
+}
+const dashCircle = document.getElementById('user-initial');
+
+if(dashCircle){
+
+    if(userData.profilePic){
+
+        dashCircle.innerHTML = `
+        <img src="${userData.profilePic}"
+        style="
+            width:100%;
+            height:100%;
+            border-radius:50%;
+            object-fit:cover;
+        ">
+        `;
+
+    } else {
+
+        const letter =
+            (userData.fullName ||
+             userData.username ||
+             "S")
+            .charAt(0)
+            .toUpperCase();
+
+        dashCircle.innerText = letter;
+    }
+}
+
+
+       
+        if(document.getElementById('st-name')) document.getElementById('st-name').innerText = userData.fullName.toUpperCase();
+        if(document.getElementById('st-level')) document.getElementById('st-level').innerText = userData.level || "No Level Set";
+        if(document.getElementById('st-user')) document.getElementById('st-user').innerText = "@" + userData.username;
+        if(document.getElementById('st-phone')) document.getElementById('st-phone').innerText = userData.personalContact || userData.contactNumber || "No Number";
+        
+        
+        const initialEl = document.getElementById('st-initials');
+        const mainImg = document.getElementById('mainProfilePic');
+        if (userData.profilePic && mainImg) {
+            mainImg.src = userData.profilePic;
+            mainImg.style.display = 'block';
+            if(initialEl) initialEl.style.display = 'none';
+        } else if (mainImg) {
+            mainImg.style.display = 'none';
+            if(initialEl) initialEl.style.display = 'flex';
+            if(initialEl) initialEl.innerText = userData.fullName.charAt(0).toUpperCase();
+        }
+
+        const bioDisplay = document.getElementById('bioDisplay');
+        if (bioDisplay) {
+            bioDisplay.innerText = userData.bio || "Tap to add bio...";
+        }
+
+        if(document.getElementById('info-name')) document.getElementById('info-name').value = userData.fullName || "";
+        if(document.getElementById('info-birthdate')) document.getElementById('info-birthdate').value = userData.birthdate || "";
+        if(document.getElementById('info-personal-contact')) document.getElementById('info-personal-contact').value = userData.personalContact || "";
+        if(document.getElementById('info-email')) document.getElementById('info-email').value = userData.email || "";
+        if(document.getElementById('info-address')) document.getElementById('info-address').value = userData.address || "";
+        
+        if(document.getElementById('info-gender')) document.getElementById('info-gender').value = userData.gender || "Male";
+
+        if(document.getElementById('info-school')) document.getElementById('info-school').value = userData.schoolName || "";
+        if(document.getElementById('info-level')) document.getElementById('info-level').value = userData.level || "";
+        if(document.getElementById('info-section')) document.getElementById('info-section').value = userData.section || "";
+        if(document.getElementById('info-strand')) document.getElementById('info-strand').value = userData.strandCourse || "";
+        
+        // Emergency Contacts Sync (Person 1 and 2)
+        if(document.getElementById('info-guardian-1')) document.getElementById('info-guardian-1').value = userData.guardianName || "";
+        if(document.getElementById('info-emergency-1')) document.getElementById('info-emergency-1').value = userData.emergencyNumber || "";
+        if(document.getElementById('info-guardian-2')) document.getElementById('info-guardian-2').value = userData.guardianName2 || "";
+        if(document.getElementById('info-emergency-2')) document.getElementById('info-emergency-2').value = userData.emergencyNumber2 || "";
+        
+        // Update QR Code
+        const qrEl = document.getElementById('st-mini-qr');
+        if(qrEl) qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${userData.username}`;
+    });
+};
+      
+        window.openEditModal = (id, name, level, phone) => {
+    document.getElementById('edit-id').value = id;
+    document.getElementById('edit-name').value = name;
+    document.getElementById('edit-level').value = level;
+    document.getElementById('edit-phone').value = phone;
+    document.getElementById('edit-modal').style.display = 'flex';
+};
+
+window.saveStudentEdit = async () => {
+    const id = document.getElementById('edit-id').value;
+    const newName = document.getElementById('edit-name').value;
+    const newLevel = document.getElementById('edit-level').value;
+    const newPhone = document.getElementById('edit-phone').value;
+    try {
+        await updateDoc(doc(db, "users", id), {
+            fullName: newName,
+            level: newLevel,
+            contactNumber: newPhone
+        });
+        document.getElementById('edit-modal').style.display = 'none';
+    } catch (err) { alert("Error saving changes."); }
+};
+
+   let map; 
+let marker;
+
+window.openProfile = () => {
+    // Ipakita ang Modal (Siguraduhing may id="profile-modal" ang modal mo)
+    document.getElementById('profile-modal').style.display = 'flex';
+    
+    setTimeout(() => {
+        if (!map) {
+            // Default view (Pilipinas) habang naglo-load ang GPS
+            map = L.map('map-container').setView([14.4081, 120.9403], 15); 
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        }
+        
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                const latlng = [latitude, longitude];
+
+                if (!marker) {
+                    marker = L.marker(latlng).addTo(map).bindPopup("Nandito ka, pre!").openPopup();
+                } else {
+                    marker.setLatLng(latlng);
+                }
+                map.setView(latlng, 16);
+            }, (err) => {
+                console.error("GPS Error:", err);
+                alert("Hindi ma-access ang location mo. Check GPS permissions.");
+            }, { enableHighAccuracy: true });
+        }
+        map.invalidateSize();
+    }, 300);
+};
+
+// 2. MODAL CONTROLS
+window.closeModal = (id) => {
+    document.getElementById(id).style.display = 'none';
+};
+
+// 3. EXISTING LOGOUT LOGIC
+window.triggerLogout = () => {
+    if(confirm("Logout from Schedly Pro?")) {
+        localStorage.removeItem('appUserRole');
+        location.reload(); 
+    }
+};
+  
+window.toggleActionMenu = () => {
+    const menu = document.getElementById('actionMenu');
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+};
+
+window.handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        
+        if (file.size > 800000) return alert("Masyadong malaki ang file. Choose a smaller photo (under 800kb).");
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const imgUrl = e.target.result;
+            
+           
+            const userId = loggedInUserDoc?.uid || loggedInUserDoc;
+
+            try {
+               
+                await updateDoc(doc(db, "users", userId), {
+                    profilePic: imgUrl
+                });
+
+               
+                if (typeof loggedInUserDoc === 'object') {
+                    loggedInUserDoc.profilePic = imgUrl;
+                    localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
+                }
+
+               
+                if (window.updateProfileUI) window.updateProfileUI(imgUrl);
+                
+                alert("Profile Photo Updated!");
+
+            } catch (err) {
+                console.error(err);
+                alert("Error saving photo to cloud.");
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+    if (window.toggleActionMenu) window.toggleActionMenu();
+};
+
+window.removeProfilePic = async () => {
+    if(confirm("Remove profile photo?")) {
+        try {
+            await updateDoc(doc(db, "users", loggedInUserDoc), {
+                profilePic: null
+            });
+        } catch (err) {
+            alert("Error removing photo.");
+        }
+    }
+    window.toggleActionMenu();
+};
+
+window.updateProfileUI = (url) => {
+    const mainImg = document.getElementById('mainProfilePic');
+    const stInit = document.getElementById('st-initials');
+    if (url) {
+        mainImg.src = url; mainImg.style.display = 'block';
+        stInit.style.display = 'none';
+    } else {
+        mainImg.style.display = 'none';
+        stInit.style.display = 'flex';
+    }
+};
+
+window.openBioEditor = async () => {
+    const bioDisplay = document.getElementById('bioDisplay');
+    const currentBio = bioDisplay.innerText === "Tap to add bio..." ? "" : bioDisplay.innerText.replace(/"/g, "");
+    
+    const bio = prompt("Anong bio mo?", currentBio);
+    if (bio !== null) {
+        try {
+            const cleanBio = bio.trim();
+            await updateDoc(doc(db, "users", loggedInUserDoc), {
+                bio: cleanBio
+            });
+
+            bioDisplay.innerText = cleanBio || "Tap to add bio...";
+            
+            alert("Bio updated! ✨");
+        } catch (err) {
+            console.error(err);
+            alert("Error saving bio.");
+        }
+    }
+};
+
+window.saveStudentInformation = async () => {
+    if (!loggedInUserDoc) return alert("Session expired. Please login again.");
+
+    try {
+        const dataToUpdate = {
+            
+            birthdate: document.getElementById('info-birthdate').value,
+            gender: document.getElementById('info-gender').value,
+            personalContact: document.getElementById('info-personal-contact').value,
+            email: document.getElementById('info-email').value,
+            address: document.getElementById('info-address').value,
+            schoolName: document.getElementById('info-school').value,
+            strandCourse: document.getElementById('info-strand').value,
+            guardianName: document.getElementById('info-guardian-1').value,
+            emergencyNumber: document.getElementById('info-emergency-1').value,
+            guardianName2: document.getElementById('info-guardian-2').value,
+            emergencyNumber2: document.getElementById('info-emergency-2').value,
+            
+            lastUpdated: new Date().toISOString()
+        };
+
+        // Ito ang magpapadala sa Firebase Firestore
+        await updateDoc(doc(db, "users", loggedInUserDoc), dataToUpdate);
+        
+        alert("Information updated and synced! ✅");
+    } catch (err) {
+        console.error("Save Error:", err);
+        alert("Error saving information. Check your internet.");
+    }
+};
+
+    window.handleTermsClick = (event) => {
+    const checkbox = document.getElementById('reg-agree');
+    
+    // Kung balak i-check (kasalukuyang false pero magiging true)
+    if (checkbox.checked) {
+        // I-uncheck muna natin temporary habang nagtatanong
+        checkbox.checked = false; 
+
+        const message = "WELCOME TO SCHEDLY PRO! 📝\n\nBy checking this, you agree to:\n1. Safe data storage in Firebase.\n2. Accurate ID information.\n3. Fair use of the system.\n\nClick 'OK' to Agree or 'Cancel' to decline.";
+
+        if (confirm(message)) {
+            checkbox.checked = true; // Dito natin siya i-che-check
+        } else {
+            checkbox.checked = false; // Stay un-checked
+        }
+    }
+};
+
+ // Heto ang mag-re-remove ng splash screen pagkatapos ng 3 seconds
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        splash.style.opacity = '0';
+        splash.style.visibility = 'hidden';
+        
+        // Pagkatapos ng fade out, optional: remove sa DOM
+        setTimeout(() => splash.remove(), 500);
+    }, 3000); // 3000ms = 3 seconds
+});
+
+
+window.openTasks = () => showView('scr-student-tasks'); // Kung ito ang ID ng task screen mo
+
+window.openSchedules = () => {  
+    showView('scr-student'); 
+    alert("Schedules coming soon! Link this to your calendar.");
+};
+
+window.openStudyMode = () => {
+    window.resetTimer();
+    showView('scr-study');
+};
+
+
+
+window.renderNotes = () => {
+    const grid = document.getElementById('notes-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    
+    notes.forEach(note => {
+        const div = document.createElement('div');
+        // Simple card design para sa listahan
+        div.style = "background: #111; padding: 15px; border-radius: 15px; border-left: 4px solid var(--accent); cursor: pointer; transition: 0.3s;";
+        div.onclick = () => openNoteEditor(note.id);
+        div.innerHTML = `
+            <div style="color: white; font-weight: bold; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                ${note.title || 'Untitled Note'}
+            </div>
+            <div style="color: #666; font-size: 11px;">${note.date}</div>
+        `;
+        grid.appendChild(div);
+    });
+};
+
+// 2. Gumawa ng bagong note
+window.createNewNote = () => {
+    const newNote = {
+        id: Date.now(),
+        title: '',
+        content: '',
+        date: new Date().toLocaleDateString()
+    };
+    notes.unshift(newNote); 
+    openNoteEditor(newNote.id);
+};
+
+
+window.openNoteEditor = (id) => {
+    activeNoteId = id;
+    const note = notes.find(n => n.id === id);
+    
+    
+    document.getElementById('notes-list-container').style.display = 'none';
+    document.getElementById('notes-editor-container').style.display = 'flex';
+    document.getElementById('add-note-btn').style.display = 'none'; // Itago muna yung +NEW button
+    
+    document.getElementById('edit-note-title').value = note.title;
+    document.getElementById('edit-note-body').innerHTML = note.content;
+};
+
+
+window.saveCurrentNote = () => {
+    
+    const noteIndex = notes.findIndex(n => n.id === activeNoteId);
+    
+    if (noteIndex !== -1) {
+        notes[noteIndex].title = document.getElementById('edit-note-title').value;
+        notes[noteIndex].content = document.getElementById('edit-note-body').innerHTML;
+        
+        
+        localStorage.setItem('schedly_notes_list', JSON.stringify(notes));
+        
+        
+        console.log("Saved note: " + notes[noteIndex].title);
+    }
+};
+
+
+window.exitNotes = () => {
+    const editor = document.getElementById('notes-editor-container');
+    const list = document.getElementById('notes-list-container');
+    const addBtn = document.getElementById('add-note-btn');
+
+    // KUNG ANG EDITOR AY NAKALITAW (flex/block), itago ito at ipakita ang listahan
+    if (editor.style.display === 'flex' || editor.style.display === 'block') {
+        saveCurrentNote(); // I-save muna bago lumabas
+        editor.style.display = 'none';
+        list.style.display = 'block';
+        addBtn.style.display = 'block';
+        renderNotes(); // I-refresh ang listahan para makita yung bagong title
+    } 
+    // KUNG NASA LISTAHAN KA NA, bumalik na sa Dashboard
+    else {
+        showView('scr-student');
+    }
+};
+
+// 6. Formatting (Bold, Italic, Color)
+window.formatNote = (cmd, val = null) => {
+    document.execCommand(cmd, false, val);
+    saveCurrentNote(); // Save agad pagka-format
+};
+
+// 7. Delete Note
+window.deleteCurrentNote = () => {
+    if (confirm("Delete this note permanently?")) {
+        notes = notes.filter(n => n.id !== activeNoteId);
+        localStorage.setItem('schedly_notes_list', JSON.stringify(notes));
+        exitNotes();
+    }
+};
+
+window.addEventListener('load', renderNotes);
+window.addEventListener('load', window.loadNotes);
+
+
+window.openPeerBoard = () => {
+    showView('scr-peer');
+    renderPosts(); 
+};
+
+window.addPost = async () => {
+    const input = document.getElementById('peer-input');
+    if (!input || input.value.trim() === "") return;
+
+    // Backup: Kung walang laman ang variable, kunin sa storage
+    const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
+
+    if (!user || !user.username) {
+        return alert("Error: User data not found. Please re-login.");
+    }
+
+    try {
+        await addDoc(collection(db, "peer_posts"), {
+            text: input.value,
+            senderName: user.username, 
+            senderImg: user.profilePic || "null", 
+            senderId: user.uid, // Ito ang gagamitin ng delete button
+            timeDisplay: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
+            createdAt: Date.now() 
+        });
+        input.value = "";
+    } catch (e) {
+        console.error("Firebase Post Error:", e);
+    }
+};
+
+// Function para mag-DELETE sa Cloud
+window.deletePost = async (id) => {
+    if (confirm("Buburahin ba ang post na ito para sa lahat?")) {
+        try {
+            await deleteDoc(doc(db, "peer_posts", id));
+        } catch (e) {
+            console.error("Delete error: ", e);
+        }
+    }
+};
+
+window.openShortcuts = () => alert("Shortcuts: Quick access links are being configured.");
+
+window.openAbout = () => {
+    showView('scr-about');
+};
+
+window.openStudyMode = () => {
+    showView('scr-study'); 
+};
+
+
+
+// BAGONG SHOWVIEW - Ito ang magpapagana sa paglipat ng screen
+window.showView = (id) => {
+    // 1. Itago lahat ng screens
+    document.querySelectorAll('.view').forEach(v => {
+        v.style.display = 'none';
+        v.classList.remove('active');
+    });
+
+    // 2. Hanapin ang target screen (hal. 'scr-study')
+    const target = document.getElementById(id);
+    if (target) {
+        // 3. Ipakita ang screen
+        target.style.display = 'flex'; // 'flex' gamit natin para sa alignment
+        target.classList.add('active');
+        console.log("Screen " + id + " is now visible.");
+    } else {
+        alert("System Error: Screen " + id + " not found!");
+    }
+};
+
+// TIMER LOGIC
+window.toggleTimer = () => {
+    const btn = document.getElementById('timer-btn');
+    const display = document.getElementById('timer-display');
+    const inputWrapper = document.getElementById('timer-input-wrapper');
+    const status = document.getElementById('timer-status');
+
+    if (!timerInterval) {
+        let mins = document.getElementById('custom-min').value;
+        if (timeLeft <= 0) {
+            timeLeft = parseInt(mins) * 60;
+        }
+
+        if (isNaN(timeLeft) || timeLeft <= 0) {
+            alert("Please enter a valid number of minutes.");
+            return;
+        }
+
+        if(inputWrapper) inputWrapper.style.display = 'none';
+        if(display) display.style.display = 'block';
+        status.innerText = "Focus Session Active";
+        status.style.color = "var(--success)";
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            window.updateTimerDisplay();
+
+            // 10 Seconds Warning
+            if (timeLeft === 10) {
+                status.innerText = "⚠️ ALMOST DONE!";
+                status.style.color = "var(--error)";
+                playRingingSound(); // Isang maikling beep
+            }
+
+            // Time's Up Logic
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                
+                status.innerText = "🚨 RINGGGGG! TIME'S UP!";
+                status.style.color = "var(--error)";
+                
+                // Simulan ang tuloy-tuloy na ring
+                playRingingSound(); 
+
+                // Gagamit ng setTimeout para lumabas muna ang text bago ang alert
+                setTimeout(() => {
+                    alert("🚨 TIME'S UP! Click OK to stop the alarm.");
+                    
+                    // PAGPINDOT NG OK:
+                    playRingingSound(true); // 1. Patayin ang tunog
+                    window.resetTimer();    // 2. I-reset ang UI at buttons
+                }, 100);
+            }
+        }, 1000);
+
+        btn.innerText = "PAUSE";
+        btn.style.background = "var(--error)";
+
+    } else {
+        // PAUSE LOGIC
+        clearInterval(timerInterval);
+        timerInterval = null;
+        playRingingSound(true); // Patayin ang tunog kung nag-pause
+        btn.innerText = "RESUME";
+        btn.style.background = "var(--success)";
+        status.innerText = "Session Paused";
+        status.style.color = "#666";
+    }
+};
+
+window.resetTimer = () => {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+    timeLeft = 0;
+    playRingingSound(true); 
+    document.getElementById('timer-input-wrapper').style.display = 'block';
+    document.getElementById('timer-display').style.display = 'none';
+    document.getElementById('timer-status').innerText = "Set your study goal";
+    document.getElementById('timer-status').style.color = "#666";
+    
+    const btn = document.getElementById('timer-btn');
+    btn.innerText = "START";
+    btn.style.background = "var(--success)";
+};
+
+window.updateTimerDisplay = () => {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+};
+
+
+
+    initSystem();
+</script>
+</body>
+</html>
