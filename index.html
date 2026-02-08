@@ -31,7 +31,7 @@
         .weak { background-color: #ff5f57 !important; } .mid { background-color: #ff9f0a !important; } .strong { background-color: #4cd964 !important; }
         input, select, textarea { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 16px; border: 1px solid #222; background: #000; color: #fff; outline: none; }
         .btn {
-    background: var(--accent); /* #D4AF37 */
+    background: var(--accent); 
     color: #000;
     font-weight: 700;
     text-transform: uppercase;
@@ -372,11 +372,10 @@
 .main-grid {
     display: grid;
     gap: 12px;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns sa mobile */
+    grid-template-columns: repeat(2, 1fr); 
     padding: 10px 0;
 }
 
-/* Kapag nasa Desktop (Windows EXE), magiging 4 columns */
 @media (min-width: 768px) {
     .main-grid {
         grid-template-columns: repeat(4, 1fr);
@@ -384,13 +383,13 @@
         margin: 0 auto;
     }
     .full-span {
-        grid-column: span 4 !important; /* Full width sa desktop */
+        grid-column: span 4 !important; 
     }
 }
 
-/* Ang itsura ng bawat button (Card) */
+
 .nav-card {
-    background: #111; /* existing card color mo */
+    background: #111; 
     border: 1px solid #222;
     padding: 20px;
     border-radius: 24px;
@@ -398,12 +397,11 @@
     transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Sa left side ang icons at text */
+    align-items: flex-start; 
     position: relative;
     overflow: hidden;
 }
 
-/* Efekto kapag pinindot */
 .nav-card:active {
     transform: scale(0.95);
     background: #1a1a1a;
@@ -466,6 +464,72 @@
     </div>
 </div>
 
+<div id="scr-shortcuts" class="view" style="display:none; background: #000; height: 100vh; overflow-y: auto;">
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+        <button onclick="showView('scr-student')" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">←</button>
+        <h2 style="color: var(--accent); margin: 0; font-weight: 800;">QUICK ACCESS</h2>
+    </div>
+
+    <div style="padding: 10px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        
+        <div class="nav-card" onclick="window.open('https://www.messenger.com', '_blank')" style="background: #111; border: 1px solid #00B2FF; padding: 20px; text-align: center;">
+            <span style="font-size: 30px;">💬</span>
+            <b style="display:block; margin-top:10px; color: white;">Messenger</b>
+            <small style="color: #666;">Group Chats</small>
+        </div>
+
+        <div class="nav-card" onclick="window.open('https://classroom.google.com', '_blank')" style="background: #111; border: 1px solid #34A853; padding: 20px; text-align: center;">
+            <span style="font-size: 30px;">🏫</span>
+            <b style="display:block; margin-top:10px; color: white;">Classroom</b>
+            <small style="color: #666;">Activities</small>
+        </div>
+
+        <div class="nav-card" onclick="window.open('https://www.canva.com', '_blank')" style="background: #111; border: 1px solid #8B3DFF; padding: 20px; text-align: center;">
+            <span style="font-size: 30px;">🎨</span>
+            <b style="display:block; margin-top:10px; color: white;">Canva</b>
+            <small style="color: #666;">Design/PPT</small>
+        </div>
+
+        <div class="nav-card" onclick="window.open('https://chatgpt.com', '_blank')" style="background: #111; border: 1px solid #74aa9c; padding: 20px; text-align: center;">
+            <span style="font-size: 30px;">🤖</span>
+            <b style="display:block; margin-top:10px; color: white;">ChatGPT</b>
+            <small style="color: #666;">AI Tutor</small>
+        </div>
+
+        <div class="nav-card" onclick="window.open('https://scholar.google.com', '_blank')" style="background: #111; border: 1px solid #4285F4; padding: 20px; text-align: center;">
+            <span style="font-size: 30px;">📚</span>
+            <b style="display:block; margin-top:10px; color: white;">Scholar</b>
+            <small style="color: #666;">Research</small>
+        </div>
+
+        <div class="nav-card" onclick="window.open('https://www.photopea.com', '_blank')" style="background: #111; border: 1px solid #ffbb33; padding: 20px; text-align: center;">
+            <span style="font-size: 30px;">🖼️</span>
+            <b style="display:block; margin-top:10px; color: white;">Photopea</b>
+            <small style="color: #666;">Editor</small>
+        </div>
+
+    </div>
+
+    <p style="color: #444; text-align: center; font-size: 11px; margin-top: 30px; font-style: italic;">
+        All links open in a new tab for easy navigation.
+    </p>
+</div>
+
+   <div id="scr-schedules-list" class="view" style="display:none; background: #000; height: 100vh;">
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
+        <button onclick="showView('scr-student')" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">←</button>
+        <h2 style="color: var(--accent); margin: 0; font-weight: 800; letter-spacing: 1px;">SCHEDULES</h2>
+    </div>
+
+    <div style="text-align: center; padding: 10px 20px 30px 20px; background: linear-gradient(to bottom, #000, #080808);">
+        <div id="live-clock" style="font-size: 40px; font-weight: 900; color: white; font-family: monospace;">00:00:00</div>
+        <div id="live-date" style="color: var(--accent); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px;">February 08, 2026</div>
+    </div>
+
+    <div id="schedule-list-content" style="padding: 0 20px 100px 20px; overflow-y: auto;">
+        </div>
+</div>
+
 <div id="scr-study" class="view" style="background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: none;">
     <div style="padding: 20px;">
         <button onclick="showView('scr-student')" style="background: #222; color: white; border: 1px solid #444; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
@@ -526,7 +590,7 @@
     </div>
 
     <div style="padding: 20px; background: #111; margin: 15px; border-radius: 20px; border: 1px solid #222;">
-        <textarea id="peer-input" placeholder="Anong ganap sa campus? Post ka dito..." 
+        <textarea id="peer-input" placeholder="What's happening on campus? Post it here..." 
             style="width: 100%; height: 80px; background: none; border: none; color: white; outline: none; resize: none; font-family: inherit; font-size: 14px;"></textarea>
         <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
             <button onclick="addPost()" style="background: var(--accent); color: black; border: none; padding: 10px 25px; border-radius: 12px; font-weight: 800; cursor: pointer;">POST</button>
@@ -612,7 +676,7 @@
 
         </div>
 
-        <p style="text-align: center; color: #222; font-size: 9px; margin-top: 40px;">&copy; 2026 Schedly Pro Ecosystem. All Rights Reserved.</p>
+        <p style="text-align: center; color: #222; font-size: 9px; margin-top: 40px;">&copy; 2026 Schedly Pro. All Rights Reserved.</p>
     </div>
 </div>
 
@@ -702,10 +766,29 @@
 <div id="scr-student" class="view">
     <div class="main-panel" style="padding: 0;">
         
-        <div style="margin-bottom: 25px;">
-            <h1 style="font-size: 26px; margin: 0; color: var(--accent); font-weight: 800;">Schedly Pro</h1>
-            <p style="font-size: 11px; color: #666; letter-spacing: 1px;">STUDENT ECOSYSTEM v1.0</p>
+        <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    
+    <div>
+        <h1 style="font-size: 26px; margin: 0; color: var(--accent); font-weight: 800;">SCHEDLY</h1>
+        <p style="font-size: 11px; color: #666; letter-spacing: 1px;">Student Task Reminder</p>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 12px;">
+        
+        <div class="status-indicator" style="margin: 0;">
+            <div id="global-badge" class="badge online" style="padding: 4px 8px; font-size: 10px; display: flex; align-items: center; gap: 5px; border-radius: 12px; background: rgba(0,255,0,0.1); border: 1px solid var(--success);">
+                <div class="dot" style="width: 6px; height: 6px; background: var(--success); border-radius: 50%;"></div>
+                <span id="global-status-text" style="color: var(--success); font-weight: bold;">Online</span>
+            </div>
         </div>
+
+        <div style="position: relative; cursor: pointer; padding: 5px; display: flex; align-items: center;" onclick="window.openNotifications()">
+            <span style="font-size: 22px;">🔔</span>
+            <span id="notif-count" style="display:none; position: absolute; top: 0; right: 0; background: #ff5f57; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #000;">0</span>
+        </div>
+
+    </div>
+</div>
 
         <div class="main-grid">
             
@@ -807,12 +890,23 @@
     <button class="btn" onclick="updateSys()">APPLY CHANGES</button>
         </div>
             
-            <div id="adm-ann" class="admin-card">
-                <h2>BROADCAST</h2>
-                <textarea id="ann-msg-in" placeholder="Announcement..."></textarea>
-                <input type="datetime-local" id="ann-time-end">
-                <button class="btn" onclick="postAnnouncement()">LAUNCH</button>
-            </div>
+           <div id="adm-ann" class="admin-card">
+    <h2>BROADCAST</h2>
+    <textarea id="ann-msg-in" placeholder="Announcement message..."></textarea>
+    
+    <div style="margin: 15px 0;">
+        <label style="color: gray; font-size: 11px; display: block; margin-bottom: 5px;">EXPIRY DATE & TIME</label>
+        <input type="datetime-local" id="ann-time-end">
+    </div>
+
+    <button class="btn" style="width: 100%;" onclick="window.postAnnouncement()">LAUNCH BROADCAST</button>
+
+    <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+
+    <h3>ACTIVE ANNOUNCEMENTS</h3>
+    <div id="admin-ann-list">
+        </div>
+</div>
 
             <div id="adm-keys" class="admin-card">
                 <h2>ACTIVATION KEYS</h2>
@@ -868,53 +962,46 @@
     </div>
 </div>
 
+<div id="scr-subjects" class="view" style="display:none; background: #000; min-height: 100vh;">
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;">
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border-radius: 50%; width: 40px; height: 40px; border: none; cursor:pointer;">←</button>
+        <h3 style="color: var(--accent); margin: 0; font-weight: 800;">MY SUBJECTS</h3>
+        <button onclick="document.getElementById('subject-modal').style.display='flex'" style="background: var(--accent); color: black; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor:pointer;">+ ADD</button>
+    </div>
+    
+    <div id="subject-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px;">
+        </div>
+</div>
+
+<div id="scr-tasks" class="view" style="display:none; background: #000; min-height: 100vh;">
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;">
+        <button onclick="showView('scr-subjects')" style="background: #222; color: white; border-radius: 50%; width: 40px; height: 40px; border: none; cursor:pointer;">←</button>
+        <h3 id="current-task-title" style="color: var(--accent); margin: 0; font-weight: 800;">TASKS</h3>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <div style="padding: 20px;">
+        <div style="background: #111; padding: 15px; border-radius: 15px; border: 1px solid #222; margin-bottom: 20px;">
+            <input type="text" id="new-task-input" placeholder="Anong gagawin?" style="width: 100%; background: none; border: none; color: white; border-bottom: 1px solid #333; margin-bottom: 15px; padding: 5px; outline: none;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="datetime-local" id="task-deadline" style="background: #222; color: white; border: none; padding: 10px; border-radius: 10px; flex: 1; font-size: 12px;">
+                <button onclick="saveTask()" style="background: var(--accent); color: black; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor:pointer;">ADD</button>
+            </div>
+        </div>
+        <div id="task-list-container" style="display: flex; flex-direction: column; gap: 10px;">
+            </div>
+    </div>
+</div>
+
 <div id="subject-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <h3 style="color:white; margin-bottom:15px;">Create New Subject</h3>
-            <input type="text" id="sub-name" placeholder="Subject Name (e.g. IT 101)" style="margin-bottom:10px;">
-            <input type="text" id="sub-desc" placeholder="Description / Schedule" style="margin-bottom:20px;">
-            <div style="display: flex; gap: 10px;">
-                <button onclick="saveSubject()" class="btn" style="background:var(--accent); color:black; font-weight:bold;">SAVE SUBJECT</button>
-                <button onclick="closeSubModal()" class="btn" style="background:#333; color:white;">CANCEL</button>
-            </div>
+    <div class="modal-content">
+        <h3 style="color:white; margin-bottom:15px;">Create New Subject</h3>
+        <input type="text" id="sub-name" placeholder="Subject Name (e.g. IT 101)" style="margin-bottom:10px;">
+        <input type="text" id="sub-desc" placeholder="Description / Schedule" style="margin-bottom:20px;">
+        <div style="display: flex; gap: 10px;">
+            <button onclick="saveSubject()" class="btn" style="background:var(--accent); color:black; font-weight:bold;">SAVE</button>
+            <button onclick="document.getElementById('subject-modal').style.display='none'" class="btn" style="background:#333; color:white;">CANCEL</button>
         </div>
-    </div>
-
-    <div id="task-modal" class="modal" style="display:none;">
-        <div class="modal-content" style="max-width: 450px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 id="modal-category-title" style="color:var(--accent); font-size: 18px;">Tasks</h2>
-                <button onclick="closeTaskModal()" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
-            </div>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <input type="text" id="new-task-input" placeholder="Anong task ito?" style="flex:1;">
-                <button onclick="saveTask()" class="add-btn-small" style="padding:10px 20px;">ADD</button>
-            </div>
-
-            <div id="task-list-container" style="max-height: 300px; overflow-y: auto;">
-                </div>
-        </div>
-    </div>
-         
-      <div id="edit-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; backdrop-filter:blur(5px); padding: 20px;">
-    <div class="auth-box" style="width:100%; max-width:350px; background:#000; border:1px solid #222; padding:20px; border-radius:15px; text-align:center;">
-        <h3 style="color:var(--accent); margin-bottom:20px;">EDIT STUDENT</h3>
-        <input type="hidden" id="edit-id">
-        <div style="text-align:left; margin-bottom:10px;">
-            <label style="font-size:10px; color:gray; margin-left:5px;">FULL NAME</label>
-            <input type="text" id="edit-name" placeholder="Full Name" style="width:100%; background:#111; border:1px solid #222; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
-        </div>
-        <div style="text-align:left; margin-bottom:10px;">
-            <label style="font-size:10px; color:gray; margin-left:5px;">LEVEL / SECTION</label>
-            <input type="text" id="edit-level" placeholder="Level/Section" style="width:100%; background:#111; border:1px solid #222; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
-        </div>
-        <div style="text-align:left; margin-bottom:20px;">
-            <label style="font-size:10px; color:gray; margin-left:5px;">CONTACT NUMBER</label>
-            <input type="text" id="edit-phone" placeholder="Contact Number" style="width:100%; background:#111; border:1px solid #222; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
-        </div>
-        <button class="btn" onclick="saveStudentEdit()" style="width:100%; margin-bottom:10px;">SAVE CHANGES</button>
-        <button class="btn" style="width:100%; background:transparent; border:1px solid #333; color:#fff;" onclick="document.getElementById('edit-modal').style.display='none'">CANCEL</button>
     </div>
 </div>
 
@@ -1032,9 +1119,70 @@
     </div>
 </div>
 
+      <div id="notif-overlay" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 10000; padding: 20px; backdrop-filter: blur(10px);">
+    <div style="max-width: 500px; margin: 0 auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px;">
+            <div>
+                <h2 style="color:var(--accent); margin:0; font-size: 20px;">Announcements</h2>
+                <small style="color: gray;">Real-time school updates</small>
+            </div>
+            <button onclick="document.getElementById('notif-overlay').style.display='none'" style="background:#222; border:none; color:white; width: 35px; height: 35px; border-radius: 50%; font-size:18px; cursor: pointer;">✕</button>
+        </div>
+        
+        <div id="notif-list-container" style="overflow-y: auto; max-height: 75vh; padding-right: 5px;">
+            <p style="color:gray; text-align:center; margin-top: 20px;">Checking for updates...</p>
+        </div>
+    </div>
+</div>
+
+<div id="global-announcement-banner" style="display:none; position:fixed; top:0; left:0; width:100%; z-index:9999; padding:15px; background:var(--accent); color:black; font-weight:bold; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.5); animation: slideDown 0.5s ease;">
+    <span id="banner-text">📢 New Announcement!</span>
+    <button onclick="this.parentElement.style.display='none'" style="margin-left:15px; background:black; color:white; border:none; border-radius:50%; width:25px; height:25px; cursor:pointer;">✕</button>
+</div>
+
+
+<div id="edit-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:#111;padding:20px;border-radius:12px;width:300px;">
+    <h3>Edit Student</h3>
+
+    <input type="hidden" id="edit-id">
+
+    <input type="text" id="edit-name" placeholder="Full Name" style="width:100%;margin:6px 0;">
+    <input type="text" id="edit-level" placeholder="Level" style="width:100%;margin:6px 0;">
+    <input type="text" id="edit-phone" placeholder="Contact Number" style="width:100%;margin:6px 0;">
+    <input
+  type="password"
+  id="edit-password"
+  placeholder="New Password (leave blank to keep current)"
+  style="width:100%;margin:6px 0;"
+>
+<input
+  type="text"
+  id="edit-username"
+  placeholder="Username"
+  style="width:100%;margin:6px 0;"
+>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <button type="button" onclick="saveStudentEdit()">Save</button>
+      <button type="button" onclick="document.getElementById('edit-modal').style.display='none'">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<style>
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+
+
+</style>
+
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, addDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, addDoc, setDoc, deleteDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyD_4YemXc1kELejpQizgg2AFeYiPDHUEGM",
@@ -1052,7 +1200,7 @@
    
    const peerCollection = collection(db, "peer_posts");
 
-// 1. TAGA-DISPLAY (onSnapshot)
+
 onSnapshot(peerCollection, (snapshot) => {
     const feed = document.getElementById('peer-feed');
     if (!feed) return;
@@ -1062,12 +1210,12 @@ onSnapshot(peerCollection, (snapshot) => {
         allPosts.push({ id: doc.id, ...doc.data() });
     });
     
-    // Bago sa taas
+   
     allPosts.sort((a, b) => b.createdAt - a.createdAt);
 
     feed.innerHTML = '';
     
-    // Kunin ang current user para sa Delete button logic
+    
     const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
 
     allPosts.forEach((post) => {
@@ -1110,7 +1258,7 @@ onSnapshot(peerCollection, (snapshot) => {
     let activeNoteId = null; 
     let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
     let html5QrCode;
-
+   
     const playRingingSound = (stop = false) => {
     if (stop) {
         if (ringInterval) {
@@ -1126,7 +1274,6 @@ onSnapshot(peerCollection, (snapshot) => {
 
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-    // Kung wala pang ringInterval, gumawa ng loop
     if (!ringInterval) {
         ringInterval = setInterval(() => {
             const osc = audioCtx.createOscillator();
@@ -1142,23 +1289,69 @@ onSnapshot(peerCollection, (snapshot) => {
     }
 };
 
+setInterval(() => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+
+    const q = query(collection(db, "student_tasks"), where("status", "!=", "completed"));
+    
+    getDocs(q).then(snap => {
+        snap.forEach(d => {
+            const t = d.data();
+            if (t.deadline === localISOTime) {
+                const sound = document.getElementById('notif-sound');
+                if (sound) {
+                    sound.play().catch(e => console.log("Sound play blocked, need user interaction first."));
+                }
+                alert("⏰ DEADLINE ALERT: " + t.taskName);
+            }
+        });
+    });
+}, 60000);
+
+function startLiveClock() {
+    setInterval(() => {
+        const ngayon = new Date();
+        const timeString = ngayon.toLocaleTimeString('en-US', { 
+            hour12: true, 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+        });
+        const dateString = ngayon.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric', 
+            year: 'numeric' 
+        });
+
+        const clockEl = document.getElementById('live-clock');
+        const dateEl = document.getElementById('live-date');
+        
+        if (clockEl) clockEl.innerText = timeString;
+        if (dateEl) dateEl.innerText = dateString;
+    }, 1000);
+}
+
+startLiveClock();
+
+
+
  function initSystem() {
    window.userRole = localStorage.getItem('appUserRole') || 'guest';
    
     onSnapshot(doc(db, "system-config", "global"), (snap) => {
         const data = snap.data();
         if (!data) return;
-
         const statusText = document.getElementById('global-status-text');
         const badge = document.getElementById('global-badge');
         const mScreen = document.getElementById('maint-screen');
         const tScreen = document.getElementById('term-screen');
         const mMsg = document.getElementById('m-msg');
-
-        // Reset: Itago lahat at linisin ang classes
         if(mScreen) mScreen.style.display = 'none';
         if(tScreen) tScreen.style.display = 'none';
-        badge.className = "badge"; // Reset class name
+        badge.className = "badge"; 
 
         if (data.state === 'terminated') {
             badge.classList.add('terminated');
@@ -1185,20 +1378,6 @@ onSnapshot(peerCollection, (snapshot) => {
         }
     });
 }
-  
-
-   
-    onSnapshot(collection(db, "broadcasts"), (s) => {
-        const cont = document.getElementById('broadcast-container');
-        if(!cont) return;
-        cont.innerHTML = "";
-        s.forEach(d => {
-            const b = d.data();
-            cont.innerHTML += `<div class="broadcast-item"><b>📢 ${b.title}:</b> ${b.message}</div>`;
-        });
-    });
-
-
   window.handleLogin = async () => {
     const u = document.getElementById('log-u').value;
     const p = document.getElementById('log-p').value;
@@ -1210,9 +1389,7 @@ onSnapshot(peerCollection, (snapshot) => {
     loginBtn.disabled = true;
 
     try {
-        // 1. ADMIN BYPASS
         if(u === 'admin' && p === 'admin123') { 
-            // DITO NATIN I-SESAVE ANG IDENTITY MO
             window.userRole = 'admin'; 
             localStorage.setItem('appUserRole', 'admin'); 
             
@@ -1220,26 +1397,19 @@ onSnapshot(peerCollection, (snapshot) => {
             loadAdminData(); 
             return; 
         }
-
-        // 2. STUDENT LOGIN
         const q = query(collection(db, "users"), where("username", "==", u), where("password", "==", p));
         const snap = await getDocs(q);
-
         if(!snap.empty) {
             const userDoc = snap.docs[0];
             const userData = userDoc.data();
-            
-            // --- DITO ANG FIX ---
-            // 1. I-save ang buong data sa global variable natin
             loggedInUserDoc = {
                 uid: userDoc.id,
                 ...userData
             }; 
-            
-            // 2. I-save din sa localStorage para kung mag-refresh man, kilala pa rin si @hypens
-            localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
-            // --------------------
 
+            window.loggedInUserId = userDoc.id;
+            
+            localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
             const savedPic = localStorage.getItem(`profile_pic_${userDoc.id}`);
             const savedBio = localStorage.getItem(`bio_${userDoc.id}`);
             window.updateProfileUI(savedPic);
@@ -1270,41 +1440,56 @@ onSnapshot(peerCollection, (snapshot) => {
          window.openAddSubjectModal = () => document.getElementById('subject-modal').style.display = 'flex';
     window.closeSubModal = () => document.getElementById('subject-modal').style.display = 'none';
     window.closeTaskModal = () => document.getElementById('task-modal').style.display = 'none';
-
-    
     window.saveSubject = async () => {
-        const name = document.getElementById('sub-name').value.trim();
-        const desc = document.getElementById('sub-desc').value.trim();
-        if(!name) return alert("Lagyan mo ng Subject Name!");
+    const name = document.getElementById('sub-name').value.trim();
+    const desc = document.getElementById('sub-desc').value.trim();
+    
+    if(!name) return alert("Add a Subject Name!");
 
-        try {
-            await addDoc(collection(db, "subjects"), {
-                studentId: loggedInUserDoc, 
-                name: name,
-                desc: desc,
-                createdAt: new Date().toISOString()
-            });
-            document.getElementById('sub-name').value = "";
-            document.getElementById('sub-desc').value = "";
-            window.closeSubModal();
-        } catch (e) { alert("Error saving subject."); }
-    };
+    const studentIdClean = (typeof loggedInUserDoc === 'object') ? (loggedInUserDoc.uid || loggedInUserDoc.id) : loggedInUserDoc;
 
-    window.loadSubjects = () => {
-        const q = query(collection(db, "subjects"), where("studentId", "==", loggedInUserDoc));
-        onSnapshot(q, (snap) => {
-            const grid = document.getElementById('subject-grid');
-            grid.innerHTML = "";
-            snap.forEach(doc => {
-                const s = doc.data();
-                grid.innerHTML += `
-                    <div class="subject-card" onclick="window.openSubjectTasks('${doc.id}', '${s.name}')">
-                        <b>${s.name}</b>
-                        <small>${s.desc || 'No schedule set'}</small>
-                    </div>`;
-            });
+    try {
+        await addDoc(collection(db, "subjects"), {
+            studentId: studentIdClean, 
+            name: name,
+            desc: desc,
+            createdAt: new Date().toISOString()
         });
-    };
+        
+        document.getElementById('sub-name').value = "";
+        document.getElementById('sub-desc').value = "";
+        document.getElementById('subject-modal').style.display = 'none';
+        console.log("Subject saved successfully with ID:", studentIdClean);
+    } catch (e) { 
+        console.error("Save Error:", e);
+        alert("Error saving: " + e.message); 
+    }
+};
+
+   window.loadSubjects = () => {
+    const grid = document.getElementById('subject-grid');
+    
+    const studentId = typeof loggedInUserDoc === 'object' ? loggedInUserDoc.uid : loggedInUserDoc;
+    
+    if (!studentId) return console.error("No student ID found for query");
+
+    const q = query(collection(db, "subjects"), where("studentId", "==", studentId));
+    
+    onSnapshot(q, (snap) => {
+        grid.innerHTML = "";
+        snap.forEach(doc => {
+            const s = doc.data();
+            grid.innerHTML += `
+                <div class="subject-card" onclick="window.openSubjectTasks('${doc.id}', '${s.name}')" 
+                     style="background:#111; padding:20px; border-radius:15px; border:1px solid #222; cursor:pointer;">
+                    <b style="color:var(--accent); font-size:18px;">${s.name}</b><br>
+                    <small style="color:gray;">${s.desc || 'No schedule set'}</small>
+                </div>`;
+        });
+    }, (error) => {
+        console.error("Snapshot error:", error);
+    });
+};
 
     
     window.openSubjectTasks = (id, name) => {
@@ -1333,34 +1518,50 @@ window.deleteTask = async (taskId) => {
     }
 };
 
-   window.loadTasks = () => {
+  window.loadTasks = () => {
     const cont = document.getElementById('task-list-container');
-    
-    
-    if (taskListener) taskListener(); 
-
     const q = query(collection(db, "student_tasks"), where("subjectId", "==", currentSubId));
     
-    
-    taskListener = onSnapshot(q, (snap) => {
+    onSnapshot(q, (snap) => {
         cont.innerHTML = "";
-        if(snap.empty) {
-            cont.innerHTML = "<p style='color:gray; font-size:12px; text-align:center;'>No tasks yet.</p>";
-            return;
-        }
+        
+        const ngayon = new Date().getTime();
+
         snap.forEach(d => {
             const t = d.data();
+            const isDone = t.status === "completed";
+            
+            const deadlineTime = new Date(t.deadline).getTime();
+            
+            const isMissed = !isDone && deadlineTime < ngayon;
+            
+            console.log(`Task: ${t.taskName} | Ngayon: ${ngayon} | Deadline: ${deadlineTime} | Late: ${isMissed}`);
+
             cont.innerHTML += `
-                <div class="task-item">
-                    <span>${t.taskName}</span>
-                    <button onclick="deleteTask('${d.id}')" style="background:none; border:none; color:var(--error); cursor:pointer; font-weight:bold;">✕</button>
+                <div style="background:#111; padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border-left: 4px solid ${isDone ? '#4cd964' : (isMissed ? '#ff4444' : '#ffbb33')}; margin-bottom:10px;">
+                    <div style="flex:1; opacity: ${isDone ? '0.5' : '1'}">
+                        <span style="text-decoration: ${isDone ? 'line-through' : 'none'}; color: white; font-weight: bold;">
+                            ${t.taskName} ${isMissed ? '<span style="color:#ff4444; font-size:10px; margin-left:5px;">⚠️ LATE</span>' : ''}
+                        </span>
+                        <br>
+                        <small style="color: ${isMissed ? '#ff4444' : 'gray'}; font-size:11px;">
+                            📅 ${t.deadline.replace('T', ' ')}
+                        </small>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="window.toggleTaskStatus('${d.id}', '${t.status || 'pending'}')" style="background:none; border:none; cursor:pointer;">
+                            ${isDone ? '↩️' : '✅'}
+                        </button>
+                        <button onclick="window.removeTask('${d.id}')" style="background:none; border:none; cursor:pointer;">
+                            ✕
+                        </button>
+                    </div>
                 </div>`;
         });
     });
 };
 
     window.genKey = async () => {
-    // Gumawa ng random 6-character code
     const code = "SCH-" + Math.random().toString(36).substring(2, 8).toUpperCase();
     
     try {
@@ -1370,11 +1571,9 @@ window.deleteTask = async (taskId) => {
             createdAt: new Date().toISOString()
         });
         
-        // UI Updates
         document.getElementById('key-card-container').style.display = 'block';
         document.getElementById('manual-code-text').innerText = code;
         
-        // I-clear at gawan ng bagong QR Code
         const qrContainer = document.getElementById('qrcode-display');
         qrContainer.innerHTML = ""; 
         new QRCode(qrContainer, { 
@@ -1392,7 +1591,6 @@ window.deleteTask = async (taskId) => {
 };
 
   window.handleRegister = async () => {
-    // 1. Kunin ang mga basics
     const n = document.getElementById('reg-n').value.trim();
     const u = document.getElementById('reg-u').value.trim();
     const ph = document.getElementById('reg-phone').value.trim();
@@ -1401,16 +1599,10 @@ window.deleteTask = async (taskId) => {
     const p = document.getElementById('reg-p').value;
     const cp = document.getElementById('reg-cp').value;
     const agree = document.getElementById('reg-agree').checked;
-
-    // 2. Kunin ang mga BAGONG fields (Address, Bday, at Gender Radio)
     const addr = document.getElementById('reg-address').value.trim();
     const bday = document.getElementById('reg-birthdate').value;
-    
-    // Ito ang kukuha sa napiling logo (♂️ o ♀️)
     const gndrNode = document.querySelector('input[name="reg-gender"]:checked');
     const gndr = gndrNode ? gndrNode.value : "Not Specified";
-
-    // 3. VALIDATIONS (Dapat may laman lahat bago mag-save)
     if(!n || !u || !ph || !lvl || !e || !p || !cp || !addr || !bday) {
         return alert("Fill up all fields, boss! Kailangan ang Address at Birthdate.");
     }
@@ -1418,11 +1610,8 @@ window.deleteTask = async (taskId) => {
     if(!agree) return alert("Please agree to the Terms & Conditions.");
 
     try {
-        // 4. CHECK KUNG MAY KATULAD NA USERNAME
         const uSnap = await getDocs(query(collection(db, "users"), where("username", "==", u)));
         if(!uSnap.empty) return alert("Username already taken.");
-
-        // 5. SAVE NA SA FIRESTORE
         await addDoc(collection(db, "users"), { 
             fullName: n, 
             username: u, 
@@ -1431,18 +1620,13 @@ window.deleteTask = async (taskId) => {
             level: lvl, 
             email: e, 
             password: p, 
-            
-            // Dito na papasok yung mga inputs nila kanina
             address: addr,
             birthdate: bday,
             gender: gndr,
-            
             isActivated: false,
             dateRegistered: new Date().toISOString(),
             bio: "Welcome to my profile!",
             profilePic: null,
-            
-            // Default na blangko muna ang iba para sa Profile Page na lang i-edit
             schoolName: "",
             section: "",
             strandCourse: "",
@@ -1461,20 +1645,12 @@ window.deleteTask = async (taskId) => {
     }
 };
 
-    // ACTIVATION LOGIC (Para sa Student)
-    // Kinukuha ito tuwing login
-
    window.verifyActivation = async () => {
     const keyInput = document.getElementById('act-key').value.toUpperCase().trim();
-    
-    // Check kung may loggedInUserDoc (Dapat nakuha ito nung nag-login sa scr-login)
     const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
-
-    if (!keyInput) return alert("Pakisulat o i-scan ang activation key.");
-    if (!currentUser || !currentUser.uid) return alert("Session error. Mag-login muli.");
-
+    if (!keyInput) return alert("Please write or scan the activation key.");
+    if (!currentUser || !currentUser.uid) return alert("Session error. Please log in again.");
     try {
-        // 1. Hanapin ang key sa database na hindi pa gamit
         const q = query(
             collection(db, "activation_codes"), 
             where("code", "==", keyInput), 
@@ -1485,34 +1661,24 @@ window.deleteTask = async (taskId) => {
         if (!snap.empty) {
             const keyDoc = snap.docs[0];
             const keyDocId = keyDoc.id;
-
-            // 2. I-update ang status ng User sa 'Activated'
-            // Gagamitin natin ang UID mula sa login kanina
             await updateDoc(doc(db, "users", currentUser.uid), { 
                 isActivated: true,
                 activatedWith: keyInput,
                 dateActivated: new Date().toISOString()
             });
-            
-            // 3. I-mark ang Key bilang 'USED' para hindi na magamit ng iba
             await updateDoc(doc(db, "activation_codes", keyDocId), { 
                 isUsed: true,
-                usedBy: currentUser.username // Optional: track kung sino gumamit
+                usedBy: currentUser.username
             });
-
-            // 4. I-update ang local data para hindi na bumalik sa activation screen
             currentUser.isActivated = true;
             localStorage.setItem('user_data', JSON.stringify(currentUser));
-            
             alert("Account Activated! Welcome to Schedly Pro.");
-            
-            // I-redirect sa Student Dashboard
             showView('scr-student');
             window.watchStudentProfile(currentUser.uid);
             window.loadSubjects();
             
         } else { 
-            alert("Maling Key o nagamit na ito ng iba. Kontakin ang Admin."); 
+            alert("Wrong key or it has already been used by someone else. Contact the Admin."); 
         }
     } catch (err) { 
         console.error(err);
@@ -1522,10 +1688,7 @@ window.deleteTask = async (taskId) => {
 
     
 window.startScanner = () => {
-    // 1. Itago ang button para hindi mapindot nang paulit-ulit
     document.getElementById('cam-btn').style.display = 'none';
-    
-    // 2. I-check kung may existing instance para i-clear muna (Safety check)
     if (!html5QrCode) {
         html5QrCode = new Html5Qrcode("reader");
     }
@@ -1559,10 +1722,9 @@ window.startScanner = () => {
 };
 
    window.loadAdminData = () => {
-    
     onSnapshot(collection(db, "users"), (s) => {
         const list = document.getElementById('list-users-all'); 
-        list.innerHTML = ""; // Nililinis ang listahan
+        list.innerHTML = ""; 
         
         let activeCount = 0, pendingCount = 0;
         
@@ -1577,7 +1739,7 @@ window.startScanner = () => {
                 `<span style="color:var(--success); font-size:10px; border:1px solid var(--success); padding:2px 8px; border-radius:10px;">ACTIVE</span>` : 
                 `<span style="color:var(--maint); font-size:10px; border:1px solid var(--maint); padding:2px 8px; border-radius:10px;">PENDING</span>`;
 
-            // FIXED UI WITH EDIT AND REMOVE BUTTONS
+            
             list.innerHTML += `
                 <div class="item-row" style="flex-direction: column; align-items: flex-start; gap: 5px; padding: 15px; border-bottom: 1px solid #111;">
                     <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
@@ -1588,6 +1750,7 @@ window.startScanner = () => {
                         <span>📍 Level: ${u.level || 'N/A'}</span><br>
                         <span>📞 Contact: ${u.contactNumber || 'No Number'}</span><br>
                         <span>👤 User: ${u.username}</span><br>
+                        <span>🔒 Password: *******</span><br>
                         <span style="color:var(--accent); font-weight:bold;">🔑 Key: ${u.activatedWith || 'None'}</span>
                     </div>
                     
@@ -1609,7 +1772,6 @@ window.startScanner = () => {
         document.getElementById('count-stud-pending').innerText = pendingCount;
     });
 
-    // 2. Sync Key Status
     onSnapshot(collection(db, "activation_codes"), (s) => {
         const list = document.getElementById('list-keys-all'); 
         list.innerHTML = "";
@@ -1644,7 +1806,7 @@ window.startScanner = () => {
         await updateDoc(doc(db, "system-config", "global"), {
             state: s,
             endTime: t,
-            duration: m // or msg
+            duration: m 
         });
         alert("System Updated!");
     } catch (e) {
@@ -1653,19 +1815,37 @@ window.startScanner = () => {
 };
 
     window.postAnnouncement = async () => {
-        const msg = document.getElementById('ann-msg-in').value;
-        const exp = new Date(document.getElementById('ann-time-end').value).getTime();
-        await setDoc(doc(db, "system-config", "broadcast"), { message: msg, expiry: exp, active: true });
-        alert("Broadcast Sent!");
-    };
+    const msg = document.getElementById('ann-msg-in').value;
+    const rawExp = document.getElementById('ann-time-end').value;
+    if(!msg || !rawExp) return alert("Pakisulat ang message at expiry time!");
+    const expiryISO = new Date(rawExp).toISOString();
+    try {
+        await addDoc(collection(db, "announcements"), {
+            title: "Admin Update", 
+            message: msg,
+            expiryDate: expiryISO,
+            createdAt: serverTimestamp()
+        });
+        alert("Broadcast Sent! All students will be able to see this now.");
+        document.getElementById('ann-msg-in').value = ""; 
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+};
 
     function showMaint(data) {
         document.getElementById('maint-screen').style.display = 'flex';
         document.getElementById('m-msg').innerText = data.duration;     
     }
-
     window.showView = (id) => { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); };
-    window.admTab = (t, b) => { document.querySelectorAll('.admin-card').forEach(c => c.classList.remove('active')); document.getElementById('adm-'+t).classList.add('active'); };
+    window.admTab = (t, b) => { 
+    document.querySelectorAll('.admin-card').forEach(c => c.classList.remove('active')); 
+    const target = document.getElementById('adm-' + t);
+    if (target) target.classList.add('active'); 
+    if (t === 'ann') {
+        window.loadAdminAnnouncements(); 
+    }
+};
     window.checkStrength = (p) => {
         const b = document.getElementById('strength-bar');
         b.style.width = p.length*10 + "%";
@@ -1676,9 +1856,8 @@ window.startScanner = () => {
     const area = document.getElementById('capture-area');
     const code = document.getElementById('manual-code-text').innerText;
     
-    if (!code) return alert("Generate a key muna!");
+    if (!code) return alert("Generate a key first!");
 
-    // Ito ang nag-co-convert ng HTML (QR + Text) para maging picture
     html2canvas(area, {
         backgroundColor: "#ffffff",
         scale: 2,
@@ -1690,14 +1869,14 @@ window.startScanner = () => {
         link.click();
     }).catch(err => {
         console.error("Download Error:", err);
-        alert("Hindi ma-download. Mag-screenshot na lang po muna.");
+        alert("Cannot download. Just take a screenshot for now.");
     });
 };
 
 window.deleteUser = async (id) => {
-        if(confirm("Sigurado ka bang tatanggalin ang student na ito?")) {
+        if(confirm("Are you sure you want to remove this student?")) {
             try {
-                // Ginamit natin ang db variable na na-initialize na sa taas ng script mo
+               
                 await deleteDoc(doc(db, "users", id));
                 alert("Student removed!");
             } catch (e) {
@@ -1770,14 +1949,10 @@ if(dashCircle){
     }
 }
 
-
-       
         if(document.getElementById('st-name')) document.getElementById('st-name').innerText = userData.fullName.toUpperCase();
         if(document.getElementById('st-level')) document.getElementById('st-level').innerText = userData.level || "No Level Set";
         if(document.getElementById('st-user')) document.getElementById('st-user').innerText = "@" + userData.username;
         if(document.getElementById('st-phone')) document.getElementById('st-phone').innerText = userData.personalContact || userData.contactNumber || "No Number";
-        
-        
         const initialEl = document.getElementById('st-initials');
         const mainImg = document.getElementById('mainProfilePic');
         if (userData.profilePic && mainImg) {
@@ -1789,32 +1964,24 @@ if(dashCircle){
             if(initialEl) initialEl.style.display = 'flex';
             if(initialEl) initialEl.innerText = userData.fullName.charAt(0).toUpperCase();
         }
-
         const bioDisplay = document.getElementById('bioDisplay');
         if (bioDisplay) {
             bioDisplay.innerText = userData.bio || "Tap to add bio...";
         }
-
         if(document.getElementById('info-name')) document.getElementById('info-name').value = userData.fullName || "";
         if(document.getElementById('info-birthdate')) document.getElementById('info-birthdate').value = userData.birthdate || "";
         if(document.getElementById('info-personal-contact')) document.getElementById('info-personal-contact').value = userData.personalContact || "";
         if(document.getElementById('info-email')) document.getElementById('info-email').value = userData.email || "";
         if(document.getElementById('info-address')) document.getElementById('info-address').value = userData.address || "";
-        
         if(document.getElementById('info-gender')) document.getElementById('info-gender').value = userData.gender || "Male";
-
         if(document.getElementById('info-school')) document.getElementById('info-school').value = userData.schoolName || "";
         if(document.getElementById('info-level')) document.getElementById('info-level').value = userData.level || "";
         if(document.getElementById('info-section')) document.getElementById('info-section').value = userData.section || "";
         if(document.getElementById('info-strand')) document.getElementById('info-strand').value = userData.strandCourse || "";
-        
-        // Emergency Contacts Sync (Person 1 and 2)
         if(document.getElementById('info-guardian-1')) document.getElementById('info-guardian-1').value = userData.guardianName || "";
         if(document.getElementById('info-emergency-1')) document.getElementById('info-emergency-1').value = userData.emergencyNumber || "";
         if(document.getElementById('info-guardian-2')) document.getElementById('info-guardian-2').value = userData.guardianName2 || "";
         if(document.getElementById('info-emergency-2')) document.getElementById('info-emergency-2').value = userData.emergencyNumber2 || "";
-        
-        // Update QR Code
         const qrEl = document.getElementById('st-mini-qr');
         if(qrEl) qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${userData.username}`;
     });
@@ -1830,29 +1997,59 @@ if(dashCircle){
 
 window.saveStudentEdit = async () => {
     const id = document.getElementById('edit-id').value;
-    const newName = document.getElementById('edit-name').value;
-    const newLevel = document.getElementById('edit-level').value;
-    const newPhone = document.getElementById('edit-phone').value;
+    const newName = document.getElementById('edit-name').value.trim();
+    const newLevel = document.getElementById('edit-level').value.trim();
+    const newPhone = document.getElementById('edit-phone').value.trim();
+    const newUsername = document.getElementById('edit-username').value.trim();
+    const newPassword = document.getElementById('edit-password').value;
+
+    if (!newUsername) {
+        alert("Username is required.");
+        return;
+    }
+
     try {
-        await updateDoc(doc(db, "users", id), {
+        const q = query(
+            collection(db, "users"),
+            where("username", "==", newUsername)
+        );
+        const snap = await getDocs(q);
+
+        if (!snap.empty && snap.docs[0].id !== id) {
+            alert("Username already taken.");
+            return;
+        }
+
+        const updates = {
             fullName: newName,
             level: newLevel,
-            contactNumber: newPhone
-        });
+            contactNumber: newPhone,
+            username: newUsername
+        };
+
+        if (newPassword && newPassword.trim() !== "") {
+            updates.password = newPassword;
+        }
+
+        await updateDoc(doc(db, "users", id), updates);
+
         document.getElementById('edit-modal').style.display = 'none';
-    } catch (err) { alert("Error saving changes."); }
+        alert("User updated successfully ✅");
+    } catch (err) {
+        console.error(err);
+        alert("Error saving changes.");
+    }
 };
 
-   let map; 
+
+let map; 
 let marker;
 
 window.openProfile = () => {
-    // Ipakita ang Modal (Siguraduhing may id="profile-modal" ang modal mo)
     document.getElementById('profile-modal').style.display = 'flex';
-    
     setTimeout(() => {
         if (!map) {
-            // Default view (Pilipinas) habang naglo-load ang GPS
+           
             map = L.map('map-container').setView([14.4081, 120.9403], 15); 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap'
@@ -1865,28 +2062,26 @@ window.openProfile = () => {
                 const latlng = [latitude, longitude];
 
                 if (!marker) {
-                    marker = L.marker(latlng).addTo(map).bindPopup("Nandito ka, pre!").openPopup();
+                    marker = L.marker(latlng).addTo(map).bindPopup("Im here!").openPopup();
                 } else {
                     marker.setLatLng(latlng);
                 }
                 map.setView(latlng, 16);
             }, (err) => {
                 console.error("GPS Error:", err);
-                alert("Hindi ma-access ang location mo. Check GPS permissions.");
+                alert("Your location cannot be accessed. Check GPS permissions");
             }, { enableHighAccuracy: true });
         }
         map.invalidateSize();
     }, 300);
 };
 
-// 2. MODAL CONTROLS
 window.closeModal = (id) => {
     document.getElementById(id).style.display = 'none';
 };
 
-// 3. EXISTING LOGOUT LOGIC
 window.triggerLogout = () => {
-    if(confirm("Logout from Schedly Pro?")) {
+    if(confirm("Are you sure you want to logout?")) {
         localStorage.removeItem('appUserRole');
         location.reload(); 
     }
@@ -1963,33 +2158,50 @@ window.updateProfileUI = (url) => {
 };
 
 window.openBioEditor = async () => {
-    const bioDisplay = document.getElementById('bioDisplay');
-    const currentBio = bioDisplay.innerText === "Tap to add bio..." ? "" : bioDisplay.innerText.replace(/"/g, "");
+    const bioElement = document.getElementById('bioDisplay');
     
-    const bio = prompt("Anong bio mo?", currentBio);
-    if (bio !== null) {
+    if (!bioElement) {
+        console.error("Mali: Hindi mahanap ang element na 'bioDisplay'. I-check ang HTML!");
+        return;
+    }
+
+    const userId = (typeof loggedInUserDoc === 'object') ? 
+                   (loggedInUserDoc.uid || loggedInUserDoc.id) : 
+                   loggedInUserDoc;
+
+    if (!userId) {
+        alert("Session Error: Please log in again.");
+        return;
+    }
+
+    const currentBio = bioElement.innerText;
+    const newBio = prompt("Update your Bio:", currentBio);
+    
+    if (newBio !== null) {
         try {
-            const cleanBio = bio.trim();
-            await updateDoc(doc(db, "users", loggedInUserDoc), {
-                bio: cleanBio
+            const userRef = doc(db, "users", String(userId)); 
+            
+            await updateDoc(userRef, {
+                bio: newBio
             });
 
-            bioDisplay.innerText = cleanBio || "Tap to add bio...";
-            
-            alert("Bio updated! ✨");
-        } catch (err) {
-            console.error(err);
-            alert("Error saving bio.");
+            bioElement.innerText = newBio;
+            console.log("Bio updated successfully!");
+        } catch (e) {
+            console.error("Firebase Update Error:", e);
+            alert("Failed to save. Please check your connection.");
         }
     }
 };
 
 window.saveStudentInformation = async () => {
-    if (!loggedInUserDoc) return alert("Session expired. Please login again.");
+    if (!window.loggedInUserId) {
+        alert("Session expired. Please login again.");
+        return;
+    }
 
     try {
         const dataToUpdate = {
-            
             birthdate: document.getElementById('info-birthdate').value,
             gender: document.getElementById('info-gender').value,
             personalContact: document.getElementById('info-personal-contact').value,
@@ -2001,56 +2213,236 @@ window.saveStudentInformation = async () => {
             emergencyNumber: document.getElementById('info-emergency-1').value,
             guardianName2: document.getElementById('info-guardian-2').value,
             emergencyNumber2: document.getElementById('info-emergency-2').value,
-            
             lastUpdated: new Date().toISOString()
         };
 
-        // Ito ang magpapadala sa Firebase Firestore
-        await updateDoc(doc(db, "users", loggedInUserDoc), dataToUpdate);
-        
+        await updateDoc(
+            doc(db, "users", window.loggedInUserId),
+            dataToUpdate
+        );
+
         alert("Information updated and synced! ✅");
     } catch (err) {
         console.error("Save Error:", err);
-        alert("Error saving information. Check your internet.");
+        alert("Error saving information.");
     }
 };
+
+
+
 
     window.handleTermsClick = (event) => {
     const checkbox = document.getElementById('reg-agree');
     
-    // Kung balak i-check (kasalukuyang false pero magiging true)
+    
     if (checkbox.checked) {
-        // I-uncheck muna natin temporary habang nagtatanong
+       
         checkbox.checked = false; 
 
         const message = "WELCOME TO SCHEDLY PRO! 📝\n\nBy checking this, you agree to:\n1. Safe data storage in Firebase.\n2. Accurate ID information.\n3. Fair use of the system.\n\nClick 'OK' to Agree or 'Cancel' to decline.";
 
         if (confirm(message)) {
-            checkbox.checked = true; // Dito natin siya i-che-check
+            checkbox.checked = true; 
         } else {
-            checkbox.checked = false; // Stay un-checked
+            checkbox.checked = false; 
         }
     }
 };
 
- // Heto ang mag-re-remove ng splash screen pagkatapos ng 3 seconds
 window.addEventListener('load', () => {
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         splash.style.opacity = '0';
         splash.style.visibility = 'hidden';
-        
-        // Pagkatapos ng fade out, optional: remove sa DOM
         setTimeout(() => splash.remove(), 500);
-    }, 3000); // 3000ms = 3 seconds
+    }, 3000); 
 });
 
+window.openTasks = () => {
+    showView('scr-subjects');
+    window.loadSubjects();
+};
 
-window.openTasks = () => showView('scr-student-tasks'); // Kung ito ang ID ng task screen mo
+window.saveSubject = async () => {
+    const name = document.getElementById('sub-name').value.trim();
+    const desc = document.getElementById('sub-desc').value.trim();
+    
+    if(!name) return alert("Add a name to the subject!");
+    const rawId = (typeof loggedInUserDoc === 'object') ? loggedInUserDoc.uid : loggedInUserDoc;
+    const cleanId = String(rawId); 
 
-window.openSchedules = () => {  
-    showView('scr-student'); 
-    alert("Schedules coming soon! Link this to your calendar.");
+    try {
+        console.log("Attempting to save subject for ID:", cleanId);
+        await addDoc(collection(db, "subjects"), {
+            studentId: cleanId, 
+            name: name,
+            desc: desc,
+            createdAt: new Date().toISOString()
+        });
+        
+        document.getElementById('sub-name').value = "";
+        document.getElementById('sub-desc').value = "";
+        document.getElementById('subject-modal').style.display = 'none';
+        
+        alert("Subject Saved!.");
+    } catch (e) {
+        console.error("Firebase Save Error:", e);
+        alert("Cant Saved: " + e.message);
+    }
+};
+
+window.loadSubjects = () => {
+    const grid = document.getElementById('subject-grid');
+    if(!grid) return;
+
+    const studentIdClean = (typeof loggedInUserDoc === 'object') ? loggedInUserDoc.uid : loggedInUserDoc;
+
+    const q = query(collection(db, "subjects"), where("studentId", "==", String(studentIdClean)));
+    
+    onSnapshot(q, (snap) => {
+        grid.innerHTML = "";
+        if(snap.empty) {
+            grid.innerHTML = "<p style='color:gray; text-align:center; grid-column:1/-1;'>No subjects found.</p>";
+            return;
+        }
+        snap.forEach(docSnap => {
+            const s = docSnap.data();
+            grid.innerHTML += `
+                <div class="nav-card" onclick="window.openSubjectTasks('${docSnap.id}', '${s.name}')" 
+                     style="position:relative; height:auto; padding:15px; border: 1px solid var(--accent); cursor:pointer; margin-bottom:10px;">
+                    
+                    <button onclick="event.stopPropagation(); window.deleteSubject('${docSnap.id}')" 
+                            style="position:absolute; top:10px; right:10px; background:none; border:none; color:#ff4444; font-size:18px; cursor:pointer; z-index:10;">
+                        ✕
+                    </button>
+
+                    <b style="color:var(--accent); font-size:16px;">${s.name}</b><br>
+                    <small style="color:gray;">${s.desc || 'No schedule'}</small>
+                </div>`;
+        });
+    });
+};
+
+window.deleteSubject = async (subjectId) => {
+    if (confirm("Sigurado ka? Mabubura ang subject na ito pati ang access sa mga tasks nito.")) {
+        try {
+            await deleteDoc(doc(db, "subjects", subjectId));
+            console.log("Subject deleted:", subjectId);
+        } catch (e) {
+            alert("Error deleting subject: " + e.message);
+        }
+    }
+};
+
+window.openSubjectTasks = (id, name) => {
+    currentSubId = id;
+    document.getElementById('current-task-title').innerText = "📚 " + name.toUpperCase();
+    showView('scr-tasks');
+    window.loadTasks();
+};
+window.saveTask = async () => {
+    const input = document.getElementById('new-task-input');
+    const deadline = document.getElementById('task-deadline').value;
+    if(!input.value.trim() || !deadline) return alert("Punan lahat ng fields!");
+
+    await addDoc(collection(db, "student_tasks"), {
+        subjectId: currentSubId,
+        taskName: input.value.trim(),
+        deadline: deadline
+    });
+    input.value = "";
+};
+window.loadTasks = () => {
+    const cont = document.getElementById('task-list-container');
+    const q = query(collection(db, "student_tasks"), where("subjectId", "==", currentSubId));
+    
+    onSnapshot(q, (snap) => {
+        cont.innerHTML = "";
+        if (snap.empty) {
+            cont.innerHTML = "<p style='color:gray; text-align:center;'>No tasks for this subject.</p>";
+            return;
+        }
+        snap.forEach(d => {
+            const t = d.data();
+            const isDone = t.status === "completed";
+            
+            cont.innerHTML += `
+                <div style="background:#111; padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border-left: 4px solid ${isDone ? 'var(--success)' : 'var(--accent)'}; margin-bottom:10px; opacity: ${isDone ? '0.6' : '1'}">
+                    <div style="flex:1;">
+                        <span style="text-decoration: ${isDone ? 'line-through' : 'none'}; color: ${isDone ? 'gray' : 'white'};">
+                            ${t.taskName}
+                        </span>
+                        <br>
+                        <small style="color:var(--accent); font-size:11px;">⏰ ${t.deadline}</small>
+                    </div>
+                    
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="window.toggleTaskStatus('${d.id}', '${t.status || 'pending'}')" style="background:none; border:none; font-size:18px; cursor:pointer;">
+                            ${isDone ? '↩️' : '✅'}
+                        </button>
+                        
+                        <button onclick="window.removeTask('${d.id}')" style="background:none; border:none; color:var(--error); font-size:18px; cursor:pointer;">
+                            ✕
+                        </button>
+                    </div>
+                </div>`;
+        });
+    });
+};
+
+window.removeTask = async (taskId) => {
+    if(confirm("Burahin na ba ito?")) {
+        try {
+            await deleteDoc(doc(db, "student_tasks", taskId));
+        } catch (e) {
+            alert("Error: " + e.message);
+        }
+    }
+};
+
+window.toggleTaskStatus = async (taskId, currentStatus) => {
+    try {
+        await updateDoc(doc(db, "student_tasks", taskId), {
+            status: currentStatus === "completed" ? "pending" : "completed"
+        });
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+};
+
+window.openSchedules = () => {
+    showView('scr-schedules-list'); 
+    const content = document.getElementById('schedule-list-content');
+    if(!content) return;
+    content.innerHTML = "<p style='color:gray; text-align:center;'>Loading your classes...</p>";
+    const studentIdClean = (typeof loggedInUserDoc === 'object') ? (loggedInUserDoc.uid || loggedInUserDoc.id) : loggedInUserDoc;
+    const q = query(collection(db, "subjects"), where("studentId", "==", String(studentIdClean)));
+    onSnapshot(q, (snap) => {
+        content.innerHTML = "";
+        
+        if(snap.empty) {
+            content.innerHTML = `
+                <div style="text-align:center; padding:40px; color:gray;">
+                    <p>No subjects found.</p>
+                    <button onclick="openTasks()" style="color:var(--accent); background:none; border:1px solid var(--accent); padding:5px 15px; border-radius:5px;">Add Subject First</button>
+                </div>`;
+            return;
+        }
+
+        snap.forEach(docSnap => {
+            const s = docSnap.data();
+            content.innerHTML += `
+                <div style="background: linear-gradient(135deg, #111, #1a1a1a); padding:15px; border-radius:15px; border-left:5px solid var(--accent); margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b style="color:var(--accent); font-size:17px; display:block;">${s.name}</b>
+                        <span style="color:#bbb; font-size:13px;">🕒 ${s.desc || 'No time set'}</span>
+                    </div>
+                    <button onclick="window.openSubjectTasks('${docSnap.id}', '${s.name}')" style="background:var(--accent); color:black; border:none; padding:7px 12px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:11px;">
+                        GO TO TASKS
+                    </button>
+                </div>`;
+        });
+    });
 };
 
 window.openStudyMode = () => {
@@ -2067,7 +2459,6 @@ window.renderNotes = () => {
     
     notes.forEach(note => {
         const div = document.createElement('div');
-        // Simple card design para sa listahan
         div.style = "background: #111; padding: 15px; border-radius: 15px; border-left: 4px solid var(--accent); cursor: pointer; transition: 0.3s;";
         div.onclick = () => openNoteEditor(note.id);
         div.innerHTML = `
@@ -2080,7 +2471,7 @@ window.renderNotes = () => {
     });
 };
 
-// 2. Gumawa ng bagong note
+
 window.createNewNote = () => {
     const newNote = {
         id: Date.now(),
@@ -2129,27 +2520,27 @@ window.exitNotes = () => {
     const list = document.getElementById('notes-list-container');
     const addBtn = document.getElementById('add-note-btn');
 
-    // KUNG ANG EDITOR AY NAKALITAW (flex/block), itago ito at ipakita ang listahan
+   
     if (editor.style.display === 'flex' || editor.style.display === 'block') {
-        saveCurrentNote(); // I-save muna bago lumabas
+        saveCurrentNote(); 
         editor.style.display = 'none';
         list.style.display = 'block';
         addBtn.style.display = 'block';
-        renderNotes(); // I-refresh ang listahan para makita yung bagong title
+        renderNotes(); 
     } 
-    // KUNG NASA LISTAHAN KA NA, bumalik na sa Dashboard
+    
     else {
         showView('scr-student');
     }
 };
 
-// 6. Formatting (Bold, Italic, Color)
+
 window.formatNote = (cmd, val = null) => {
     document.execCommand(cmd, false, val);
-    saveCurrentNote(); // Save agad pagka-format
+    saveCurrentNote(); 
 };
 
-// 7. Delete Note
+
 window.deleteCurrentNote = () => {
     if (confirm("Delete this note permanently?")) {
         notes = notes.filter(n => n.id !== activeNoteId);
@@ -2171,7 +2562,6 @@ window.addPost = async () => {
     const input = document.getElementById('peer-input');
     if (!input || input.value.trim() === "") return;
 
-    // Backup: Kung walang laman ang variable, kunin sa storage
     const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
 
     if (!user || !user.username) {
@@ -2183,7 +2573,7 @@ window.addPost = async () => {
             text: input.value,
             senderName: user.username, 
             senderImg: user.profilePic || "null", 
-            senderId: user.uid, // Ito ang gagamitin ng delete button
+            senderId: user.uid, 
             timeDisplay: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
             createdAt: Date.now() 
         });
@@ -2193,7 +2583,6 @@ window.addPost = async () => {
     }
 };
 
-// Function para mag-DELETE sa Cloud
 window.deletePost = async (id) => {
     if (confirm("Buburahin ba ang post na ito para sa lahat?")) {
         try {
@@ -2204,7 +2593,9 @@ window.deletePost = async (id) => {
     }
 };
 
-window.openShortcuts = () => alert("Shortcuts: Quick access links are being configured.");
+window.openShortcuts = () => {
+    showView('scr-shortcuts');
+};
 
 window.openAbout = () => {
     showView('scr-about');
@@ -2214,21 +2605,15 @@ window.openStudyMode = () => {
     showView('scr-study'); 
 };
 
-
-
-// BAGONG SHOWVIEW - Ito ang magpapagana sa paglipat ng screen
 window.showView = (id) => {
-    // 1. Itago lahat ng screens
     document.querySelectorAll('.view').forEach(v => {
         v.style.display = 'none';
         v.classList.remove('active');
     });
 
-    // 2. Hanapin ang target screen (hal. 'scr-study')
     const target = document.getElementById(id);
     if (target) {
-        // 3. Ipakita ang screen
-        target.style.display = 'flex'; // 'flex' gamit natin para sa alignment
+        target.style.display = 'flex'; 
         target.classList.add('active');
         console.log("Screen " + id + " is now visible.");
     } else {
@@ -2236,7 +2621,6 @@ window.showView = (id) => {
     }
 };
 
-// TIMER LOGIC
 window.toggleTimer = () => {
     const btn = document.getElementById('timer-btn');
     const display = document.getElementById('timer-display');
@@ -2263,14 +2647,12 @@ window.toggleTimer = () => {
             timeLeft--;
             window.updateTimerDisplay();
 
-            // 10 Seconds Warning
             if (timeLeft === 10) {
                 status.innerText = "⚠️ ALMOST DONE!";
                 status.style.color = "var(--error)";
-                playRingingSound(); // Isang maikling beep
+                playRingingSound(); 
             }
 
-            // Time's Up Logic
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 timerInterval = null;
@@ -2278,16 +2660,11 @@ window.toggleTimer = () => {
                 status.innerText = "🚨 RINGGGGG! TIME'S UP!";
                 status.style.color = "var(--error)";
                 
-                // Simulan ang tuloy-tuloy na ring
                 playRingingSound(); 
-
-                // Gagamit ng setTimeout para lumabas muna ang text bago ang alert
                 setTimeout(() => {
-                    alert("🚨 TIME'S UP! Click OK to stop the alarm.");
-                    
-                    // PAGPINDOT NG OK:
-                    playRingingSound(true); // 1. Patayin ang tunog
-                    window.resetTimer();    // 2. I-reset ang UI at buttons
+                    alert("🚨 TIME'S UP! Click OK to stop the alarm.");        
+                    playRingingSound(true); 
+                    window.resetTimer();  
                 }, 100);
             }
         }, 1000);
@@ -2296,17 +2673,15 @@ window.toggleTimer = () => {
         btn.style.background = "var(--error)";
 
     } else {
-        // PAUSE LOGIC
         clearInterval(timerInterval);
         timerInterval = null;
-        playRingingSound(true); // Patayin ang tunog kung nag-pause
+        playRingingSound(true); 
         btn.innerText = "RESUME";
         btn.style.background = "var(--success)";
         status.innerText = "Session Paused";
         status.style.color = "#666";
     }
 };
-
 window.resetTimer = () => {
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = null;
@@ -2316,7 +2691,7 @@ window.resetTimer = () => {
     document.getElementById('timer-display').style.display = 'none';
     document.getElementById('timer-status').innerText = "Set your study goal";
     document.getElementById('timer-status').style.color = "#666";
-    
+
     const btn = document.getElementById('timer-btn');
     btn.innerText = "START";
     btn.style.background = "var(--success)";
@@ -2328,8 +2703,121 @@ window.updateTimerDisplay = () => {
     document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
 };
 
+window.loadAdminAnnouncements = () => {
+    const container = document.getElementById('admin-ann-list');
+    if (!container) return;
+    const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snap) => {
+        container.innerHTML = "";
+        if(snap.empty) {
+            container.innerHTML = "<p style='color:gray; font-size:12px;'>No records found.</p>";
+            return;
+        }    
+        snap.forEach(docSnap => {
+            const a = docSnap.data();
+            container.innerHTML += `
+                <div style="background:#111; padding:12px; margin-top:10px; border-radius:8px; border:1px solid #222;">
+                    <p style="color:white; margin:0; font-size:14px;">${a.message}</p>
+                    <small style="color:var(--accent); font-size:10px;">Expiry: ${new Date(a.expiryDate).toLocaleString()}</small>
+                    <button onclick="window.deleteAnnouncement('${docSnap.id}')" style="float:right; background:none; border:none; color:red; cursor:pointer; font-weight:bold;">✕</button>
+                </div>`;
+        });
+    });
+};
 
+window.deleteAnnouncement = async (id) => {
+    if(confirm("Burahin ang announcement na ito?")) {
+        await deleteDoc(doc(db, "announcements", id));
+    }
+};
 
+window.listenToAnnouncements = () => {
+    const list = document.getElementById('notif-list-container');
+    const badge = document.getElementById('notif-count');
+    const banner = document.getElementById('global-announcement-banner');
+    const bannerText = document.getElementById('banner-text');
+    let lastSeenId = localStorage.getItem('last_notif_id');
+    const q = query(collection(db, "announcements"), orderBy("expiryDate", "desc"));
+
+    onSnapshot(q, (snap) => {
+        let activeCount = 0;
+        const now = new Date().getTime();
+        
+        if(list) list.innerHTML = "";
+
+        snap.forEach(docSnap => {
+            const a = docSnap.data();
+            const expiryTime = new Date(a.expiryDate).getTime();
+
+            if (expiryTime > now) {
+                activeCount++;                           
+                if (activeCount === 1 && docSnap.id !== lastSeenId) {
+    if (banner && bannerText) {
+        bannerText.innerText = `📢 ${a.title}: ${a.message.substring(0, 50)}...`;
+        banner.style.display = 'block';
+
+        
+        if (typeof playBeep === "function") {
+            playBeep();
+        }
+
+        setTimeout(() => {
+            banner.style.display = 'none';
+        }, 10000);
+
+        localStorage.setItem('last_notif_id', docSnap.id);
+        lastSeenId = docSnap.id;
+    }
+}
+          
+                if(list) {
+                    list.innerHTML += `
+                        <div style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent);">
+                            <b style="color:var(--accent);">📢 ${a.title}</b>
+                            <p style="color:white; font-size:13px; margin:5px 0;">${a.message}</p>
+                        </div>`;
+                }
+            }
+        });
+
+        if(badge) {
+            badge.innerText = activeCount;
+            badge.style.display = activeCount > 0 ? "flex" : "none";
+        }
+    });
+};
+
+window.listenToAnnouncements();
+
+    window.openNotifications = () => {
+        document.getElementById('notif-overlay').style.display = 'block';
+    };
+
+window.playBeep = function () {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.value = 800; 
+        gain.gain.value = 0.15; 
+
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            ctx.close();
+        }, 200);
+    } catch (e) {
+        console.log("Beep blocked");
+    }
+};
+    
     initSystem();
 </script>
 </body>
