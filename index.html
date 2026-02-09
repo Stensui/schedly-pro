@@ -593,7 +593,7 @@ input, button, textarea {
 </audio>
 
       <audio id="bg-music" loop preload="auto">
-    <source src="https://files.catbox.moe/d8r50w.mp3" type="audio/mpeg">
+    <source src="bg-music.mp3" type="audio/mpeg">
 </audio>
 
 <div id="music-touch" onclick="window.toggleMusic()" style="
@@ -3114,13 +3114,12 @@ window.openSupport = () => {
 };
     
 document.addEventListener('DOMContentLoaded', () => {
-    // --- (Yung codes mo sa itaas para sa login fields at music, wag galawin) ---
     const sU = localStorage.getItem('rem_u');
     const sP = localStorage.getItem('rem_p');
     const uField = document.getElementById('log-u');
     const pField = document.getElementById('log-p');
     const rCheck = document.getElementById('log-remember');
-
+     
     if (uField && pField && rCheck) {
         if (sU && sP) {
             uField.value = sU;
@@ -3132,7 +3131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startSplashAnimation();
     }
     const music = document.getElementById('bg-music');
-    
+    if (music) { music.load(); }
     const startMusic = () => {
         if (music && music.paused) {
             window.toggleMusic(); 
@@ -3178,11 +3177,10 @@ window.toggleMusic = function() {
     clearInterval(musicFadeInterval);
 
     if (music.paused) {
-        if (music.volume === 0) music.volume = 0; 
-        music.play().catch(e => console.log("Music play blocked."));
-        icon.innerText = "🎵";
-        isMusicActive = true;
 
+        music.play().catch(e => console.log("Blocked: ", e));
+        icon.innerText = "🎵";
+        
         musicFadeInterval = setInterval(() => {
             if (music.volume < 0.25) { 
                 music.volume = Math.min(0.25, music.volume + 0.05);
@@ -3190,11 +3188,8 @@ window.toggleMusic = function() {
                 clearInterval(musicFadeInterval);
             }
         }, 200);
-        
     } else {
         icon.innerText = "🔇";
-        isMusicActive = false;
-
         musicFadeInterval = setInterval(() => {
             if (music.volume > 0.05) {
                 music.volume = Math.max(0, music.volume - 0.05);
