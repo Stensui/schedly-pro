@@ -653,11 +653,11 @@ img, canvas {
 
         </div>
 
-        <p style="text-align: center; color: #222; font-size: 9px; margin-top: 40px;">&copy; 2026 Schedly Pro. All Rights Reserved.</p>
+        <p style="text-align: center; color: #222; font-size: 9px; margin-top: 40px;">&copy; 2026 Schedly Pro V.1. All Rights Reserved.</p>
     </div>
 </div>
 
-  <div id="scr-login" class="view active">
+  <div id="scr-login" class="view" style="display:none;">
     <div class="auth-box" style="padding: 40px 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
             
@@ -753,8 +753,8 @@ img, canvas {
         <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
     
     <div>
-        <h1 style="font-size: 26px; margin: 0; color: var(--accent); font-weight: 800;">SCHEDLY</h1>
-        <p style="font-size: 11px; color: #666; letter-spacing: 1px;">Student Task Reminder</p>
+        <h1 style="font-size: 26px; margin: 0; color: var(--accent); font-weight: 800;">SCHEDLY PRO V.1 </h1>
+        <p style="font-size: 11px; color: #666; letter-spacing: 1px;">Your Daily Academic Partner</p>
     </div>
     
     <div style="display: flex; align-items: center; gap: 12px;">
@@ -1095,7 +1095,7 @@ img, canvas {
         </div>
 
         <div style="background: #0a0a0a; border-radius: 12px; border: 1px solid #1a1a1a; padding: 10px;">
-            <p style="color: var(--accent); font-size: 11px; font-weight: bold; margin-bottom: 8px;">📍 LIVE CAMPUS LOCATION</p>
+            <p style="color: var(--accent); font-size: 11px; font-weight: bold; margin-bottom: 8px;">📍 LIVE LOCATION</p>
             <div id="map-container" style="height: 180px; width: 100%; border-radius: 10px; background: #111; border: 1px solid #222;"></div>
         </div>
 
@@ -2274,9 +2274,16 @@ window.saveStudentInformation = async () => {
 window.addEventListener('load', () => {
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
-        splash.style.opacity = '0';
-        splash.style.visibility = 'hidden';
-        setTimeout(() => splash.remove(), 500);
+        if (splash) {
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.remove(); 
+                
+                if (typeof window.showView === 'function') {
+                    window.showView('scr-login');
+                }
+            }, 500);
+        }
     }, 3000); 
 });
 
