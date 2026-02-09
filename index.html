@@ -402,6 +402,19 @@ img, canvas {
     max-width: 250px;
 }
 
+
+#peer-feed div {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important; 
+    max-width: 100% !important;
+}
+
+#peer-feed p {
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important; 
+}
+
 </style>
 </style>
 </head>
@@ -1192,25 +1205,24 @@ onSnapshot(peerCollection, (snapshot) => {
 
     allPosts.forEach((post) => {
         const postDiv = document.createElement('div');
-        postDiv.style = "background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; position: relative;";
         
+        postDiv.style = "background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; position: relative; width: 100%; box-sizing: border-box; word-break: break-word; overflow-wrap: break-word;";
         
         const isOwner = currentUser && (currentUser.uid === post.senderId);
 
-       
         const displayImg = (post.senderImg && post.senderImg !== "null") 
             ? post.senderImg 
             : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.senderName)}&background=random&color=fff`;
 
         postDiv.innerHTML = `
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <img src="${displayImg}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
-                <div>
-                    <div style="color: white; font-size: 14px; font-weight: 800;">@${post.senderName}</div>
+                <img src="${displayImg}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;">
+                <div style="min-width: 0;"> <div style="color: white; font-size: 14px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@${post.senderName}</div>
                     <div style="color: #444; font-size: 10px;">${post.timeDisplay}</div>
                 </div>
             </div>
-            <div style="color: #ccc; font-size: 15px; line-height: 1.6;">${post.text}</div>
+            
+            <div style="color: #ccc; font-size: 15px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word;">${post.text}</div>
             
             ${isOwner ? `<button onclick="deletePost('${post.id}')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: #ff4444; cursor: pointer; font-size: 20px;">&times;</button>` : ''}
         `;
@@ -2334,7 +2346,7 @@ window.loadSubjects = () => {
 };
 
 window.deleteSubject = async (subjectId) => {
-    if (confirm("Sigurado ka? Mabubura ang subject na ito pati ang access sa mga tasks nito.")) {
+    if (confirm("Are you sure? This subject will be deleted, as well as access to its tasks.")) {
         try {
             await deleteDoc(doc(db, "subjects", subjectId));
             console.log("Subject deleted:", subjectId);
@@ -2594,7 +2606,7 @@ window.addPost = async () => {
 };
 
 window.deletePost = async (id) => {
-    if (confirm("Buburahin ba ang post na ito para sa lahat?")) {
+    if (confirm("Will this post be deleted for everyone?")) {
         try {
             await deleteDoc(doc(db, "peer_posts", id));
         } catch (e) {
