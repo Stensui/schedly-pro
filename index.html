@@ -463,21 +463,21 @@ img, canvas {
     <div style="text-align: center; margin-top: 30px; padding: 0 20px;">
         <h2 style="color: white; letter-spacing: 2px; font-weight: 800;">STUDY MODE</h2>
         
-        <div style="background: #111; margin-top: 20px; padding: 40px 20px; border-radius: 30px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <div id="timer-input-wrapper">
-                <input type="number" id="custom-min" value="25" min="1" max="120" style="background: none; border: none; color: var(--accent); font-size: 80px; font-weight: 800; width: 160px; text-align: center; outline: none;">
-                <p style="color: var(--accent); font-weight: bold; margin-top: -10px; font-size: 12px; letter-spacing: 2px;">MINUTES</p>
-            </div>
-
-            <h1 id="timer-display" style="font-size: 90px; color: var(--accent); margin: 0; display: none; font-family: monospace;">25:00</h1>
-            
-            <p id="timer-status" style="color: #666; margin: 20px 0; font-size: 13px;">Set your focus goal</p>
-
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button id="timer-btn" onclick="toggleTimer()" style="background: var(--success); color: black; border: none; padding: 15px 35px; border-radius: 15px; font-weight: 800; cursor: pointer; flex: 1; max-width: 150px;">START</button>
-                <button onclick="resetTimer()" style="background: #222; color: white; border: 1px solid #444; padding: 15px 35px; border-radius: 15px; cursor: pointer; flex: 1; max-width: 150px;">RESET</button>
-            </div>
+        <div style="background: #111; margin-top: 20px; padding: 40px 15px; border-radius: 30px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;">
+    <div id="timer-input-wrapper" style="width: 100%; text-align: center;">
+        <input type="number" id="custom-min" value="25" min="1" max="120" style="background: none; border: none; color: var(--accent); font-size: 18vw; max-font-size: 80px; font-weight: 800; width: 100%; text-align: center; outline: none;">
+        <p style="color: var(--accent); font-weight: bold; margin-top: -5px; font-size: 12px; letter-spacing: 2px;">MINUTES</p>
         </div>
+
+         <h1 id="timer-display" style="font-size: 20vw; max-font-size: 90px; color: var(--accent); margin: 0; display: none; font-family: monospace; width: 100%; text-align: center;">25:00</h1>
+    
+        <p id="timer-status" style="color: #666; margin: 20px 0; font-size: 13px;">Set your focus goal</p>
+
+        <div style="display: flex; gap: 10px; justify-content: center; width: 100%;">
+        <button id="timer-btn" onclick="toggleTimer()" style="background: var(--success); color: black; border: none; padding: 15px 0; border-radius: 15px; font-weight: 800; cursor: pointer; flex: 1;">START</button>
+        <button onclick="resetTimer()" style="background: #222; color: white; border: 1px solid #444; padding: 15px 0; border-radius: 15px; cursor: pointer; flex: 1;">RESET</button>
+    </div>
+</div>
         
         <p style="margin-top: 30px; color: #444; font-size: 11px; font-style: italic;">"Stay focused, your future self will thank you."</p>
     </div>
@@ -549,14 +549,17 @@ img, canvas {
         </div>
 
         <div style="background: #0d0d0d; border: 1px solid #1a1a1a; padding: 20px; border-radius: 24px; margin-bottom: 25px; text-align: center;">
-            <p style="color: #666; font-size: 11px; margin-bottom: 15px; font-weight: bold;">CONNECT WITH US</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <a href="https://www.facebook.com/profile.php?id=61586943834900" target="_blank" style="text-decoration: none; background: #1877F2; color: white; padding: 12px; border-radius: 12px; font-size: 11px; font-weight: bold;">FB PAGE</a>
-                <a href="mailto:YourSchedly@gmail.com" style="text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #333;">YourSchedly@gmail.com</a>
-                <a href="tel:+639928072368" style="text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #333;">+639928072368</a>
-                <div style="background: #111; color: #444; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #222;">WEBSITE (Soon)</div>
-            </div>
-        </div>
+        <p style="color: #666; font-size: 11px; margin-bottom: 15px; font-weight: bold;">CONNECT WITH US</p>
+       <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="https://www.facebook.com/profile.php?id=61586943834900" target="_blank" style="text-decoration: none; background: #1877F2; color: white; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: bold; display: block;">FB PAGE</a>
+        
+        <a href="mailto:YourSchedly@gmail.com" style="text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #333; display: block; word-break: break-all;">YourSchedly@gmail.com</a>
+        
+        <a href="tel:+639928072368" style="text-decoration: none; background: #222; color: white; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #333; display: block;">+639928072368</a>
+        
+        <div style="background: #111; color: #444; padding: 12px; border-radius: 12px; font-size: 11px; border: 1px solid #222; display: block;">WEBSITE (Soon)</div>
+    </div>
+</div>
 
         <p style="color: #444; font-size: 11px; font-weight: 800; letter-spacing: 2px; margin-bottom: 15px; text-align: center;">MEET THE DEVELOPERS</p>
 
