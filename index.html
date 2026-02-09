@@ -377,6 +377,31 @@ img, canvas {
 * {
     box-sizing: border-box !important;
 }
+
+
+#timer-display {
+    font-size: 18vw !important; 
+    line-height: 1;
+    width: 100% !important;
+    text-align: center;
+    font-family: 'Courier New', monospace; 
+    align-items: center;
+    letter-spacing: -2px; 
+}
+
+#timer-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#custom-min {
+    width: 100% !important;
+    max-width: 250px;
+}
+
 </style>
 </style>
 </head>
@@ -474,12 +499,13 @@ img, canvas {
         <h2 style="color: white; letter-spacing: 2px; font-weight: 800;">STUDY MODE</h2>
         
         <div style="background: #111; margin-top: 20px; padding: 40px 15px; border-radius: 30px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;">
-    <div id="timer-input-wrapper" style="width: 100%; text-align: center;">
-        <input type="number" id="custom-min" value="25" min="1" max="120" style="background: none; border: none; color: var(--accent); font-size: 18vw; max-font-size: 80px; font-weight: 800; width: 100%; text-align: center; outline: none;">
-        <p style="color: var(--accent); font-weight: bold; margin-top: -5px; font-size: 12px; letter-spacing: 2px;">MINUTES</p>
-        </div>
+    <div id="timer-input-wrapper">
+    <input type="number" id="custom-min" value="25" min="1" max="120" 
+           style="background: none; border: none; color: var(--accent); font-size: 15vw; font-weight: 800; width: 100%; text-align: center; outline: none;">
+    <p style="color: var(--accent); font-weight: bold; margin-top: -10px; font-size: 12px; letter-spacing: 2px;">MINUTES</p>
+</div>
 
-         <h1 id="timer-display" style="font-size: 20vw; max-font-size: 90px; color: var(--accent); margin: 0; display: none; font-family: monospace; width: 100%; text-align: center;">25:00</h1>
+<h1 id="timer-display" style="display: none; color: var(--accent); font-weight: 800; margin: 10px 0;">25:00</h1>
     
         <p id="timer-status" style="color: #666; margin: 20px 0; font-size: 13px;">Set your focus goal</p>
 
