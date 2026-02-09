@@ -239,7 +239,7 @@
     .splash-text { font-size: 24px; letter-spacing: 4px; margin-top: 15px; font-weight: 800; }
     @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
     .loader-bar { width: 150px; height: 3px; background: #222; margin: 20px auto; border-radius: 10px; overflow: hidden; }
-    .progress { width: 0%; height: 100%; background: var(--accent); animation: load 2.5s forwards; }
+    .progress { width: 0%; height: 100%; background: var(--accent); animation: load 5s forwards; }
     @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
     .modal { 
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -377,8 +377,6 @@ img, canvas {
 * {
     box-sizing: border-box !important;
 }
-
-
 #timer-display {
     font-size: 18vw !important; 
     line-height: 1;
@@ -419,6 +417,38 @@ img, canvas {
     max-height: 70vh; 
     padding-bottom: 20px;
 }
+.falling-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1; 
+    pointer-events: none;
+}
+
+.falling-item {
+    position: absolute;
+    top: -50px;
+    font-size: 24px;
+    opacity: 0.6;
+    user-select: none;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
 </style>
 </style>
 </head>
@@ -428,7 +458,12 @@ img, canvas {
     <div class="status-indicator"><div id="global-badge" class="badge online"><div class="dot"></div><span id="global-status-text">Server: Online</span></div></div>
     <div id="student-alert-banner" style="display:none; position:fixed; top:0; left:0; width:100%; background:var(--accent); color:#000; padding:12px; text-align:center; font-weight:800; z-index:4000;">📢 UNIVERSITY ANNOUNCEMENT! Open the bell.</div>
 
-       <div id="splash-screen">
+     <audio id="splash-sound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
+     </audio>
+
+      <div id="splash-screen">
+    <div id="falling-items-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;"></div>
     <div class="splash-content">
         <img src="https://i.postimg.cc/bY74X2V5/schedly-logo.png" 
              alt="Schedly Logo" 
@@ -445,8 +480,8 @@ img, canvas {
     <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
 </audio>
 
-      <audio id="bg-music" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-slowmotion.mp3" type="audio/mpeg">
+      <audio id="bg-music" loop preload="auto">
+    <source src="https://files.catbox.moe/d8r50w.mp3" type="audio/mpeg">
 </audio>
 
 <div id="music-touch" onclick="window.toggleMusic()" style="
@@ -1286,6 +1321,7 @@ onSnapshot(peerCollection, (snapshot) => {
     let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
     let html5QrCode;
     let isMusicActive = false;
+    
     const playRingingSound = (stop = false) => {
     if (stop) {
         if (ringInterval) {
@@ -2323,9 +2359,9 @@ window.addEventListener('load', () => {
                 if (typeof window.showView === 'function') {
                     window.showView('scr-login');
                 }
-            }, 500);
+            }, 1000);
         }
-    }, 3000); 
+    }, 5000); 
 });
 
 window.openTasks = () => {
@@ -2833,6 +2869,52 @@ window.deleteAnnouncement = async (id) => {
     }
 };
 
+function startSplashAnimation() {
+    const container = document.getElementById('falling-items-bg');
+    const splashSound = document.getElementById('splash-sound');
+    const items = ['📚', '✏️', '📓', '⏰', '📖', '🖋️', '🎨', '📏', '📎', '💻', '🎒', '🧪', '📐'];
+    
+    let splashPlayPromise;
+
+    if (splashSound) {
+        splashSound.volume = 0.4;
+        splashPlayPromise = splashSound.play();
+    }
+
+    const creator = setInterval(() => {
+        const splash = document.getElementById('splash-screen');       
+        if (!splash || splash.style.display === 'none' || getComputedStyle(splash).opacity === '0') {
+            
+            if (splashSound && splashPlayPromise !== undefined) {
+                splashPlayPromise.then(() => {
+                    let fadeOut = setInterval(() => {
+                        if (splashSound.volume > 0.05) {
+                            splashSound.volume -= 0.05;
+                        } else {
+                            splashSound.pause();
+                            splashSound.currentTime = 0; 
+                            clearInterval(fadeOut);
+                        }
+                    }, 100);
+                }).catch(e => console.log("Splash sound intro interrupted."));
+            }
+            
+            clearInterval(creator);
+            return;
+        }
+        const div = document.createElement('div');
+        div.className = 'falling-item';
+        div.innerText = items[Math.floor(Math.random() * items.length)];
+        div.style.left = Math.random() * 100 + '%';
+        div.style.animationDuration = (3 + Math.random() * 3) + 's';
+        div.style.fontSize = (15 + Math.random() * 25) + 'px';
+        container.appendChild(div);
+        setTimeout(() => div.remove(), 6000);
+    }, 100); 
+}
+
+startSplashAnimation();
+
 window.listenToAnnouncements = () => {
     const list = document.getElementById('notif-list-container');
     const badge = document.getElementById('notif-count');
@@ -2914,53 +2996,83 @@ window.openSupport = () => {
 };
     
 document.addEventListener('DOMContentLoaded', () => {
-        const sU = localStorage.getItem('rem_u');
-        const sP = localStorage.getItem('rem_p');
-        
-        const uField = document.getElementById('log-u');
-        const pField = document.getElementById('log-p');
-        const rCheck = document.getElementById('log-remember');
+    const sU = localStorage.getItem('rem_u');
+    const sP = localStorage.getItem('rem_p');
+    const uField = document.getElementById('log-u');
+    const pField = document.getElementById('log-p');
+    const rCheck = document.getElementById('log-remember');
 
-        if (uField && pField && rCheck) {
-            if (sU && sP) {
-                uField.value = sU;
-                pField.value = sP;
-                rCheck.checked = true;
-            }
+    if (uField && pField && rCheck) {
+        if (sU && sP) {
+            uField.value = sU;
+            pField.value = sP;
+            rCheck.checked = true;
         }
-    });
+    }
+    if (typeof startSplashAnimation === "function") {
+        startSplashAnimation();
+    }
+    const music = document.getElementById('bg-music');
     
-   window.toggleMusic = function() {
+    const startMusic = () => {
+        if (music && music.paused) {
+            window.toggleMusic(); 
+            document.removeEventListener('click', startMusic);
+            document.removeEventListener('touchstart', startMusic);
+        }
+    };
+
+    setTimeout(startMusic, 1000);
+
+    document.addEventListener('click', startMusic);
+    document.addEventListener('touchstart', startMusic);
+
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+            splash.style.transition = "opacity 1s ease";
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 1500);
+        }
+    }, 10000);
+});
+    
+let musicFadeInterval; 
+
+window.toggleMusic = function() {
     const music = document.getElementById('bg-music');
     const icon = document.getElementById('music-icon');
 
+    clearInterval(musicFadeInterval);
+
     if (music.paused) {
-        music.volume = 0; // Start sa zero
-        music.play();
+        if (music.volume === 0) music.volume = 0; 
+        music.play().catch(e => console.log("Music play blocked."));
         icon.innerText = "🎵";
-        
-        // Fade in effect
-        let fadeIn = setInterval(() => {
-            if (music.volume < 0.25) { // Hanggang 25% volume lang para chill
-                music.volume += 0.05;
+        isMusicActive = true;
+
+        musicFadeInterval = setInterval(() => {
+            if (music.volume < 0.25) { 
+                music.volume = Math.min(0.25, music.volume + 0.05);
             } else {
-                clearInterval(fadeIn);
+                clearInterval(musicFadeInterval);
             }
         }, 200);
         
-        isMusicActive = true;
     } else {
-  
-        let fadeOut = setInterval(() => {
+        icon.innerText = "🔇";
+        isMusicActive = false;
+
+        musicFadeInterval = setInterval(() => {
             if (music.volume > 0.05) {
-                music.volume -= 0.05;
+                music.volume = Math.max(0, music.volume - 0.05);
             } else {
                 music.pause();
-                clearInterval(fadeOut);
-                icon.innerText = "🔇";
+                clearInterval(musicFadeInterval);
             }
         }, 100);
-        isMusicActive = false;
     }
 };
 
