@@ -414,7 +414,11 @@ img, canvas {
     word-wrap: break-word !important;
     white-space: pre-wrap !important; 
 }
-
+#notif-list-container {
+    overflow-y: auto; 
+    max-height: 70vh; 
+    padding-bottom: 20px;
+}
 </style>
 </style>
 </head>
@@ -435,6 +439,32 @@ img, canvas {
             <div class="progress"></div>
         </div>
     </div>
+</div>
+
+<audio id="notif-sound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+</audio>
+
+      <audio id="bg-music" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-slowmotion.mp3" type="audio/mpeg">
+</audio>
+
+<div id="music-touch" onclick="window.toggleMusic()" style="
+    position: fixed !important; 
+    bottom: 25px !important; 
+    left: 20px !important; 
+    width: 45px !important; 
+    height: 45px !important; 
+    background: #111 !important; 
+    border: 2px solid #D4AF37 !important;
+    border-radius: 12px !important; 
+    display: flex !important; 
+    align-items: center !important; 
+    justify-content: center !important; 
+    z-index: 999999 !important; /* Sobrang taas para laging nasa ibabaw */
+    cursor: pointer !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;">
+    <span id="music-icon" style="font-size: 20px !important; pointer-events: none;">🔇</span>
 </div>
 
 <div id="scr-shortcuts" class="view" style="display:none; background: #000; height: 100vh; overflow-y: auto;">
@@ -890,7 +920,7 @@ img, canvas {
     <h3>ACTIVE ANNOUNCEMENTS</h3>
     <div id="admin-ann-list">
         </div>
-</div>
+</div> 
 
             <div id="adm-keys" class="admin-card">
                 <h2>ACTIVATION KEYS</h2>
@@ -1120,10 +1150,23 @@ img, canvas {
     </div>
 </div>
 
-<div id="global-announcement-banner" style="display:none; position:fixed; top:0; left:0; width:100%; z-index:9999; padding:15px; background:var(--accent); color:black; font-weight:bold; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.5); animation: slideDown 0.5s ease;">
-    <span id="banner-text">📢 New Announcement!</span>
-    <button onclick="this.parentElement.style.display='none'" style="margin-left:15px; background:black; color:white; border:none; border-radius:50%; width:25px; height:25px; cursor:pointer;">✕</button>
-</div>
+<div id="global-announcement-banner" style="
+    display:none; 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    z-index:9999; 
+    padding:15px; 
+    background:var(--accent); 
+    color:black; 
+    font-weight:bold; 
+    text-align:center; 
+    box-shadow:0 4px 15px rgba(0,0,0,0.5); 
+    cursor:pointer;
+    animation: slideDown 0.5s ease;">
+    <span id="banner-text">📢 NEW ANNOUNCEMENT!</span>
+    </div>
 
 
 <div id="edit-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;">
@@ -1242,7 +1285,7 @@ onSnapshot(peerCollection, (snapshot) => {
     let activeNoteId = null; 
     let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
     let html5QrCode;
-   
+    let isMusicActive = false;
     const playRingingSound = (stop = false) => {
     if (stop) {
         if (ringInterval) {
@@ -1371,9 +1414,7 @@ startLiveClock();
     loginBtn.disabled = true;
 
     try {
-        // --- ADMIN LOGIN ---
         if(u === 'admin' && p === 'admin123') { 
-            // ADDED HERE: Remember Me for Admin
             const remCheck = document.getElementById('log-remember');
             if(remCheck && remCheck.checked) {
                 localStorage.setItem('rem_u', u);
@@ -1824,7 +1865,7 @@ window.startScanner = () => {
     window.postAnnouncement = async () => {
     const msg = document.getElementById('ann-msg-in').value;
     const rawExp = document.getElementById('ann-time-end').value;
-    if(!msg || !rawExp) return alert("Pakisulat ang message at expiry time!");
+    if(!msg || !rawExp) return alert("Please write the message and the expiry time!");
     const expiryISO = new Date(rawExp).toISOString();
     try {
         await addDoc(collection(db, "announcements"), {
@@ -2420,7 +2461,7 @@ window.loadTasks = () => {
 };
 
 window.removeTask = async (taskId) => {
-    if(confirm("Burahin na ba ito?")) {
+    if(confirm("Do you want to remove this task?")) {
         try {
             await deleteDoc(doc(db, "student_tasks", taskId));
         } catch (e) {
@@ -2585,6 +2626,38 @@ window.addEventListener('load', window.loadNotes);
 window.openPeerBoard = () => {
     showView('scr-peer');
     renderPosts(); 
+};
+window.renderPosts = () => {
+    const container = document.getElementById('peer-posts-container');
+    if (!container) return;
+    const q = query(collection(db, "peer_posts"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        container.innerHTML = ""
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const postId = doc.id;
+            const currentUser = JSON.parse(localStorage.getItem('user_data'));
+            const isOwner = currentUser && (data.senderId === currentUser.uid);
+
+            const postHTML = `
+                <div class="post-card" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(212,175,55,0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <strong style="color: var(--accent); font-size: 14px;">${data.senderName}</strong>
+                            <span style="font-size: 10px; color: #888; display: block;">${data.timeDisplay}</span>
+                        </div>
+                        ${isOwner ? `<button onclick="window.deletePost('${postId}')" style="background:none; border:none; color:#ff4444; font-size: 12px;">Delete</button>` : ''}
+                    </div>
+                    <p style="margin-top: 8px; font-size: 14px; color: #eee; line-height: 1.4;">${data.text}</p>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', postHTML);
+        });
+
+        if (snapshot.empty) {
+            container.innerHTML = '<p style="text-align:center; color:#666; font-size:12px; margin-top:20px;">No posts yet. Start the conversation!</p>';
+        }
+    });
 };
 
 window.addPost = async () => {
@@ -2755,7 +2828,7 @@ window.loadAdminAnnouncements = () => {
 };
 
 window.deleteAnnouncement = async (id) => {
-    if(confirm("Burahin ang announcement na ito?")) {
+    if(confirm("Would you like to remove this announcement?")) {
         await deleteDoc(doc(db, "announcements", id));
     }
 };
@@ -2765,35 +2838,56 @@ window.listenToAnnouncements = () => {
     const badge = document.getElementById('notif-count');
     const banner = document.getElementById('global-announcement-banner');
     const bannerText = document.getElementById('banner-text');
+    const notifSound = document.getElementById('notif-sound');
     let lastSeenId = localStorage.getItem('last_notif_id');
+    
     const q = query(collection(db, "announcements"), orderBy("expiryDate", "desc"));
 
     onSnapshot(q, (snap) => {
         let activeCount = 0;
         const now = new Date().getTime();
-        
-        if(list) list.innerHTML = "";
 
+        snap.docChanges().forEach(change => {
+            if (change.type === "added") {
+                const a = change.doc.data();
+                const expiryTime = new Date(a.expiryDate).getTime();
+
+                if (expiryTime > now && change.doc.id !== lastSeenId) {
+                    if(banner && bannerText) {
+                        bannerText.innerText = `📢 NEW ANNOUNCEMENT!`; 
+                        banner.style.display = 'block';  
+                       
+                        banner.onclick = () => {
+                            banner.style.display = 'none';
+                            window.openNotifications(); 
+                        };
+
+                        if (notifSound) {
+                            notifSound.currentTime = 0;
+                            notifSound.volume = 0.3; 
+                            notifSound.play().catch(e => console.log("Audio play deferred."));
+                        }
+
+                        setTimeout(() => { banner.style.display = 'none'; }, 10000); 
+                        
+                        localStorage.setItem('last_notif_id', change.doc.id);
+                        lastSeenId = change.doc.id;
+                    }
+                }
+            }
+        });
+        if(list) list.innerHTML = "";
         snap.forEach(docSnap => {
             const a = docSnap.data();
             const expiryTime = new Date(a.expiryDate).getTime();
-
             if (expiryTime > now) {
-                activeCount++;                           
-                if (activeCount === 1 && docSnap.id !== lastSeenId) {
-                    if(banner && bannerText) {
-                        bannerText.innerText = `📢 ${a.title}: ${a.message.substring(0, 50)}...`;
-                        banner.style.display = 'block';                                           
-                      setTimeout(() => { banner.style.display = 'none'; }, 10000);                       
-                        localStorage.setItem('last_notif_id', docSnap.id);
-                        lastSeenId = docSnap.id;
-                    }
-                }              
+                activeCount++; 
                 if(list) {
                     list.innerHTML += `
-                        <div style="background:#111; padding:15px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent);">
-                            <b style="color:var(--accent);">📢 ${a.title}</b>
-                            <p style="color:white; font-size:13px; margin:5px 0;">${a.message}</p>
+                        <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:12px; border-left:4px solid var(--accent); border-top: 1px solid #222;">
+                            <b style="color:var(--accent); font-size:14px; display:block; margin-bottom:5px;">📢 ${a.title}</b>
+                            <p style="color:#eee; font-size:13px; margin:0; line-height:1.5; word-wrap: break-word; white-space: pre-wrap;">${a.message}</p>
+                            <small style="color:#444; font-size:9px; display:block; margin-top:8px;">Active until: ${a.expiryDate}</small>
                         </div>`;
                 }
             }
@@ -2809,8 +2903,9 @@ window.listenToAnnouncements = () => {
 window.listenToAnnouncements();
 
     window.openNotifications = () => {
-        document.getElementById('notif-overlay').style.display = 'block';
-    };
+    const overlay = document.getElementById('notif-overlay');
+    if(overlay) overlay.style.display = 'block';
+};
 
 window.openSupport = () => {
     if(confirm("Need help? We will redirect you to Schedly Pro Support on Facebook.")) {
@@ -2834,6 +2929,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+    
+   window.toggleMusic = function() {
+    const music = document.getElementById('bg-music');
+    const icon = document.getElementById('music-icon');
+
+    if (music.paused) {
+        music.volume = 0; // Start sa zero
+        music.play();
+        icon.innerText = "🎵";
+        
+        // Fade in effect
+        let fadeIn = setInterval(() => {
+            if (music.volume < 0.25) { // Hanggang 25% volume lang para chill
+                music.volume += 0.05;
+            } else {
+                clearInterval(fadeIn);
+            }
+        }, 200);
+        
+        isMusicActive = true;
+    } else {
+  
+        let fadeOut = setInterval(() => {
+            if (music.volume > 0.05) {
+                music.volume -= 0.05;
+            } else {
+                music.pause();
+                clearInterval(fadeOut);
+                icon.innerText = "🔇";
+            }
+        }, 100);
+        isMusicActive = false;
+    }
+};
 
     initSystem();
 </script>
