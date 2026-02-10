@@ -561,6 +561,127 @@ img, canvas {
 input, button, textarea {
     font-size: 16px !important;
 }
+@keyframes modalPop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes textSlide {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+#welcome-modal {
+    animation: fadeIn 0.3s ease-out;
+}
+#modal-content {
+    animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.modal-text-animate {
+    animation: textSlide 0.3s ease-out;
+}
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes fadeIn {
+    from { background: rgba(0,0,0,0); }
+    to { background: rgba(0,0,0,0.9); }
+}
+#logout-modal {
+    animation: fadeIn 0.3s ease-out;
+}
+#logout-modal .modal-content {
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#logout-modal button:active {
+    transform: scale(0.95);
+    filter: brightness(0.8);
+}
+@keyframes musicPulse {
+    0% { 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(212,175,55, 0.6);
+        transform: scale(1.08);
+    }
+    100% { 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        transform: scale(1);
+    }
+}
+.music-playing {
+    animation: musicPulse 2s infinite ease-in-out !important;
+    border-color: #fff !important;
+}
+#bio-modal, #support-modal, #logout-modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.modal-content-fix {
+    width: 100%;
+    max-width: 340px; 
+    margin: auto; 
+    position: relative;
+}
+#task-delete-modal .modal-content {
+    animation: apkModalPop 0.2s ease-out;
+}
+
+@keyframes apkModalPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+#task-delete-modal button {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.1s ease;
+}
+
+#task-delete-modal button:active {
+    transform: scale(0.94); 
+    filter: brightness(0.8);
+}
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modalPopUp {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+.modal-content {
+    animation: modalPopUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: rgba(26, 26, 26, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+button:active {
+    transform: scale(0.92);
+    transition: 0.1s;
+}
+#confirm-task-done-btn {
+    box-shadow: 0 0 15px rgba(76, 217, 100, 0.3);
+    transition: 0.3s;
+}
+#confirm-task-done-btn:hover {
+    box-shadow: 0 0 25px rgba(76, 217, 100, 0.5);
+}
 </style>
 </style>
 </head>
@@ -577,7 +698,7 @@ input, button, textarea {
       <div id="splash-screen">
     <div id="falling-items-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: -1; pointer-events: none;"></div>
     <div class="splash-content">
-        <img src="https://i.postimg.cc/bY74X2V5/schedly-logo.png" 
+        <img src="schedly-logo.png" 
              alt="Schedly Logo" 
              class="splash-logo">
         
@@ -588,8 +709,24 @@ input, button, textarea {
     </div>
 </div>
 
+<audio id="next-sound" preload="auto">
+    <source src="next_effect.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="btn-sound" preload="auto">
+    <source src="button_click.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="action-sound" preload="auto">
+    <source src="action_effect.mp3" type="audio/mpeg">
+</audio>
+
 <audio id="notif-sound" preload="auto">
-    <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+    <source src="notif.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="task-alarm-sound" preload="auto" loop>
+    <source src="task_alarm.mp3" type="audio/mpeg">
 </audio>
 
       <audio id="bg-music" loop preload="auto">
@@ -665,95 +802,110 @@ input, button, textarea {
     </p>
 </div>
 
-   <div id="scr-schedules-list" class="view" style="display:none; background: #000; height: 100vh;">
-    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
-        <button onclick="showView('scr-student')" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">←</button>
-        <h2 style="color: var(--accent); margin: 0; font-weight: 800; letter-spacing: 1px;">SCHEDULES</h2>
+   <div id="scr-schedules-list" class="view" style="display:none; background: #000; height: 100vh; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; flex-direction: column;">
+    <div style="padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #111; margin-top: 40px;">
+        <button onclick="showView('scr-student')" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; flex-shrink: 0;">←</button>
+        <h2 style="color: var(--accent); margin: 0; font-weight: 800; letter-spacing: 1px; font-size: 18px; white-space: nowrap;">SCHEDULES</h2>
     </div>
 
-    <div style="text-align: center; padding: 10px 20px 30px 20px; background: linear-gradient(to bottom, #000, #080808);">
-        <div id="live-clock" style="font-size: 40px; font-weight: 900; color: white; font-family: monospace;">00:00:00</div>
-        <div id="live-date" style="color: var(--accent); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px;">February 08, 2026</div>
+    <div style="text-align: center; padding: 20px 20px; background: linear-gradient(to bottom, #0a0a0a, #000); border-bottom: 1px solid #111;">
+        <div id="live-clock" style="font-size: 32px; font-weight: 900; color: white; font-family: 'Courier New', monospace; letter-spacing: 2px;">00:00:00</div>
+        <div id="live-date" style="color: var(--accent); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; opacity: 0.8;">February 10, 2026</div>
     </div>
 
-    <div id="schedule-list-content" style="padding: 0 20px 100px 20px; overflow-y: auto;">
+    <div id="schedule-list-content" style="flex: 1; padding: 15px 20px 100px 20px; overflow-y: auto;">
         </div>
 </div>
 
-<div id="scr-study" class="view" style="background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: none;">
-    <div style="padding: 20px;">
-        <button onclick="showView('scr-student')" style="background: #222; color: white; border: 1px solid #444; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
+<div id="scr-study" class="view" style="background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: none; flex-direction: column;">
+    <div style="padding: 20px; margin-top: 40px;">
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border: 1px solid #444; border-radius: 50%; width: 35px; height: 35px; cursor: pointer;">←</button>
     </div>
 
-    <div style="text-align: center; margin-top: 30px; padding: 0 20px;">
-        <h2 style="color: white; letter-spacing: 2px; font-weight: 800;">STUDY MODE</h2>
+    <div style="text-align: center; padding: 0 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: -40px;">
+        <h2 style="color: white; letter-spacing: 2px; font-weight: 800; font-size: 18px; margin-bottom: 20px;">STUDY MODE</h2>
         
-        <div style="background: #111; margin-top: 20px; padding: 40px 15px; border-radius: 30px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;">
-    <div id="timer-input-wrapper">
-    <input type="number" id="custom-min" value="25" min="1" max="120" 
-           style="background: none; border: none; color: var(--accent); font-size: 15vw; font-weight: 800; width: 100%; text-align: center; outline: none;">
-    <p style="color: var(--accent); font-weight: bold; margin-top: -10px; font-size: 12px; letter-spacing: 2px;">MINUTES</p>
-</div>
+        <div style="background: #111; padding: 30px 15px; border-radius: 30px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;">
+            
+            <div id="timer-input-wrapper">
+                <input type="number" id="custom-min" value="25" min="1" max="120" 
+                       style="background: none; border: none; color: var(--accent); font-size: 12vw; font-weight: 800; width: 100%; text-align: center; outline: none;">
+                <p style="color: var(--accent); font-weight: bold; margin-top: -5px; font-size: 11px; letter-spacing: 2px;">MINUTES</p>
+            </div>
 
-<h1 id="timer-display" style="display: none; color: var(--accent); font-weight: 800; margin: 10px 0;">25:00</h1>
+            <h1 id="timer-display" style="display: none; color: var(--accent); font-size: 12vw; font-weight: 800; margin: 10px 0;">25:00</h1>
     
-        <p id="timer-status" style="color: #666; margin: 20px 0; font-size: 13px;">Set your focus goal</p>
+            <p id="timer-status" style="color: #666; margin: 15px 0; font-size: 12px;">Set your focus goal</p>
 
-        <div style="display: flex; gap: 10px; justify-content: center; width: 100%;">
-        <button id="timer-btn" onclick="toggleTimer()" style="background: var(--success); color: black; border: none; padding: 15px 0; border-radius: 15px; font-weight: 800; cursor: pointer; flex: 1;">START</button>
-        <button onclick="resetTimer()" style="background: #222; color: white; border: 1px solid #444; padding: 15px 0; border-radius: 15px; cursor: pointer; flex: 1;">RESET</button>
-    </div>
-</div>
+            <div style="display: flex; gap: 10px; justify-content: center; width: 100%;">
+                <button id="timer-btn" onclick="toggleTimer()" style="background: var(--success); color: black; border: none; padding: 12px 0; border-radius: 15px; font-weight: 800; cursor: pointer; flex: 1; font-size: 14px;">START</button>
+                <button onclick="resetTimer()" style="background: #222; color: white; border: 1px solid #444; padding: 12px 0; border-radius: 15px; cursor: pointer; flex: 1; font-size: 14px;">RESET</button>
+            </div>
+        </div>
         
-        <p style="margin-top: 30px; color: #444; font-size: 11px; font-style: italic;">"Stay focused, your future self will thank you."</p>
+        <p style="margin-top: 25px; color: #444; font-size: 10px; font-style: italic; padding: 0 20px;">"Stay focused, your future self will thank you."</p>
     </div>
 </div>
 
-<div id="scr-notes" class="view" style="display: none; background: var(--bg); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column;">
-    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a;">
-        <button onclick="exitNotes()" style="background: #222; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
-        <h3 id="notes-title" style="color: var(--accent); margin: 0; font-weight: 800;">MY LAB NOTES</h3>
-        <button onclick="createNewNote()" id="add-note-btn" style="background: var(--accent); color: black; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer;">+ NEW</button>
+<div id="scr-notes" class="view" style="display: none; background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column;">
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a; margin-top: 40px;">
+        <button onclick="exitNotes()" style="background: #222; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; flex-shrink: 0;">←</button>
+        
+        <div style="flex: 1; text-align: center; padding: 0 10px;">
+            <h3 id="notes-title" style="color: var(--accent); margin: 0; font-weight: 800; font-size: 16px; white-space: nowrap; letter-spacing: 1px;">MY LAB NOTES</h3>
+        </div>
+
+        <button onclick="createNewNote()" id="add-note-btn" style="background: var(--accent); color: black; border: none; padding: 6px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px; flex-shrink: 0;">+ NEW</button>
     </div>
 
     <div id="notes-list-container" style="flex: 1; padding: 15px; overflow-y: auto; display: block;">
-        <div id="notes-grid" style="display: grid; gap: 10px;"></div>
+        <div id="notes-grid" style="display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));"></div>
     </div>
 
     <div id="notes-editor-container" style="flex: 1; padding: 15px; display: none; flex-direction: column;">
-        <div style="display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background: #111; border-radius: 10px; overflow-x: auto;">
-            <button onclick="formatNote('bold')" style="font-weight: bold; padding: 5px 10px; background: #222; color: white; border: none; border-radius: 5px;">B</button>
-            <button onclick="formatNote('italic')" style="font-style: italic; padding: 5px 10px; background: #222; color: white; border: none; border-radius: 5px;">I</button>
-            <input type="color" onchange="formatNote('foreColor', this.value)" style="width: 30px; height: 30px; border: none; background: none; cursor: pointer;">
-            <button onclick="deleteCurrentNote()" style="margin-left: auto; background: var(--error); color: white; border: none; padding: 5px 10px; border-radius: 5px;">Delete</button>
+        <div style="display: flex; gap: 8px; margin-bottom: 15px; padding: 8px; background: #111; border-radius: 12px; overflow-x: auto; align-items: center; border: 1px solid #222;">
+            <button onclick="formatNote('bold')" style="font-weight: bold; padding: 6px 12px; background: #222; color: white; border: none; border-radius: 8px; font-size: 14px;">B</button>
+            <button onclick="formatNote('italic')" style="font-style: italic; padding: 6px 12px; background: #222; color: white; border: none; border-radius: 8px; font-size: 14px;">I</button>
+            <div style="position: relative; width: 30px; height: 30px; border-radius: 5px; overflow: hidden; border: 1px solid #333;">
+                <input type="color" onchange="formatNote('foreColor', this.value)" style="position: absolute; top: -5px; left: -5px; width: 50px; height: 50px; border: none; background: none; cursor: pointer;">
+            </div>
+            <button onclick="deleteCurrentNote()" style="margin-left: auto; background: #ff4444; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold;">Delete</button>
         </div>
         
-       <input type="text" id="edit-note-title" oninput="saveCurrentNote()" placeholder="Note Title..." style="background: none; border: none; border-bottom: 1px solid #222; color: var(--accent); font-size: 20px; font-weight: bold; margin-bottom: 15px; outline: none; padding: 5px 0; width: 100%;">
-        <div id="edit-note-body" contenteditable="true" style="flex: 1; color: #ccc; font-size: 16px; outline: none; line-height: 1.6; overflow-y: auto;" oninput="saveCurrentNote()"></div>
+        <input type="text" id="edit-note-title" oninput="saveCurrentNote()" placeholder="Note Title..." 
+               style="background: none; border: none; border-bottom: 1px solid #222; color: var(--accent); font-size: 18px; font-weight: bold; margin-bottom: 15px; outline: none; padding: 8px 0; width: 100%;">
+        
+        <div id="edit-note-body" contenteditable="true" 
+             style="flex: 1; color: #ccc; font-size: 14px; outline: none; line-height: 1.6; overflow-y: auto; padding-bottom: 40px;" oninput="saveCurrentNote()"></div>
     </div>
 </div>
 
    <div id="scr-peer" class="view" style="display: none; background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column;">
-    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a;">
-        <button onclick="showView('scr-student')" style="background: #222; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">←</button>
-        <h3 style="color: var(--accent); margin: 0; font-weight: 800; letter-spacing: 2px;">PEER BOARD</h3>
-        <div style="width: 40px;"></div>
-    </div>
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a; margin-top: 40px;">
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; flex-shrink: 0;">←</button>
+        
+        <div style="flex: 1; text-align: center;">
+            <h3 style="color: var(--accent); margin: 0; font-weight: 800; letter-spacing: 2px; font-size: 16px;">PEER BOARD</h3>
+        </div>
 
-    <div style="padding: 20px; background: #111; margin: 15px; border-radius: 20px; border: 1px solid #222;">
+        <div style="width: 35px;"></div> </div>
+
+    <div style="padding: 15px; background: #111; margin: 15px; border-radius: 20px; border: 1px solid #222; flex-shrink: 0;">
         <textarea id="peer-input" placeholder="What's happening on campus? Post it here..." 
-            style="width: 100%; height: 80px; background: none; border: none; color: white; outline: none; resize: none; font-family: inherit; font-size: 14px;"></textarea>
-        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
-            <button onclick="addPost()" style="background: var(--accent); color: black; border: none; padding: 10px 25px; border-radius: 12px; font-weight: 800; cursor: pointer;">POST</button>
+            style="width: 100%; height: 60px; background: none; border: none; color: white; outline: none; resize: none; font-family: inherit; font-size: 14px; padding: 5px; box-sizing: border-box;"></textarea>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+            <div id="image-upload-indicator" style="color: #666; font-size: 11px;"></div>
+            
+            <button onclick="addPost()" style="background: var(--accent); color: black; border: none; padding: 8px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 13px;">POST</button>
         </div>
     </div>
 
-    <div id="peer-feed" style="flex: 1; padding: 0 20px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
+    <div id="peer-feed" style="flex: 1; padding: 0 15px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;">
         </div>
 </div>
 
 <div id="scr-about" class="view" style="display:none; flex-direction: column; background: #000; min-height: 100vh; width: 100%;">
-    
     <div style="padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #1a1a1a;">
         <button onclick="showView('scr-student')" style="background: #111; border: 1px solid #222; color: white; width: 40px; height: 40px; border-radius: 12px; cursor: pointer;">←</button>
         <div>
@@ -838,7 +990,7 @@ input, button, textarea {
     <div class="auth-box" style="padding: 40px 20px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
         <div style="text-align: center; margin-bottom: 30px;">
             
-            <img src="https://i.postimg.cc/bY74X2V5/schedly-logo.png" 
+            <img src="schedly-logo.png" 
                  alt="Schedly Logo" 
                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/2693/2693507.png'"
                  style="width: 150px; height: auto; display: inline-block; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(212,175,55,0.4));">
@@ -931,13 +1083,15 @@ input, button, textarea {
   
 <div id="scr-student" class="view">
     <div class="main-panel" style="padding: 0;">
-        
         <div style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-    
-    <div>
-        <h1 style="font-size: 26px; margin: 0; color: var(--accent); font-weight: 800;">SCHEDLY PRO V.1 </h1>
-        <p style="font-size: 11px; color: #666; letter-spacing: 1px;">Your Daily Academic Partner</p>
-    </div>
+    <div style="text-align: left; min-width: 0;">
+    <h1 style="font-size: 20px; margin: 0; color: var(--accent); font-weight: 800; white-space: nowrap; letter-spacing: -0.5px;">
+        SCHEDLY PRO V.1
+    </h1>
+    <p style="font-size: 10px; color: #666; letter-spacing: 0.5px; margin: 0; white-space: nowrap;">
+        Your Daily Academic Partner
+    </p>
+</div>
     
     <div style="display: flex; align-items: center; gap: 12px;">
         
@@ -948,16 +1102,14 @@ input, button, textarea {
             </div>
         </div>
 
-        <div style="position: relative; cursor: pointer; padding: 5px; display: flex; align-items: center;" onclick="window.openNotifications()">
-            <span style="font-size: 22px;">🔔</span>
-            <span id="notif-count" style="display:none; position: absolute; top: 0; right: 0; background: #ff5f57; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #000;">0</span>
-        </div>
+        <div style="position: relative; cursor: pointer; padding: 5px; display: flex; align-items: center; margin-top: 35px; z-index: 1100;" onclick="window.openNotifications()">
+    <span style="font-size: 22px;">🔔</span>
+    <span id="notif-count" style="display:none; position: absolute; top: -2px; right: -2px; background: #ff5f57; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 9px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #000;">0</span>
+</div>
 
     </div>
 </div>
-
         <div class="main-grid">
-            
             <div class="nav-card full-span" style="grid-column: span 2; border-color: var(--accent); background: linear-gradient(135deg, #111, #080808);" onclick="openProfile()">
                 <div style="display:flex; align-items:center; gap:15px;">
                     <div id="user-initial" style="width:55px; height:55px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; color:black; font-weight:900; font-size:22px; box-shadow: 0 0 15px rgba(212,175,55,0.2);">?</div>
@@ -1140,22 +1292,33 @@ input, button, textarea {
         </div>
 </div>
 
-<div id="scr-tasks" class="view" style="display:none; background: #000; min-height: 100vh;">
-    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222;">
-        <button onclick="showView('scr-subjects')" style="background: #222; color: white; border-radius: 50%; width: 40px; height: 40px; border: none; cursor:pointer;">←</button>
-        <h3 id="current-task-title" style="color: var(--accent); margin: 0; font-weight: 800;">TASKS</h3>
-        <div style="width: 40px;"></div>
+<div id="scr-tasks" class="view" style="display:none; background: #000; min-height: 100vh; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column;">
+    <div style="padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a; margin-top: 40px;">
+        <button onclick="showView('scr-subjects')" style="background: #222; color: white; border-radius: 50%; width: 35px; height: 35px; border: none; cursor:pointer; flex-shrink: 0;">←</button>
+        
+        <div style="flex: 1; text-align: center; min-width: 0; padding: 0 10px;">
+            <h3 id="current-task-title" style="color: var(--accent); margin: 0; font-weight: 800; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; letter-spacing: 1px;">
+                TASKS
+            </h3>
+        </div>
+        
+        <div style="width: 35px;"></div>
     </div>
 
-    <div style="padding: 20px;">
-        <div style="background: #111; padding: 15px; border-radius: 15px; border: 1px solid #222; margin-bottom: 20px;">
-            <input type="text" id="new-task-input" placeholder="What is your task?" style="width: 100%; background: none; border: none; color: white; border-bottom: 1px solid #333; margin-bottom: 15px; padding: 5px; outline: none;">
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <input type="datetime-local" id="task-deadline" style="background: #222; color: white; border: none; padding: 10px; border-radius: 10px; flex: 1; font-size: 12px;">
-                <button onclick="saveTask()" style="background: var(--accent); color: black; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor:pointer;">ADD</button>
+    <div style="padding: 15px; overflow-y: auto; flex: 1;">
+        <div style="background: #111; padding: 15px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; margin-top: 20px;">
+            <input type="text" id="new-task-input" placeholder="What is your task?" 
+                style="width: 100%; background: none; border: none; color: white; border-bottom: 1px solid #333; margin-bottom: 15px; padding: 8px 0; outline: none; font-size: 14px;">
+            
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="datetime-local" id="task-deadline" 
+                    style="background: #222; color: white; border: none; padding: 10px; border-radius: 12px; flex: 1; font-size: 11px; font-family: inherit;">
+                <button onclick="saveTask()" 
+                    style="background: var(--accent); color: black; border: none; padding: 10px 18px; border-radius: 12px; font-weight: 800; cursor:pointer; font-size: 12px;">ADD</button>
             </div>
         </div>
-        <div id="task-list-container" style="display: flex; flex-direction: column; gap: 10px;">
+
+        <div id="task-list-container" style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 30px;">
             </div>
     </div>
 </div>
@@ -1282,7 +1445,6 @@ input, button, textarea {
         </div>
 
         <button onclick="saveStudentInformation()" style="width: 100%; padding: 15px; background: var(--accent); color: #000; font-weight: 800; border: none; border-radius: 12px; cursor: pointer;">💾 SAVE UPDATES</button>
-        <button onclick="triggerLogout()" style="width: 100%; padding: 12px; background: transparent; color: #ff4444; border: 1px solid #440000; border-radius: 12px; font-size: 11px;">LOGOUT ACCOUNT</button>
     </div>
 </div>
 
@@ -1349,14 +1511,170 @@ input, button, textarea {
   </div>
 </div>
 
+<div id="logout-modal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
+    <div class="modal-content" style="background:#121212; border:1px solid #333; border-radius:24px; padding:30px; width:85%; max-width:320px; text-align:center; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+        <div style="font-size: 50px; margin-bottom: 15px;">🚪</div>
+        <h2 style="color:var(--accent); margin-bottom: 10px; font-size: 22px;">Logging Out?</h2>
+        <p style="color:#888; font-size: 14px; margin-bottom: 25px; line-height: 1.5;">Are you sure you want to end your session? You'll need to login again to access your schedules.</p>
+        
+        <div style="display:flex; flex-direction: column; gap: 10px;">
+            <button onclick="confirmLogout()" style="width:100%; padding:14px; border-radius:12px; border:none; background:var(--error); color:white; font-weight:bold; font-size: 14px; cursor:pointer;">YES, LOGOUT</button>
+            <button onclick="closeLogoutModal()" style="width:100%; padding:14px; border-radius:12px; border:none; background:transparent; color:#666; font-weight:bold; font-size: 14px; cursor:pointer;">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" style="
+    position: fixed;
+    bottom: 80px; /* Para hindi matakpan yung music button mo */
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid var(--accent);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+    opacity: 0;
+    pointer-events: none;">
+    <span id="toast-icon">👋</span>
+    <span id="toast-message">Welcome Back, Student!</span>
+</div>
+
+<div id="welcome-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+    <div id="modal-content" style="background:#111; border:2px solid var(--accent); padding:25px; border-radius:24px; max-width:400px; width:90%; text-align:center; box-shadow: 0 0 30px rgba(0,0,0,0.5); position:relative; overflow:hidden;">
+        <div id="modal-step-content">
+            </div>
+        <button id="modal-next-btn" style="margin-top:25px; background:var(--accent); color:black; border:none; padding:12px 30px; border-radius:12px; font-weight:800; width:100%; cursor:pointer;">NEXT</button>
+    </div>
+</div>
+
+<div id="bio-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000000; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+    <div style="background:#111; border:1px solid #D4AF37; width:85%; max-width:350px; padding:25px; border-radius:20px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+        <h3 style="color:#D4AF37; margin-top:0; font-size:18px;">Update Bio</h3>
+        <p style="color:#ccc; font-size:13px; margin-bottom:15px;">Write something about yourself:</p>
+        
+        <textarea id="bio-input" style="width:100%; height:100px; background:#1a1a1a; border:1px solid #333; border-radius:10px; color:white; padding:10px; font-family:inherit; resize:none; outline:none; margin-bottom:20px;" placeholder="Enter your bio..."></textarea>
+        
+        <div style="display:flex; gap:10px;">
+            <button onclick="closeBioModal()" style="flex:1; background:#222; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">Cancel</button>
+            <button onclick="confirmBioUpdate()" style="flex:1; background:#D4AF37; color:black; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer;">Save</button>
+        </div>
+    </div>
+</div>
+
+<div id="support-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000000; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+    <div style="background:#111; border:1px solid #D4AF37; width:85%; max-width:320px; padding:25px; border-radius:20px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+        <h3 style="color:#D4AF37; margin-top:0; font-size:18px;">Schedly Pro Support</h3>
+        <p style="color:#ccc; font-size:13px; margin-bottom:20px;">How can we help you today?</p>
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <button onclick="window.open('https://www.facebook.com/profile.php?id=61586943834900', '_blank')" style="background:#1877F2; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <span>FB</span> Facebook Support
+            </button>
+
+            <button onclick="window.open('tel:+639928072368')" style="background:#222; color:#D4AF37; border:1px solid #333; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer; width: 100%; margin-bottom: 10px;">
+    📞 +63 992 807 2368
+</button>
+
+<button onclick="window.location.href='mailto:YourSchedly@gmail.com'" style="background:#222; color:#D4AF37; border:1px solid #333; padding:12px; border-radius:12px; font-weight:bold; cursor:pointer; width: 100%;">
+    📧 YourSchedly@gmail.com
+</button>
+
+            <button onclick="showToast('Website is under maintenance.', '⏳')" style="background:#1a1a1a; color:#666; border:1px solid #333; padding:12px; border-radius:12px; font-weight:bold; cursor:not-allowed;">
+                🌐 Website (Coming Soon)
+            </button>
+        </div>
+
+        <button onclick="closeSupportModal()" style="margin-top:20px; background:transparent; color:#888; border:none; font-size:13px; text-decoration:underline; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+<div id="terms-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:1000001; justify-content:center; align-items:center; backdrop-filter:blur(10px);">
+    <div style="background:#111; border:1px solid #D4AF37; width:90%; max-width:350px; padding:25px; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,0.8);">
+        <h3 style="color:#D4AF37; margin-top:0; text-align:center;">WELCOME TO SCHEDLY PRO! 📝</h3>
+        
+        <div style="color:#ccc; font-size:14px; line-height:1.6; margin:20px 0; text-align:left;">
+            <p style="margin-bottom:10px;">By checking this, you agree to:</p>
+            <ul style="padding-left:20px; margin:0;">
+                <li>Safe data storage in Firebase.</li>
+                <li>Accurate ID information.</li>
+                <li>Fair use of the system.</li>
+            </ul>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="termsDecision(false)" style="flex:1; background:#222; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold;">Decline</button>
+            <button onclick="termsDecision(true)" style="flex:1; background:#D4AF37; color:black; border:none; padding:12px; border-radius:10px; font-weight:bold;">I Agree</button>
+        </div>
+    </div>
+</div>
+
+<div id="delete-confirm-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000002; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+    <div style="background:#111; border:1px solid #ff4444; width:85%; max-width:320px; padding:25px; border-radius:20px; text-align:center;">
+        <h3 style="color:#ff4444; margin-top:0;">Remove Student?</h3>
+        <p style="color:#ccc; font-size:14px; margin-bottom:20px;">Are you sure? This action cannot be undone and the student will lose access.</p>
+        <div style="display:flex; gap:10px;">
+            <button onclick="closeDeleteModal()" style="flex:1; background:#222; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold;">Cancel</button>
+            <button id="confirm-delete-btn" style="flex:1; background:#ff4444; color:white; border:none; padding:12px; border-radius:12px; font-weight:bold;">Remove</button>
+        </div>
+    </div>
+</div>
+
+<div id="task-delete-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000003; justify-content:center; align-items:center; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); padding: 20px; box-sizing: border-box;">
+    
+    <div class="modal-content" style="background:#1a1a1a; border:1px solid rgba(255,68,68,0.3); width:100%; max-width:320px; padding:24px; border-radius:24px; text-align:center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);">
+        
+        <div style="font-size: 42px; margin-bottom: 12px;">🗑️</div>
+        <h3 style="color:#ffffff; margin:0 0 8px 0; font-size:1.3rem; font-family: sans-serif;">Remove Task?</h3>
+        <p style="color:#a0a0a0; font-size:0.95rem; margin-bottom:28px; line-height:1.5; font-family: sans-serif;">This will delete the task from your list. Are you sure?</p>
+        
+        <div style="display:flex; gap:12px; flex-direction: row;">
+            <button onclick="closeTaskDeleteModal()" style="flex:1; background:#333; color:white; border:none; height:50px; border-radius:14px; font-weight:600; font-size:1rem; cursor:pointer;">
+                Cancel
+            </button>
+            <button id="confirm-task-del-btn" style="flex:1; background:#ff4444; color:white; border:none; height:50px; border-radius:14px; font-weight:bold; font-size:1rem; cursor:pointer; box-shadow: 0 4px 10px rgba(255,68,68,0.2);">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="task-done-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000005; justify-content:center; align-items:center; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding: 20px;">
+    <div style="background:#1a1a1a; border:1px solid rgba(76, 217, 100, 0.4); width:100%; max-width:320px; padding:25px; border-radius:25px; text-align:center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+        <div style="font-size: 45px; margin-bottom: 10px;">🏆</div>
+        <h3 style="color:#fff; margin:0 0 10px 0; font-family:sans-serif;">Mission Done?</h3>
+        <p style="color:#aaa; font-size:0.9rem; margin-bottom:25px; line-height:1.4;">Marking this task as completed. Good job on finishing your work!</p>
+        <div style="display:flex; gap:12px;">
+            <button onclick="window.closeTaskDoneModal()" style="flex:1; background:#333; color:white; border:none; height:50px; border-radius:15px; font-weight:600;">Cancel</button>
+            <button id="confirm-task-done-btn" style="flex:1; background:#4cd964; color:#000; border:none; height:50px; border-radius:15px; font-weight:bold;">Yes, Done!</button>
+        </div>
+    </div>
+</div>
+
+<div id="note-delete-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:999999; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+    <div style="background:#1a1a1a; width:85%; max-width:300px; padding:20px; border-radius:20px; text-align:center; border:1px solid #444;">
+        <div style="font-size: 40px; margin-bottom: 10px;">📝🗑️</div>
+        <p style="color:white; margin-bottom:20px; font-weight:bold;">Delete this note?</p>
+        <div style="display:flex; gap:10px;">
+            <button onclick="document.getElementById('note-delete-modal').style.display='none'" style="flex:1; padding:12px; border-radius:10px; border:none; background:#333; color:white;">Cancel</button>
+            <button id="confirm-note-delete" style="flex:1; padding:12px; border-radius:10px; border:none; background:#ff4444; color:white; font-weight:bold;">Delete</button>
+        </div>
+    </div>
+</div>
+
 <style>
 @keyframes slideDown {
     from { transform: translateY(-100%); }
     to { transform: translateY(0); }
 }
-
-
-
 </style>
 
     <script type="module">
@@ -1374,85 +1692,71 @@ input, button, textarea {
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
-    const finalAlarm = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock_beeping.ogg');
-   
-   const peerCollection = collection(db, "peer_posts");
+
+
+const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
+const finalAlarm = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock_beeping.ogg');
+
+const peerCollection = collection(db, "peer_posts");
+
+
+let userRole = 'none';
+let loggedInUserDoc = ""; 
+let currentSubId = "";
+let taskListener = null;
+let timerInterval = null;
+let audioCtx = null;
+let timeLeft = 0;
+let ringInterval = null;
+let notes = JSON.parse(localStorage.getItem('schedly_notes_list')) || [];
+let activeNoteId = null; 
+let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
+let html5QrCode;
+let isMusicActive = false;
 
 
 onSnapshot(peerCollection, (snapshot) => {
     const feed = document.getElementById('peer-feed');
     if (!feed) return;
-    
     let allPosts = [];
-    snapshot.forEach((doc) => {
-        allPosts.push({ id: doc.id, ...doc.data() });
-    });
-    
-   
+    snapshot.forEach((doc) => { allPosts.push({ id: doc.id, ...doc.data() }); });
     allPosts.sort((a, b) => b.createdAt - a.createdAt);
-
     feed.innerHTML = '';
-    
-    
     const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
-
     allPosts.forEach((post) => {
         const postDiv = document.createElement('div');
-        
-        postDiv.style = "background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; position: relative; width: 100%; box-sizing: border-box; word-break: break-word; overflow-wrap: break-word;";
-        
+        postDiv.style = "background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; margin-bottom: 15px; position: relative; width: 100%; box-sizing: border-box;";
         const isOwner = currentUser && (currentUser.uid === post.senderId);
-
-        const displayImg = (post.senderImg && post.senderImg !== "null") 
-            ? post.senderImg 
-            : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.senderName)}&background=random&color=fff`;
-
-        postDiv.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <img src="${displayImg}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;">
-                <div style="min-width: 0;"> <div style="color: white; font-size: 14px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@${post.senderName}</div>
-                    <div style="color: #444; font-size: 10px;">${post.timeDisplay}</div>
-                </div>
-            </div>
-            
-            <div style="color: #ccc; font-size: 15px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word;">${post.text}</div>
-            
-            ${isOwner ? `<button onclick="deletePost('${post.id}')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: #ff4444; cursor: pointer; font-size: 20px;">&times;</button>` : ''}
-        `;
+        const displayImg = (post.senderImg && post.senderImg !== "null") ? post.senderImg : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.senderName)}&background=random&color=fff`;
+        postDiv.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><img src="${displayImg}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;"><div style="min-width: 0;"><div style="color: white; font-size: 14px; font-weight: 800;">@${post.senderName}</div><div style="color: #444; font-size: 10px;">${post.timeDisplay}</div></div></div><div style="color: #ccc; font-size: 15px;">${post.text}</div>${isOwner ? `<button onclick="deletePost('${post.id}')" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: #ff4444; font-size: 20px;">&times;</button>` : ''}`;
         feed.appendChild(postDiv);
     });
 });
-    
-    let userRole = 'none';
-    let loggedInUserDoc = ""; 
-    let currentSubId = "";
-    let taskListener = null;
-    let timerInterval = null;
-    let audioCtx = null;
-    let timeLeft = 0;
-    let ringInterval = null;
-    let notes = JSON.parse(localStorage.getItem('schedly_notes_list')) || [];
-    let activeNoteId = null; 
-    let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
-    let html5QrCode;
-    let isMusicActive = false;
-    
-    const playRingingSound = (stop = false) => {
+
+const playRingingSound = (stop = false) => {
+    const taskAudio = document.getElementById('task-alarm-sound');
+
     if (stop) {
-        if (ringInterval) {
-            clearInterval(ringInterval);
-            ringInterval = null;
-        }
-        if (audioCtx) {
-            audioCtx.close();
-            audioCtx = null;
-        }
+        if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
+        if (audioCtx) { audioCtx.close(); audioCtx = null; }
+        if (taskAudio) { taskAudio.pause(); taskAudio.currentTime = 0; }
         return;
     }
 
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
+    if (taskAudio) {
+        taskAudio.play().catch(e => {
+            console.log("MP3 failed, using robotic backup.");
+
+            startRoboticBeep();
+        });
+    } else {
+        startRoboticBeep();
+    }
+};
+
+function startRoboticBeep() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (!ringInterval) {
         ringInterval = setInterval(() => {
             const osc = audioCtx.createOscillator();
@@ -1460,30 +1764,40 @@ onSnapshot(peerCollection, (snapshot) => {
             osc.type = 'square';
             osc.frequency.setValueAtTime(880, audioCtx.currentTime);
             gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
         }, 400); 
     }
-};
-
+}
 setInterval(() => {
     const now = new Date();
     const offset = now.getTimezoneOffset() * 60000;
     const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
-
+    
     const q = query(collection(db, "student_tasks"), where("status", "!=", "completed"));
     
     getDocs(q).then(snap => {
         snap.forEach(d => {
             const t = d.data();
             if (t.deadline === localISOTime) {
-                const sound = document.getElementById('notif-sound');
-                if (sound) {
-                    sound.play().catch(e => console.log("Sound play blocked, need user interaction first."));
+                playRingingSound();
+                
+                const alarmModal = document.getElementById('deadline-alarm-modal');
+                const taskNameLabel = document.getElementById('alarm-task-name');
+                
+                if (alarmModal && taskNameLabel) {
+                    taskNameLabel.innerText = t.taskName;
+                    alarmModal.style.display = 'flex';
                 }
-                alert("⏰ DEADLINE ALERT: " + t.taskName);
+
+                if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+
+                document.getElementById('stop-alarm-btn').onclick = () => {
+                    playRingingSound(true); 
+                    alarmModal.style.display = 'none';
+                    if (navigator.vibrate) navigator.vibrate(0); 
+                    showToast("Alarm Stopped", "⏰");
+                };
             }
         });
     });
@@ -1562,7 +1876,8 @@ startLiveClock();
     
     if (navigator.vibrate) navigator.vibrate(20);
 
-    if(!u || !p) return alert("Please enter credentials.");
+    if(!u || !p) return showToast("Please enter credentials.", "🔑");
+
     const originalText = "Sign In"; 
     loginBtn.innerHTML = '<div class="spinner"></div>'; 
     loginBtn.disabled = true;
@@ -1621,16 +1936,26 @@ startLiveClock();
             if(userData.isActivated) {
                 window.watchStudentProfile(userDoc.id); 
                 showView('scr-student'); 
+                
+                const displayName = userData.senderName || userData.username || "Student";
+                showToast(`Welcome Back, ${displayName}!`, "🎓");
+
                 window.loadSubjects();
+           
+                const storageKey = `welcome_finished_${userDoc.id}`;
+                if (localStorage.getItem(storageKey) !== 'true') { 
+                    showWelcomeModal(userDoc.id, userData.senderName || "Student");
+                }
+
             } else {
                 showView('scr-activate'); 
             }
         } else {
-            alert("Invalid username or password.");
+            showToast("Invalid username or password.", "🚫");
         }
     } catch (err) {
         console.error(err);
-        alert("Connection Error.");
+        showToast("Connection Error.", "🌐");
     } finally {
         loginBtn.innerHTML = "Sign In"; 
         loginBtn.disabled = false;
@@ -1639,14 +1964,18 @@ startLiveClock();
 };
 
 
-         window.openAddSubjectModal = () => document.getElementById('subject-modal').style.display = 'flex';
-    window.closeSubModal = () => document.getElementById('subject-modal').style.display = 'none';
-    window.closeTaskModal = () => document.getElementById('task-modal').style.display = 'none';
-    window.saveSubject = async () => {
+window.openAddSubjectModal = () => document.getElementById('subject-modal').style.display = 'flex';
+window.closeSubModal = () => document.getElementById('subject-modal').style.display = 'none';
+window.closeTaskModal = () => document.getElementById('task-modal').style.display = 'none';
+
+window.saveSubject = async () => {
     const name = document.getElementById('sub-name').value.trim();
     const desc = document.getElementById('sub-desc').value.trim();
     
-    if(!name) return alert("Add a Subject Name!");
+    if(!name) {
+        if (navigator.vibrate) navigator.vibrate([50, 50]);
+        return showToast("Add a Subject Name!", "⚠️");
+    }
 
     const studentIdClean = (typeof loggedInUserDoc === 'object') ? (loggedInUserDoc.uid || loggedInUserDoc.id) : loggedInUserDoc;
 
@@ -1661,10 +1990,13 @@ startLiveClock();
         document.getElementById('sub-name').value = "";
         document.getElementById('sub-desc').value = "";
         document.getElementById('subject-modal').style.display = 'none';
+        
+        showToast("Subject saved successfully!", "📚");
         console.log("Subject saved successfully with ID:", studentIdClean);
+
     } catch (e) { 
         console.error("Save Error:", e);
-        alert("Error saving: " + e.message); 
+        showToast("Error saving: " + e.message, "❌"); 
     }
 };
 
@@ -1720,47 +2052,104 @@ window.deleteTask = async (taskId) => {
     }
 };
 
-  window.loadTasks = () => {
+let currentTaskIdToDelete = null;
+let currentTaskStatusId = null;
+let currentTaskNextStatus = "";
+window.loadTasks = () => {
     const cont = document.getElementById('task-list-container');
     const q = query(collection(db, "student_tasks"), where("subjectId", "==", currentSubId));
     
     onSnapshot(q, (snap) => {
         cont.innerHTML = "";
-        
         const ngayon = new Date().getTime();
+
+        if (snap.empty) {
+            cont.innerHTML = "<p style='color:gray; text-align:center; margin-top:20px;'>No tasks for this subject.</p>";
+            return;
+        }
 
         snap.forEach(d => {
             const t = d.data();
             const isDone = t.status === "completed";
-            
             const deadlineTime = new Date(t.deadline).getTime();
-            
             const isMissed = !isDone && deadlineTime < ngayon;
-            
-            console.log(`Task: ${t.taskName} | Ngayon: ${ngayon} | Deadline: ${deadlineTime} | Late: ${isMissed}`);
 
             cont.innerHTML += `
-                <div style="background:#111; padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border-left: 4px solid ${isDone ? '#4cd964' : (isMissed ? '#ff4444' : '#ffbb33')}; margin-bottom:10px;">
+                <div style="background:#1a1a1a; padding:15px; border-radius:16px; display:flex; justify-content:space-between; align-items:center; border-left: 5px solid ${isDone ? '#4cd964' : (isMissed ? '#ff4444' : '#ffbb33')}; margin-bottom:12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
                     <div style="flex:1; opacity: ${isDone ? '0.5' : '1'}">
-                        <span style="text-decoration: ${isDone ? 'line-through' : 'none'}; color: white; font-weight: bold;">
-                            ${t.taskName} ${isMissed ? '<span style="color:#ff4444; font-size:10px; margin-left:5px;">⚠️ LATE</span>' : ''}
+                        <span style="text-decoration: ${isDone ? 'line-through' : 'none'}; color: white; font-weight: bold; font-size: 1rem; display: block;">
+                            ${t.taskName} ${isMissed ? '<span style="color:#ff4444; font-size:10px; background:rgba(255,68,68,0.1); padding:2px 6px; border-radius:4px; margin-left:5px;">⚠️ LATE</span>' : ''}
                         </span>
-                        <br>
-                        <small style="color: ${isMissed ? '#ff4444' : 'gray'}; font-size:11px;">
+                        <small style="color: ${isMissed ? '#ff4444' : '#888'}; font-size:12px;">
                             📅 ${t.deadline.replace('T', ' ')}
                         </small>
                     </div>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="window.toggleTaskStatus('${d.id}', '${t.status || 'pending'}')" style="background:none; border:none; cursor:pointer;">
-                            ${isDone ? '↩️' : '✅'}
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <button onclick="window.toggleTaskStatus('${d.id}', '${t.status || 'pending'}')" style="background:rgba(255,255,255,0.05); border:none; width:42px; height:42px; border-radius:12px; cursor:pointer; display:flex; justify-content:center; align-items:center; -webkit-tap-highlight-color:transparent;">
+                            <span style="font-size:20px;">${isDone ? '↩️' : '✅'}</span>
                         </button>
-                        <button onclick="window.removeTask('${d.id}')" style="background:none; border:none; cursor:pointer;">
-                            ✕
+                        <button onclick="window.removeTask('${d.id}')" style="background:rgba(255,68,68,0.1); border:none; width:42px; height:42px; border-radius:12px; cursor:pointer; display:flex; justify-content:center; align-items:center; -webkit-tap-highlight-color:transparent;">
+                            <span style="color:#ff4444; font-size:18px; font-weight:bold;">✕</span>
                         </button>
                     </div>
                 </div>`;
         });
     });
+};
+
+window.removeTask = async (taskId) => {
+    currentTaskIdToDelete = taskId;
+    document.getElementById('task-delete-modal').style.display = 'flex';
+    if (navigator.vibrate) navigator.vibrate(30);
+
+    document.getElementById('confirm-task-del-btn').onclick = async () => {
+        try {
+            await deleteDoc(doc(db, "student_tasks", currentTaskIdToDelete));
+            showToast("Task removed successfully", "🗑️");
+            if (navigator.vibrate) navigator.vibrate([40, 20]);
+        } catch (e) {
+            showToast("Error deleting task", "❌");
+        }
+        closeTaskDeleteModal();
+    };
+};
+
+window.closeTaskDeleteModal = () => {
+    document.getElementById('task-delete-modal').style.display = 'none';
+};
+
+window.toggleTaskStatus = (id, currentStatus) => {
+    if (currentStatus === "completed") {
+        updateTaskStatusInFirebase(id, "pending");
+    } else {
+        currentTaskStatusId = id;
+        currentTaskNextStatus = "completed";
+        document.getElementById('task-done-modal').style.display = 'flex';
+        if (navigator.vibrate) navigator.vibrate(30);
+    }
+};
+
+document.getElementById('confirm-task-done-btn').onclick = async () => {
+    await updateTaskStatusInFirebase(currentTaskStatusId, currentTaskNextStatus);
+    closeTaskDoneModal();
+};
+
+async function updateTaskStatusInFirebase(id, newStatus) {
+    try {
+        await updateDoc(doc(db, "student_tasks", id), { status: newStatus });
+        if (newStatus === "completed") {
+            showToast("Mission Accomplished! 🏆", "✨");
+            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        } else {
+            showToast("Moved to pending", "↩️");
+        }
+    } catch (e) {
+        showToast("Error: " + e.message, "❌");
+    }
+}
+
+window.closeTaskDoneModal = () => {
+    document.getElementById('task-done-modal').style.display = 'none';
 };
 
     window.genKey = async () => {
@@ -1785,10 +2174,11 @@ window.deleteTask = async (taskId) => {
             colorDark : "#000000",
             colorLight : "#ffffff"
         });
-        
-        alert("New Key Generated: " + code);
-    } catch (e) {
-        alert("Error generating key: " + e.message);
+        if (navigator.vibrate) navigator.vibrate(50);
+        showToast("New Key Generated: " + code, "🔑");
+            } catch (e) {
+        console.error("GenKey Error:", e);
+        showToast("Error generating key: " + e.message, "❌");
     }
 };
 
@@ -1805,15 +2195,25 @@ window.deleteTask = async (taskId) => {
     const bday = document.getElementById('reg-birthdate').value;
     const gndrNode = document.querySelector('input[name="reg-gender"]:checked');
     const gndr = gndrNode ? gndrNode.value : "Not Specified";
+
     if(!n || !u || !ph || !lvl || !e || !p || !cp || !addr || !bday) {
-        return alert("Please complete all required fields. Specifically, your address and date of birth are mandatory.");
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        return showToast("Please complete all required fields.", "⚠️");
     }
-    if(p !== cp) return alert("Passwords do not match!");
-    if(!agree) return alert("Please agree to the Terms & Conditions.");
+    
+    if(p !== cp) {
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        return showToast("Passwords do not match!", "❌");
+    }
+    
+    if(!agree) return showToast("Please agree to the Terms & Conditions.", "📜");
 
     try {
         const uSnap = await getDocs(query(collection(db, "users"), where("username", "==", u)));
-        if(!uSnap.empty) return alert("Username already taken.");
+        
+
+        if(!uSnap.empty) return showToast("Username already taken.", "🚫");
+
         await addDoc(collection(db, "users"), { 
             fullName: n, 
             username: u, 
@@ -1838,20 +2238,32 @@ window.deleteTask = async (taskId) => {
             emergencyNumber2: ""
         });
 
-        alert("Successfully Registered! Please login to activate."); 
-        showView('scr-login');
+        if (navigator.vibrate) navigator.vibrate(100);
+        showToast("Successfully Registered! Redirecting...", "🎉"); 
+        
+        setTimeout(() => {
+            showView('scr-login');
+        }, 1500);
         
     } catch (err) {
         console.error(err);
-        alert("Error: " + err.message);
+        showToast("Error: " + err.message, "❌");
     }
 };
 
    window.verifyActivation = async () => {
     const keyInput = document.getElementById('act-key').value.toUpperCase().trim();
     const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
-    if (!keyInput) return alert("Please write or scan the activation key.");
-    if (!currentUser || !currentUser.uid) return alert("Session error. Please log in again.");
+    
+    if (!keyInput) {
+        if (navigator.vibrate) navigator.vibrate([50, 50]);
+        return showToast("Please write or scan the activation key.", "⚠️");
+    }
+
+    if (!currentUser || !currentUser.uid) {
+        return showToast("Session error. Please log in again.", "❗");
+    }
+
     try {
         const q = query(
             collection(db, "activation_codes"), 
@@ -1863,6 +2275,7 @@ window.deleteTask = async (taskId) => {
         if (!snap.empty) {
             const keyDoc = snap.docs[0];
             const keyDocId = keyDoc.id;
+            
             await updateDoc(doc(db, "users", currentUser.uid), { 
                 isActivated: true,
                 activatedWith: keyInput,
@@ -1872,21 +2285,33 @@ window.deleteTask = async (taskId) => {
                 isUsed: true,
                 usedBy: currentUser.username
             });
+
             currentUser.isActivated = true;
             localStorage.setItem('user_data', JSON.stringify(currentUser));
-            alert("Account Activated! Welcome to Schedly Pro.");
+
+            if (navigator.vibrate) navigator.vibrate(100);
+            showToast("Account Activated! Welcome to Schedly Pro.", "🔓");
+
             showView('scr-student');
             window.watchStudentProfile(currentUser.uid);
             window.loadSubjects();
             
+            const storageKey = `welcome_finished_${currentUser.uid}`;
+            if (localStorage.getItem(storageKey) !== 'true') {
+                setTimeout(() => {
+                    showWelcomeModal(currentUser.uid, currentUser.senderName || "Student");
+                }, 500);
+            }
+
         } else { 
-            alert("Wrong key or it has already been used by someone else. Contact the Admin."); 
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            showToast("Wrong key or already used. Contact Admin.", "🚫"); 
         }
     } catch (err) { 
         console.error(err);
-        alert("Activation failed: " + err.message); 
+        showToast("Activation failed: " + err.message, "❌"); 
     }
-};
+ };
 
     
 window.startScanner = () => {
@@ -1902,23 +2327,22 @@ window.startScanner = () => {
         config,
         async (decodedText) => { 
             try {
-                
                 document.getElementById('act-key').value = decodedText;
                 
-               
                 await html5QrCode.stop();
                 
-               
                 document.getElementById('reader').innerHTML = ""; 
-                
                 document.getElementById('cam-btn').style.display = 'block';
-                alert("QR Code Detected! Now click Activate.");
+                
+                if (navigator.vibrate) navigator.vibrate(50);
+                showToast("QR Code Detected! Now click Activate.", "📸");
+
             } catch (stopErr) {
                 console.warn("Stop error:", stopErr);
             }
         }
     ).catch((err) => {
-        alert("Camera Error: " + err);
+        showToast("Camera Error: " + err, "❌");
         document.getElementById('cam-btn').style.display = 'block';
     });
 };
@@ -2009,18 +2433,27 @@ window.startScanner = () => {
             state: s,
             endTime: t,
             duration: m 
-        });
-        alert("System Updated!");
+        });       
+        if (navigator.vibrate) navigator.vibrate(50);
+        showToast("System Updated!", "⚙️");
+        
     } catch (e) {
-        alert("Update failed: " + e.message);
+        console.error("System Update Error:", e);
+        showToast("Update failed: " + e.message, "❌");
     }
 };
 
     window.postAnnouncement = async () => {
     const msg = document.getElementById('ann-msg-in').value;
     const rawExp = document.getElementById('ann-time-end').value;
-    if(!msg || !rawExp) return alert("Please write the message and the expiry time!");
+
+    if(!msg || !rawExp) {
+        if (navigator.vibrate) navigator.vibrate([50, 50]);
+        return showToast("Please write the message and the expiry time!", "⚠️");
+    }
+
     const expiryISO = new Date(rawExp).toISOString();
+
     try {
         await addDoc(collection(db, "announcements"), {
             title: "Admin Update", 
@@ -2028,10 +2461,15 @@ window.startScanner = () => {
             expiryDate: expiryISO,
             createdAt: serverTimestamp()
         });
-        alert("Broadcast Sent! All students will be able to see this now.");
+        
+        if (navigator.vibrate) navigator.vibrate(100);
+        showToast("Broadcast Sent! Students notified. 📢", "✨");
+
         document.getElementById('ann-msg-in').value = ""; 
+        
     } catch (e) {
-        alert("Error: " + e.message);
+        console.error("Announcement Error:", e);
+        showToast("Error: " + e.message, "❌");
     }
 };
 
@@ -2054,11 +2492,15 @@ window.startScanner = () => {
         b.className = p.length < 5 ? "strength-bar weak" : p.length < 9 ? "strength-bar mid" : "strength-bar strong";
     };
 
-      window.downloadKeyCard = () => {
+   window.downloadKeyCard = () => {
     const area = document.getElementById('capture-area');
     const code = document.getElementById('manual-code-text').innerText;
     
-    if (!code) return alert("Generate a key first!");
+    if (!code) {
+        if (navigator.vibrate) navigator.vibrate(30);
+        return showToast("Generate a key first!", "🔑");
+    }
+    showToast("Generating image, please wait...", "⏳");
 
     html2canvas(area, {
         backgroundColor: "#ffffff",
@@ -2069,31 +2511,43 @@ window.startScanner = () => {
         link.download = `Key-${code}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
+        
+        showToast("Key Card downloaded! 💾", "✨");
+        
     }).catch(err => {
         console.error("Download Error:", err);
-        alert("Cannot download. Just take a screenshot for now.");
+        showToast("Cannot download. Take a screenshot instead.", "❌");
     });
 };
 
+let userToDelete = null;
 window.deleteUser = async (id) => {
-        if(confirm("Are you sure you want to remove this student?")) {
-            try {
-               
-                await deleteDoc(doc(db, "users", id));
-                alert("Student removed!");
-            } catch (e) {
-                console.error(e);
-                alert("Error deleting student.");
-            }
+    userToDelete = id;
+    const modal = document.getElementById('delete-confirm-modal');
+    modal.style.display = 'flex';
+    
+    document.getElementById('confirm-delete-btn').onclick = async () => {
+        try {
+            await deleteDoc(doc(db, "users", userToDelete));
+            showToast("Student removed!", "🗑️");
+            closeDeleteModal();
+            if (typeof loadAdminData === 'function') loadAdminData(); // Refresh list kung meron
+        } catch (e) {
+            console.error(e);
+            showToast("Error deleting student.", "❌");
         }
     };
-
-     window.setSystemState = async (newState) => {
+};
+window.closeDeleteModal = () => {
+    document.getElementById('delete-confirm-modal').style.display = 'none';
+    userToDelete = null;
+};
+window.setSystemState = async (newState) => {
     try {
         await updateDoc(doc(db, "system-config", "global"), { state: newState });
-        alert("System status updated to: " + newState.toUpperCase());
+        showToast("System: " + newState.toUpperCase(), "📡");
     } catch (e) {
-        alert("Error updating status: " + e.message);
+        showToast("Error updating status: " + e.message, "❌");
     }
 };
 
@@ -2204,10 +2658,9 @@ window.saveStudentEdit = async () => {
     const newPhone = document.getElementById('edit-phone').value.trim();
     const newUsername = document.getElementById('edit-username').value.trim();
     const newPassword = document.getElementById('edit-password').value;
-
     if (!newUsername) {
-        alert("Username is required.");
-        return;
+        if (navigator.vibrate) navigator.vibrate([50, 50]);
+        return showToast("Username is required.", "⚠️");
     }
 
     try {
@@ -2218,8 +2671,7 @@ window.saveStudentEdit = async () => {
         const snap = await getDocs(q);
 
         if (!snap.empty && snap.docs[0].id !== id) {
-            alert("Username already taken.");
-            return;
+            return showToast("Username already taken.", "🚫");
         }
 
         const updates = {
@@ -2236,10 +2688,13 @@ window.saveStudentEdit = async () => {
         await updateDoc(doc(db, "users", id), updates);
 
         document.getElementById('edit-modal').style.display = 'none';
-        alert("User updated successfully ✅");
+        
+        if (navigator.vibrate) navigator.vibrate(100);
+        showToast("User updated successfully ✅", "✨");
+        
     } catch (err) {
         console.error(err);
-        alert("Error saving changes.");
+        showToast("Error saving changes.", "❌");
     }
 };
 
@@ -2251,7 +2706,6 @@ window.openProfile = () => {
     document.getElementById('profile-modal').style.display = 'flex';
     setTimeout(() => {
         if (!map) {
-           
             map = L.map('map-container').setView([14.4081, 120.9403], 15); 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap'
@@ -2264,15 +2718,20 @@ window.openProfile = () => {
                 const latlng = [latitude, longitude];
 
                 if (!marker) {
-                    marker = L.marker(latlng).addTo(map).bindPopup("Im here!").openPopup();
+                    marker = L.marker(latlng).addTo(map).bindPopup("I'm here!").openPopup();
                 } else {
                     marker.setLatLng(latlng);
                 }
                 map.setView(latlng, 16);
             }, (err) => {
                 console.error("GPS Error:", err);
-                alert("Your location cannot be accessed. Check GPS permissions");
+                
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                showToast("GPS Error: Check your location settings.", "📍");
+                
             }, { enableHighAccuracy: true });
+        } else {
+            showToast("Geolocation is not supported by this device.", "🚫");
         }
         map.invalidateSize();
     }, 300);
@@ -2283,28 +2742,49 @@ window.closeModal = (id) => {
 };
 
 window.triggerLogout = () => {
-    if(confirm("Are you sure you want to logout?")) {
-        localStorage.removeItem('appUserRole');
-        location.reload(); 
+    if (typeof playBtnSound === "function") playBtnSound();
+    if (navigator.vibrate) navigator.vibrate(50); 
+
+    const logoutModal = document.getElementById('logout-modal');
+    if (logoutModal) {
+        const content = logoutModal.querySelector('.modal-content');
+        if(content) content.style.animation = 'none';
+        
+        logoutModal.style.display = 'flex';
+        if(content) {
+            content.offsetHeight; 
+            content.style.animation = 'modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+        }
     }
 };
-  
+window.confirmLogout = () => {
+    if (typeof playActionSound === "function") playActionSound();
+    
+    localStorage.removeItem('appUserRole');
+    location.reload();
+};
+window.closeLogoutModal = () => {
+    if (typeof playBtnSound === "function") playBtnSound();
+    
+    const logoutModal = document.getElementById('logout-modal');
+    if (logoutModal) {
+        logoutModal.style.display = 'none';
+    }
+};
 window.toggleActionMenu = () => {
     const menu = document.getElementById('actionMenu');
     menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 };
-
 window.handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
         
-        if (file.size > 800000) return alert("Masyadong malaki ang file. Choose a smaller photo (under 800kb).");
+        if (file.size > 800000) return showToast("Masyadong malaki ang file. Choose a smaller photo (under 800kb).", "🖼️");
 
         const reader = new FileReader();
         reader.onload = async (e) => {
             const imgUrl = e.target.result;
             
-           
             const userId = loggedInUserDoc?.uid || loggedInUserDoc;
 
             try {
@@ -2313,20 +2793,16 @@ window.handleImageUpload = (event) => {
                     profilePic: imgUrl
                 });
 
-               
                 if (typeof loggedInUserDoc === 'object') {
                     loggedInUserDoc.profilePic = imgUrl;
                     localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
                 }
 
-               
-                if (window.updateProfileUI) window.updateProfileUI(imgUrl);
-                
-                alert("Profile Photo Updated!");
-
+                if (window.updateProfileUI) window.updateProfileUI(imgUrl);  
+                showToast("Profile Photo Updated!", "📸");
             } catch (err) {
                 console.error(err);
-                alert("Error saving photo to cloud.");
+                showToast("Error saving photo to cloud.", "❌");
             }
         };
         reader.readAsDataURL(file);
@@ -2335,30 +2811,27 @@ window.handleImageUpload = (event) => {
 };
 
 window.removeProfilePic = async () => {
-    if(confirm("Remove profile photo?")) {
-        const userId = loggedInUserDoc?.uid || window.loggedInUserId;
+    const userId = loggedInUserDoc?.uid || window.loggedInUserId;
 
-        if(!userId) return alert("User ID not found. Please re-login.");
+    if(!userId) return showToast("User ID not found. Please re-login.", "⚠️");
 
-        try {
-            await updateDoc(doc(db, "users", userId), {
-                profilePic: null
-            });
+    try {
+        await updateDoc(doc(db, "users", userId), {
+            profilePic: null
+        });
 
-            if (typeof loggedInUserDoc === 'object') {
-                loggedInUserDoc.profilePic = null;
-                localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
-            }
-
-            if (window.updateProfileUI) window.updateProfileUI(null);
-            
-            alert("Profile photo removed.");
-
-        } catch (err) {
-            console.error("Remove Photo Error:", err);
-            alert("Error removing photo.");
+        if (typeof loggedInUserDoc === 'object') {
+            loggedInUserDoc.profilePic = null;
+            localStorage.setItem('user_data', JSON.stringify(loggedInUserDoc));
         }
+        if (window.updateProfileUI) window.updateProfileUI(null);
+        showToast("Profile photo removed.", "🗑️");
+
+    } catch (err) {
+        console.error("Remove Photo Error:", err);
+        showToast("Error removing photo.", "❌");
     }
+    
     if (window.toggleActionMenu) window.toggleActionMenu();
 };
 
@@ -2374,46 +2847,53 @@ window.updateProfileUI = (url) => {
     }
 };
 
-window.openBioEditor = async () => {
+window.openBioEditor = () => {
+    const bioElement = document.getElementById('bioDisplay');
+    const modal = document.getElementById('bio-modal');
+    const input = document.getElementById('bio-input');
+
+    if (!bioElement || !modal || !input) return;
+
+    input.value = bioElement.innerText;
+    
+    modal.style.display = 'flex';
+    if (navigator.vibrate) navigator.vibrate(30);
+};
+
+window.closeBioModal = () => {
+    document.getElementById('bio-modal').style.display = 'none';
+};
+
+window.confirmBioUpdate = async () => {
+    const newBio = document.getElementById('bio-input').value;
     const bioElement = document.getElementById('bioDisplay');
     
-    if (!bioElement) {
-        console.error("Mali: Hindi mahanap ang element na 'bioDisplay'. I-check ang HTML!");
-        return;
-    }
-
     const userId = (typeof loggedInUserDoc === 'object') ? 
                    (loggedInUserDoc.uid || loggedInUserDoc.id) : 
                    loggedInUserDoc;
 
     if (!userId) {
-        alert("Session Error: Please log in again.");
+        showToast("Session Error: Please log in again.", "⚠️");
         return;
     }
 
-    const currentBio = bioElement.innerText;
-    const newBio = prompt("Update your Bio:", currentBio);
-    
-    if (newBio !== null) {
-        try {
-            const userRef = doc(db, "users", String(userId)); 
-            
-            await updateDoc(userRef, {
-                bio: newBio
-            });
+    try {
+        const userRef = doc(db, "users", String(userId)); 
+        
+        await updateDoc(userRef, { bio: newBio });
 
-            bioElement.innerText = newBio;
-            console.log("Bio updated successfully!");
-        } catch (e) {
-            console.error("Firebase Update Error:", e);
-            alert("Failed to save. Please check your connection.");
-        }
+        bioElement.innerText = newBio;
+        window.closeBioModal(); 
+        showToast("Bio updated successfully!", "✨");
+    } catch (e) {
+        console.error("Firebase Update Error:", e);
+        showToast("Failed to save bio.", "❌");
     }
 };
 
 window.saveStudentInformation = async () => {
     if (!window.loggedInUserId) {
-        alert("Session expired. Please login again.");
+        showToast("Session expired. Please login again.", "⚠️");
         return;
     }
 
@@ -2437,33 +2917,40 @@ window.saveStudentInformation = async () => {
             doc(db, "users", window.loggedInUserId),
             dataToUpdate
         );
-
-        alert("Information updated and synced! ✅");
+        showToast("Information updated and synced!", "✅");
     } catch (err) {
         console.error("Save Error:", err);
-        alert("Error saving information.");
+        showToast("Error saving information.", "❌");
     }
 };
 
 
 
 
-    window.handleTermsClick = (event) => {
+   window.handleTermsClick = (event) => {
     const checkbox = document.getElementById('reg-agree');
-    
+    const modal = document.getElementById('terms-modal');
     
     if (checkbox.checked) {
-       
         checkbox.checked = false; 
-
-        const message = "WELCOME TO SCHEDLY PRO! 📝\n\nBy checking this, you agree to:\n1. Safe data storage in Firebase.\n2. Accurate ID information.\n3. Fair use of the system.\n\nClick 'OK' to Agree or 'Cancel' to decline.";
-
-        if (confirm(message)) {
-            checkbox.checked = true; 
-        } else {
-            checkbox.checked = false; 
-        }
+        modal.style.display = 'flex';
+        if (navigator.vibrate) navigator.vibrate(30);
     }
+};
+
+window.termsDecision = (agreed) => {
+    const checkbox = document.getElementById('reg-agree');
+    const modal = document.getElementById('terms-modal');
+    
+    if (agreed) {
+        checkbox.checked = true;
+        showToast("Terms Accepted! ✅");
+    } else {
+        checkbox.checked = false;
+        showToast("Terms declined.", "⚠️");
+    }
+    
+    modal.style.display = 'none';
 };
 
 window.addEventListener('load', () => {
@@ -2491,7 +2978,8 @@ window.saveSubject = async () => {
     const name = document.getElementById('sub-name').value.trim();
     const desc = document.getElementById('sub-desc').value.trim();
     
-    if(!name) return alert("Add a name to the subject!");
+    if(!name) return showToast("Add a name to the subject!", "⚠️");
+
     const rawId = (typeof loggedInUserDoc === 'object') ? loggedInUserDoc.uid : loggedInUserDoc;
     const cleanId = String(rawId); 
 
@@ -2508,10 +2996,11 @@ window.saveSubject = async () => {
         document.getElementById('sub-desc').value = "";
         document.getElementById('subject-modal').style.display = 'none';
         
-        alert("Subject Saved!.");
+        showToast("Subject Saved!", "📚");
+
     } catch (e) {
         console.error("Firebase Save Error:", e);
-        alert("Cant Saved: " + e.message);
+        showToast("Cant Saved: " + e.message, "❌");
     }
 };
 
@@ -2548,13 +3037,13 @@ window.loadSubjects = () => {
 };
 
 window.deleteSubject = async (subjectId) => {
-    if (confirm("Are you sure? This subject will be deleted, as well as access to its tasks.")) {
-        try {
-            await deleteDoc(doc(db, "subjects", subjectId));
-            console.log("Subject deleted:", subjectId);
-        } catch (e) {
-            alert("Error deleting subject: " + e.message);
-        }
+    try {
+        await deleteDoc(doc(db, "subjects", subjectId));
+        console.log("Subject deleted:", subjectId);
+        showToast("Subject and its tasks deleted.", "🗑️");
+        
+    } catch (e) {
+        showToast("Error deleting subject: " + e.message, "❌");
     }
 };
 
@@ -2567,72 +3056,22 @@ window.openSubjectTasks = (id, name) => {
 window.saveTask = async () => {
     const input = document.getElementById('new-task-input');
     const deadline = document.getElementById('task-deadline').value;
-    if(!input.value.trim() || !deadline) return alert("Please fill all the fields!");
-
+    
+    if(!input.value.trim() || !deadline) {
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+        return showToast("Please fill all the fields!", "📝");
+    }
     await addDoc(collection(db, "student_tasks"), {
         subjectId: currentSubId,
         taskName: input.value.trim(),
         deadline: deadline
     });
+
     input.value = "";
-};
-window.loadTasks = () => {
-    const cont = document.getElementById('task-list-container');
-    const q = query(collection(db, "student_tasks"), where("subjectId", "==", currentSubId));
-    
-    onSnapshot(q, (snap) => {
-        cont.innerHTML = "";
-        if (snap.empty) {
-            cont.innerHTML = "<p style='color:gray; text-align:center;'>No tasks for this subject.</p>";
-            return;
-        }
-        snap.forEach(d => {
-            const t = d.data();
-            const isDone = t.status === "completed";
-            
-            cont.innerHTML += `
-                <div style="background:#111; padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; border-left: 4px solid ${isDone ? 'var(--success)' : 'var(--accent)'}; margin-bottom:10px; opacity: ${isDone ? '0.6' : '1'}">
-                    <div style="flex:1;">
-                        <span style="text-decoration: ${isDone ? 'line-through' : 'none'}; color: ${isDone ? 'gray' : 'white'};">
-                            ${t.taskName}
-                        </span>
-                        <br>
-                        <small style="color:var(--accent); font-size:11px;">⏰ ${t.deadline}</small>
-                    </div>
-                    
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="window.toggleTaskStatus('${d.id}', '${t.status || 'pending'}')" style="background:none; border:none; font-size:18px; cursor:pointer;">
-                            ${isDone ? '↩️' : '✅'}
-                        </button>
-                        
-                        <button onclick="window.removeTask('${d.id}')" style="background:none; border:none; color:var(--error); font-size:18px; cursor:pointer;">
-                            ✕
-                        </button>
-                    </div>
-                </div>`;
-        });
-    });
+    if (navigator.vibrate) navigator.vibrate(50);
+    showToast("Task saved! ✅");
 };
 
-window.removeTask = async (taskId) => {
-    if(confirm("Do you want to remove this task?")) {
-        try {
-            await deleteDoc(doc(db, "student_tasks", taskId));
-        } catch (e) {
-            alert("Error: " + e.message);
-        }
-    }
-};
-
-window.toggleTaskStatus = async (taskId, currentStatus) => {
-    try {
-        await updateDoc(doc(db, "student_tasks", taskId), {
-            status: currentStatus === "completed" ? "pending" : "completed"
-        });
-    } catch (e) {
-        alert("Error: " + e.message);
-    }
-};
 
 window.openSchedules = () => {
     showView('scr-schedules-list'); 
@@ -2766,10 +3205,19 @@ window.formatNote = (cmd, val = null) => {
 
 
 window.deleteCurrentNote = () => {
-    if (confirm("Delete this note permanently?")) {
-        notes = notes.filter(n => n.id !== activeNoteId);
-        localStorage.setItem('schedly_notes_list', JSON.stringify(notes));
-        exitNotes();
+    const noteModal = document.getElementById('note-delete-modal');
+    if (noteModal) {
+        noteModal.style.display = 'flex';
+        
+        document.getElementById('confirm-note-delete').onclick = () => {
+            notes = notes.filter(n => n.id !== activeNoteId);
+            localStorage.setItem('schedly_notes_list', JSON.stringify(notes));
+            
+            if (window.showToast) showToast("Note deleted! 🗑️");
+            if (navigator.vibrate) navigator.vibrate([40, 30]);
+            noteModal.style.display = 'none';
+            exitNotes();
+        };
     }
 };
 
@@ -2816,12 +3264,15 @@ window.renderPosts = () => {
 
 window.addPost = async () => {
     const input = document.getElementById('peer-input');
-    if (!input || input.value.trim() === "") return;
+    if (!input || input.value.trim() === "") {
+        if (navigator.vibrate) navigator.vibrate(20); 
+        return;
+    }
 
     const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
-
     if (!user || !user.username) {
-        return alert("Error: User data not found. Please re-login.");
+        if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
+        return showToast("Error: User data not found. Please re-login. ❌");
     }
 
     try {
@@ -2833,19 +3284,30 @@ window.addPost = async () => {
             timeDisplay: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
             createdAt: Date.now() 
         });
+
         input.value = "";
+        if (navigator.vibrate) navigator.vibrate(40); 
+        showToast("Post shared! 🚀");
+        
     } catch (e) {
         console.error("Firebase Post Error:", e);
+        showToast("Post failed. Check connection. 🌐");
     }
 };
 
 window.deletePost = async (id) => {
-    if (confirm("Will this post be deleted for everyone?")) {
-        try {
-            await deleteDoc(doc(db, "peer_posts", id));
-        } catch (e) {
-            console.error("Delete error: ", e);
+    try {
+        await deleteDoc(doc(db, "peer_posts", id));
+        
+        if (window.showToast) {
+            showToast("Post deleted for everyone", "🗑️");
         }
+        
+        if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
+        
+    } catch (e) {
+        console.error("Delete error: ", e);
+        if (window.showToast) showToast("Error deleting post", "❌");
     }
 };
 
@@ -2868,12 +3330,14 @@ window.showView = (id) => {
     });
 
     const target = document.getElementById(id);
+    
     if (target) {
         target.style.display = 'flex'; 
         target.classList.add('active');
         console.log("Screen " + id + " is now visible.");
     } else {
-        alert("System Error: Screen " + id + " not found!");
+        if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
+        showToast("System Error: Screen " + id + " not found! ❌");
     }
 };
 
@@ -2890,7 +3354,8 @@ window.toggleTimer = () => {
         }
 
         if (isNaN(timeLeft) || timeLeft <= 0) {
-            alert("Please enter a valid number of minutes.");
+            if (navigator.vibrate) navigator.vibrate([50, 50]);
+            showToast("Please enter a valid number of minutes.", "⚠️");
             return;
         }
 
@@ -2917,10 +3382,13 @@ window.toggleTimer = () => {
                 status.style.color = "var(--error)";
                 
                 playRingingSound(); 
+                
                 setTimeout(() => {
-                    alert("🚨 TIME'S UP! Click OK to stop the alarm.");        
-                    playRingingSound(true); 
-                    window.resetTimer();  
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                    showToast("🚨 TIME'S UP! Reset to stopped.", "⏰");
+                    
+                    playRingingSound(true);
+                    window.resetTimer();    
                 }, 100);
             }
         }, 1000);
@@ -2982,8 +3450,17 @@ window.loadAdminAnnouncements = () => {
 };
 
 window.deleteAnnouncement = async (id) => {
-    if(confirm("Would you like to remove this announcement?")) {
+    try {
         await deleteDoc(doc(db, "announcements", id));
+        
+        if (window.showToast) {
+            showToast("Announcement removed", "🗑️");
+        }
+        if (navigator.vibrate) navigator.vibrate([40, 20]);
+        
+    } catch (e) {
+        console.error("Delete Error:", e);
+        if (window.showToast) showToast("Error deleting announcement", "❌");
     }
 };
 
@@ -3041,11 +3518,16 @@ window.listenToAnnouncements = () => {
     const notifSound = document.getElementById('notif-sound');
     let lastSeenId = localStorage.getItem('last_notif_id');
     
+    const cached = localStorage.getItem('cached_announcements');
+    if (cached && list) {
+        list.innerHTML = cached; 
+    }
     const q = query(collection(db, "announcements"), orderBy("expiryDate", "desc"));
 
     onSnapshot(q, (snap) => {
         let activeCount = 0;
         const now = new Date().getTime();
+        let htmlCollector = ""; 
 
         snap.docChanges().forEach(change => {
             if (change.type === "added") {
@@ -3076,22 +3558,27 @@ window.listenToAnnouncements = () => {
                 }
             }
         });
+
         if(list) list.innerHTML = "";
+
         snap.forEach(docSnap => {
             const a = docSnap.data();
             const expiryTime = new Date(a.expiryDate).getTime();
             if (expiryTime > now) {
                 activeCount++; 
-                if(list) {
-                    list.innerHTML += `
-                        <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:12px; border-left:4px solid var(--accent); border-top: 1px solid #222;">
-                            <b style="color:var(--accent); font-size:14px; display:block; margin-bottom:5px;">📢 ${a.title}</b>
-                            <p style="color:#eee; font-size:13px; margin:0; line-height:1.5; word-wrap: break-word; white-space: pre-wrap;">${a.message}</p>
-                            <small style="color:#444; font-size:9px; display:block; margin-top:8px;">Active until: ${a.expiryDate}</small>
-                        </div>`;
-                }
+                const cardHtml = `
+                    <div style="background:#111; padding:15px; border-radius:12px; margin-bottom:12px; border-left:4px solid var(--accent); border-top: 1px solid #222;">
+                        <b style="color:var(--accent); font-size:14px; display:block; margin-bottom:5px;">📢 ${a.title}</b>
+                        <p style="color:#eee; font-size:13px; margin:0; line-height:1.5; word-wrap: break-word; white-space: pre-wrap;">${a.message}</p>
+                        <small style="color:#444; font-size:9px; display:block; margin-top:8px;">Active until: ${a.expiryDate}</small>
+                    </div>`;
+                
+                if(list) list.innerHTML += cardHtml;
+                htmlCollector += cardHtml; 
             }
         });
+
+        localStorage.setItem('cached_announcements', htmlCollector);
 
         if(badge) {
             badge.innerText = activeCount;
@@ -3102,15 +3589,22 @@ window.listenToAnnouncements = () => {
 
 window.listenToAnnouncements();
 
-    window.openNotifications = () => {
+window.openNotifications = () => {
     const overlay = document.getElementById('notif-overlay');
     if(overlay) overlay.style.display = 'block';
 };
 
 window.openSupport = () => {
-    if(confirm("Need help? We will redirect you to Schedly Pro Support on Facebook.")) {
-        window.open('https://www.facebook.com/profile.php?id=61586943834900', '_blank');
+    const modal = document.getElementById('support-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        if (navigator.vibrate) navigator.vibrate(30); 
     }
+};
+
+window.closeSupportModal = () => {
+    const modal = document.getElementById('support-modal');
+    if (modal) modal.style.display = 'none';
 };
     
 document.addEventListener('DOMContentLoaded', () => {
@@ -3173,23 +3667,24 @@ let musicFadeInterval;
 window.toggleMusic = function() {
     const music = document.getElementById('bg-music');
     const icon = document.getElementById('music-icon');
+    const touchBtn = document.getElementById('music-touch');
 
     clearInterval(musicFadeInterval);
 
     if (music.paused) {
-
         music.play().catch(e => console.log("Blocked: ", e));
         icon.innerText = "🎵";
-        
+        touchBtn.classList.add('music-playing');
         musicFadeInterval = setInterval(() => {
-            if (music.volume < 0.25) { 
-                music.volume = Math.min(0.25, music.volume + 0.05);
+            if (music.volume < 0.35) { 
+                music.volume = Math.min(0.35, music.volume + 0.05);
             } else {
                 clearInterval(musicFadeInterval);
             }
         }, 200);
     } else {
         icon.innerText = "🔇";
+        touchBtn.classList.remove('music-playing');
         musicFadeInterval = setInterval(() => {
             if (music.volume > 0.05) {
                 music.volume = Math.max(0, music.volume - 0.05);
@@ -3215,6 +3710,199 @@ document.addEventListener('touchend', function (event) {
     }
     lastTouchEnd = now;
 }, false);
+
+const showWelcomeModal = (userId, userName) => {
+    const modal = document.getElementById('welcome-modal');
+    const stepContent = document.getElementById('modal-step-content');
+    const nextBtn = document.getElementById('modal-next-btn');
+    const storageKey = `welcome_finished_${userId}`;
+    
+    if (localStorage.getItem(storageKey) === 'true') return;
+
+    let currentStep = 0;
+    const steps = [
+        {
+            title: `Welcome to Schedly, ${userName}!`,
+            message: "Your ultimate academic companion. Schedly is designed to help students organize tasks, track schedules, and collaborate with peers seamlessly. Let's make your student life more productive and stress-free!"
+        },
+        {
+            title: "👤 Profile & Identity",
+            message: "Personalize your experience! Set up your profile picture, write a bio that represents you, and even track your current location for security and academic reference."
+        },
+        {
+            title: "📋 Task Management",
+            message: "Never miss a deadline again. Organize your academic responsibilities, set priorities, and get real-time alerts when a task is due."
+        },
+        {
+            title: "📅 Smart Schedules",
+            message: "Keep track of your classes and school events. View your daily routine in a clean, organized layout so you're always prepared for what's next."
+        },
+        {
+            title: "🧠 Study Mode",
+            message: "Boost your focus! Use the Study Mode to minimize distractions and manage your study sessions effectively using optimized focus timers."
+        },
+        {
+            title: "📝 My Notes",
+            message: "Capture ideas instantly. Our built-in notepad allows you to store important lecture points, reminders, and quick thoughts directly within the app."
+        },
+        {
+            title: "🤝 Peer Board",
+            message: "Connect with your classmates. Share updates, ask questions, and collaborate with your peers through the real-time community feed."
+        },
+        {
+            title: "⚡ Quick Shortcuts",
+            message: "Efficiency at its best. Access the most used features of the app with a single tap using our strategically placed navigation shortcuts."
+        },
+        {
+            title: "ℹ️ About Schedly",
+            message: "Schedly is a dedicated platform built for students, by students. Our mission is to bridge the gap between complex academic requirements and effective time management."
+        },
+        {
+            title: "🛠️ Meet the Developers",
+            message: `
+                <div style="text-align:left; font-size:12px; max-height:200px; overflow-y:auto; padding-right:10px;">
+                    <b style="color:var(--accent)">Stephen John O. Jaynos</b> - Lead Developer / UI Designer<br>
+                    <b>John Joshua Sumilang</b> - Developer<br>
+                    <b>Alexandra Villasis</b> - Developer<br>
+                    <b>Arby Castillo</b> - Developer<br>
+                    <b>Arvie Arsenia</b> - Developer<br>
+                    <b>Christian A. Sibolino</b> - Developer<br>
+                    <b>Cyruz Amaro</b> - Developer<br>
+                    <b>Farhan Paningbatan</b> - Developer
+                </div>
+            `
+        },
+        {
+            title: "📞 Get in Touch",
+            message: `
+                <div style="font-size:14px; line-height:1.8;">
+                    🌐 FB Page: <b>SCHEDLY</b><br>
+                    📧 Email: <b>YourSchedly@gmail.com</b><br>
+                    📞 Phone: <b>+639928072368</b><br>
+                    🚀 Website: <i>Coming Soon</i>
+                </div>
+            `
+        }
+    ];
+    const updateModal = () => {
+        const s = steps[currentStep];
+        stepContent.classList.remove('modal-text-animate');
+        void stepContent.offsetWidth; 
+        stepContent.classList.add('modal-text-animate');
+
+        stepContent.innerHTML = `
+            <h2 style="color:var(--accent); margin-bottom:15px; font-size:22px;">${s.title}</h2>
+            <div style="color:#ccc; font-size:14px; line-height:1.6; text-align:center;">${s.message}</div>
+        `;
+        nextBtn.innerText = (currentStep === steps.length - 1) ? "START PRODUCTIVITY" : "NEXT";
+    };
+
+    modal.style.display = 'flex';
+    updateModal();
+
+    nextBtn.onclick = () => {
+        if (typeof playNextSound === "function") {
+            playNextSound();
+        } else {
+            const clickSfx = document.getElementById('next-sound');
+            if (clickSfx) {
+                clickSfx.currentTime = 0; 
+                clickSfx.play().catch(e => console.log("Audio play deferred"));
+            }
+        }
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            updateModal();
+            stepContent.scrollTop = 0; 
+        } else {
+            localStorage.setItem(storageKey, 'true');
+            modal.style.display = 'none';
+        }
+    };
+};
+
+window.playActionSound = () => {
+    const sfx = document.getElementById('action-sound');
+    if (sfx) {
+        sfx.volume = 0.3; 
+        sfx.currentTime = 0;
+        sfx.play().catch(e => {});
+    }
+};
+
+window.playNextSound = () => {
+    const sfx = document.getElementById('next-sound');
+    if (sfx) {
+        sfx.volume = 0.3; 
+        sfx.currentTime = 0;
+        sfx.play().catch(e => console.log("Sound blocked"));
+    }
+};
+
+window.playBtnSound = () => {
+    const sfx = document.getElementById('btn-sound');
+    if (sfx) {
+        sfx.volume = 0.3; 
+        sfx.currentTime = 0;
+        sfx.play().catch(e => console.log("Sound blocked"));
+    }
+};
+
+document.addEventListener('click', (e) => {
+    const target = e.target.closest('.nav-card, .task-item, button, .btn, [onclick]');
+    
+    if (!target) return; 
+
+    const isModalNext = target.id === 'modal-next-btn';
+    if (isModalNext) return;
+
+    if (target.classList.contains('nav-card') || target.classList.contains('task-item')) {
+        playActionSound(); 
+    } 
+    else {
+        playBtnSound();
+    }
+});
+
+window.showToast = function(message, icon = "👋") {
+    const toast = document.getElementById('toast-container');
+    const msgSpan = document.getElementById('toast-message');
+    const iconSpan = document.getElementById('toast-icon');
+
+    if (!toast) return;
+
+    msgSpan.innerText = message;
+    iconSpan.innerText = icon;
+    toast.style.opacity = "1";
+    toast.style.transform = "translateX(-50%) translateY(0)";
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(-50%) translateY(100px)";
+    }, 3000);
+};
+
+window.startPeerCleaner = () => {
+    setInterval(async () => {
+        const sampungMinuto = 10 * 60 * 1000; 
+        const limitTime = Date.now() - sampungMinuto;
+
+        try {
+            const q = query(collection(db, "peer_posts"), where("createdAt", "<=", limitTime));
+            const snap = await getDocs(q);
+
+            if (!snap.empty) {
+                console.log(`Cleaning up ${snap.size} expired posts...`);
+                snap.forEach(async (d) => {
+                    await deleteDoc(doc(db, "peer_posts", d.id));
+                });
+            }
+        } catch (e) {
+            console.error("Cleaner Error:", e);
+        }
+    }, 60000);
+};
+
+window.startPeerCleaner();
 
     initSystem();
 </script>
