@@ -682,6 +682,31 @@ button:active {
 #confirm-task-done-btn:hover {
     box-shadow: 0 0 25px rgba(76, 217, 100, 0.5);
 }
+.custom-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    border: 1px solid var(--accent);
+    padding: 20px;
+    border-radius: 15px;
+    z-index: 10000;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+.toast-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 9999;
+}
 </style>
 </style>
 </head>
@@ -751,55 +776,75 @@ button:active {
     <span id="music-icon" style="font-size: 20px !important; pointer-events: none;">🔇</span>
 </div>
 
-<div id="scr-shortcuts" class="view" style="display:none; background: #000; height: 100vh; overflow-y: auto;">
-    <div style="padding: 20px; display: flex; align-items: center; gap: 15px;">
-        <button onclick="showView('scr-student')" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">←</button>
-        <h2 style="color: var(--accent); margin: 0; font-weight: 800;">QUICK ACCESS</h2>
-    </div>
-
-    <div style="padding: 10px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+<div id="scr-shortcuts" class="view" style="display:none; background: #000; height: 100vh; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; flex-direction: column;">
+    
+    <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a; flex-shrink: 0;">
         
-        <div class="nav-card" onclick="window.open('https://www.messenger.com', '_blank')" style="background: #111; border: 1px solid #00B2FF; padding: 20px; text-align: center;">
-            <span style="font-size: 30px;">💬</span>
-            <b style="display:block; margin-top:10px; color: white;">Messenger</b>
-            <small style="color: #666;">Group Chats</small>
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border: 1px solid #444; border-radius: 50%; width: 45px; height: 45px; cursor:pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; outline: none;">
+            ←
+        </button>
+        
+        <div style="flex: 1; display: flex; justify-content: center; align-items: center; min-width: 0; padding: 0 15px;">
+            <h2 style="color: var(--accent); margin: 0; font-weight: 800; font-size: 16px; text-align: center; text-transform: uppercase; letter-spacing: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;">
+                QUICK ACCESS
+            </h2>
         </div>
-
-        <div class="nav-card" onclick="window.open('https://classroom.google.com', '_blank')" style="background: #111; border: 1px solid #34A853; padding: 20px; text-align: center;">
-            <span style="font-size: 30px;">🏫</span>
-            <b style="display:block; margin-top:10px; color: white;">Classroom</b>
-            <small style="color: #666;">Activities</small>
-        </div>
-
-        <div class="nav-card" onclick="window.open('https://www.canva.com', '_blank')" style="background: #111; border: 1px solid #8B3DFF; padding: 20px; text-align: center;">
-            <span style="font-size: 30px;">🎨</span>
-            <b style="display:block; margin-top:10px; color: white;">Canva</b>
-            <small style="color: #666;">Design/PPT</small>
-        </div>
-
-        <div class="nav-card" onclick="window.open('https://chatgpt.com', '_blank')" style="background: #111; border: 1px solid #74aa9c; padding: 20px; text-align: center;">
-            <span style="font-size: 30px;">🤖</span>
-            <b style="display:block; margin-top:10px; color: white;">ChatGPT</b>
-            <small style="color: #666;">AI Tutor</small>
-        </div>
-
-        <div class="nav-card" onclick="window.open('https://scholar.google.com', '_blank')" style="background: #111; border: 1px solid #4285F4; padding: 20px; text-align: center;">
-            <span style="font-size: 30px;">📚</span>
-            <b style="display:block; margin-top:10px; color: white;">Scholar</b>
-            <small style="color: #666;">Research</small>
-        </div>
-
-        <div class="nav-card" onclick="window.open('https://www.photopea.com', '_blank')" style="background: #111; border: 1px solid #ffbb33; padding: 20px; text-align: center;">
-            <span style="font-size: 30px;">🖼️</span>
-            <b style="display:block; margin-top:10px; color: white;">Photopea</b>
-            <small style="color: #666;">Editor</small>
-        </div>
-
+        
+        <div style="width: 45px; flex-shrink: 0;"></div>
     </div>
 
-    <p style="color: #444; text-align: center; font-size: 11px; margin-top: 30px; font-style: italic;">
-        All links open in a new tab for easy navigation.
-    </p>
+    <div style="text-align: center; padding: 15px 20px; background: linear-gradient(to bottom, #0a0a0a, #000); border-bottom: 1px solid #111; flex-shrink: 0;">
+        <div style="color: #666; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.8;">Student Utilities</div>
+    </div>
+
+    <div id="shortcut-list-content" style="flex: 1; padding: 20px 20px 100px 20px; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="nav-card" onclick="window.open('https://www.messenger.com', '_blank')" 
+                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 178, 255, 0.3); padding: 25px 10px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 35px; margin-bottom: 10px;">💬</div>
+                <b style="display:block; color: white; font-size: 14px;">Messenger</b>
+                <small style="color: #666; font-size: 10px;">Connect</small>
+            </div>
+
+            <div class="nav-card" onclick="window.open('https://classroom.google.com', '_blank')" 
+                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(52, 168, 83, 0.3); padding: 25px 10px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 35px; margin-bottom: 10px;">🏫</div>
+                <b style="display:block; color: white; font-size: 14px;">Classroom</b>
+                <small style="color: #666; font-size: 10px;">Activities</small>
+            </div>
+
+            <div class="nav-card" onclick="window.open('https://www.canva.com', '_blank')" 
+                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(139, 61, 255, 0.3); padding: 25px 10px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 35px; margin-bottom: 10px;">🎨</div>
+                <b style="display:block; color: white; font-size: 14px;">Canva</b>
+                <small style="color: #666; font-size: 10px;">Design/PPT</small>
+            </div>
+
+            <div class="nav-card" onclick="window.open('https://chatgpt.com', '_blank')" 
+                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(116, 170, 156, 0.3); padding: 25px 10px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 35px; margin-bottom: 10px;">🤖</div>
+                <b style="display:block; color: white; font-size: 14px;">ChatGPT</b>
+                <small style="color: #666; font-size: 10px;">AI Tutor</small>
+            </div>
+
+            <div class="nav-card" onclick="window.open('https://scholar.google.com', '_blank')" 
+                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(66, 133, 244, 0.3); padding: 25px 10px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 35px; margin-bottom: 10px;">📚</div>
+                <b style="display:block; color: white; font-size: 14px;">Scholar</b>
+                <small style="color: #666; font-size: 10px;">Research</small>
+            </div>
+
+            <div class="nav-card" onclick="window.open('https://www.photopea.com', '_blank')" 
+                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255, 187, 51, 0.3); padding: 25px 10px; border-radius: 20px; text-align: center;">
+                <div style="font-size: 35px; margin-bottom: 10px;">🖼️</div>
+                <b style="display:block; color: white; font-size: 14px;">Photopea</b>
+                <small style="color: #666; font-size: 10px;">Editor</small>
+            </div>
+        </div>
+        
+        <p style="color: #444; text-align: center; font-size: 10px; margin-top: 30px; font-style: italic;">Links open in a new tab.</p>
+    </div>
 </div>
 
    <div id="scr-schedules-list" class="view" style="display:none; background: #000; height: 100vh; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; flex-direction: column;">
@@ -939,7 +984,7 @@ button:active {
         </div>
     </div>
 
-    <div id="peer-feed" style="flex: 1; padding: 0 15px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; -webkit-overflow-scrolling: touch;">
+    <div id="peer-posts-container" style="flex: 1; padding: 0 15px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; -webkit-overflow-scrolling: touch;">
         </div>
 </div>
 
@@ -961,15 +1006,47 @@ button:active {
 
     <div style="padding: 20px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch;">
         
-        <div style="background: #111; border: 1px solid #222; padding: 25px; border-radius: 24px; margin-bottom: 25px; border-left: 4px solid var(--accent);">
-            <h3 style="color: white; margin: 0 0 10px 0; font-size: 18px;">Hello, Fellow Students! 👋</h3>
-            <p style="color: #ccc; font-size: 13px; line-height: 1.6; margin: 0;">
-                We built <b>Schedly Pro</b> because we know how tough it is to balance academic life. 
-                Our goal is to give you a digital home where your schedules, tasks, and friends are all in one place. 
-                <br><br>
-                Whether you're tracking a deadline or looking for a quick update in the Peer Board, we're here to make your student journey a little bit easier.
+        <div style="background: #0a0a0a; border: 1px solid #222; padding: 25px; border-radius: 24px; margin-bottom: 25px; border-left: 4px solid var(--accent);">
+    
+    <div style="margin-bottom: 20px;">
+        <h2 style="color: var(--accent); margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase;">
+            SCHEDLY PRO V.1
+        </h2>
+        <p style="color: #666; margin: 5px 0 0; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Your ultimate academic companion</p>
+    </div>
+
+    <div style="color: #ccc; font-size: 13px; line-height: 1.7;">
+        <p style="margin: 0 0 20px 0;">
+            <b>Hello, Fellow Students! 👋</b><br>
+            We developed <b>SCHEDLY PRO</b> for our <b>Entrepreneurship subject</b> because we know how tough it is to balance academic life. Our goal is to give you a digital home where everything is in one place.
+        </p>
+
+        <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 18px; border: 1px solid #111; margin-bottom: 20px;">
+            <p style="margin: 0; color: #aaa; font-size: 12.5px;">
+                Whether you're tracking deadlines with <span style="color: var(--accent); font-weight: 700;">TASKS</span>, 
+                checking your room in <span style="color: var(--accent); font-weight: 700;">SCHEDULES</span>, 
+                monitoring your GWA through the <span style="color: var(--accent); font-weight: 700;">GRADE CALC</span>, 
+                or staying focused with <span style="color: var(--accent); font-weight: 700;">STUDY MODE</span>we've got you covered. 
+                Keep personal records in <span style="color: var(--accent); font-weight: 700;">MY NOTES</span>, 
+                stay updated via the <span style="color: var(--accent); font-weight: 700;">PEER BOARD</span>, 
+                and access essential tools instantly through <span style="color: var(--accent); font-weight: 700;">SHORTCUTS</span>.
             </p>
         </div>
+
+        <p style="margin: 0 0 20px 0;">
+            <b>Our Solution:</b> We created this centralized hub so you don't have to jump between scattered apps. We simplify the student journey so you can focus more on learning and less on tracking.
+        </p>
+
+        <p style="margin: 0; padding-top: 15px; border-top: 1px solid #1a1a1a; color: #888; font-style: italic; font-size: 12px;">
+            Built by students, for students. We're here to make your academic life a little bit easier.
+        </p>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; opacity: 0.5;">
+        <span style="color: #444; font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Entrepreneurship Project</span>
+        <span style="color: var(--accent); font-size: 11px; font-weight: 800;">#StudentFirst</span>
+    </div>
+</div>
 
         <div style="background: #0d0d0d; border: 1px solid #1a1a1a; padding: 20px; border-radius: 24px; margin-bottom: 25px; text-align: center;">
             <p style="color: #666; font-size: 11px; margin-bottom: 15px; font-weight: 800; letter-spacing: 1px;">CONNECT WITH US</p>
@@ -1039,7 +1116,7 @@ button:active {
             </h1>
             
             <p style="font-size: 11px; color: var(--accent); margin-top: 8px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.9;">
-                Your Daily Academic Partner
+                Your ultimate academic companion
             </p>
             
             <div style="width: 40px; height: 2px; background: var(--accent); margin: 15px auto; border-radius: 2px;"></div>
@@ -1138,7 +1215,7 @@ button:active {
                     SCHEDLY PRO V.1
                 </h1>
                 <p style="font-size: 10px; color: #666; letter-spacing: 0.5px; margin: 2px 0 0 0; white-space: nowrap;">
-                    Your Daily Academic Partner
+                    Your ultimate academic companion
                 </p>
             </div>
             
@@ -1170,6 +1247,12 @@ button:active {
                 <b style="font-size: 14px;">Schedules</b>
                 <small style="font-size: 10px; color: #666;">Room & Time</small>
             </div>
+               
+            <div class="nav-card" onclick="openGradeCalc()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
+                <span class="card-icon" style="font-size: 28px;">🧮</span>
+                 <b style="font-size: 14px;">Grade Calc</b>
+                 <small style="font-size: 10px; color: #666;">GWA Tracker</small>
+           </div>
 
             <div class="nav-card" onclick="openStudyMode()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
                 <span class="card-icon" style="font-size: 28px;">⏳</span>
@@ -1192,7 +1275,13 @@ button:active {
             <div class="nav-card" onclick="openAbout()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
                 <span class="card-icon" style="font-size: 28px;">ℹ️</span>
                 <b style="font-size: 14px;">About Us</b>
-                <small style="font-size: 10px; color: #666;">The Team</small>
+                <small style="font-size: 10px; color: #666;">Project Overview</small>
+            </div>
+             
+            <div class="nav-card" onclick="openShortcuts()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
+                <span class="card-icon" style="font-size: 28px;">🔗</span>
+                <b style="font-size: 14px;">Shortcuts</b>
+                <small style="font-size: 10px; color: #666;">Quick Access</small>
             </div>
 
             <div class="nav-card full-span" style="grid-column: span 2; border-color: #333; background: rgba(255,95,87,0.05); padding: 15px;" onclick="triggerLogout()">
@@ -1420,16 +1509,18 @@ button:active {
                         <img id="mainProfilePic" style="width: 100%; height: 100%; object-fit: cover; display: none;">
                     </div>
 
-                    <div id="actionMenu" style="display: none; position: absolute; background: #1a1a1a; border: 1px solid #333; border-radius: 10px; top: 70px; left: 0; z-index: 10005; min-width: 150px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); overflow: hidden;">
-                        <button onclick="document.getElementById('imageUploader').click(); toggleActionMenu();" 
-                                style="width: 100%; padding: 12px; background: none; border: none; color: white; text-align: left; cursor: pointer; font-size: 11px; display: block; border-bottom: 1px solid #222;">
-                            📷 Change Photo
-                        </button>
-                        <button onclick="removeProfilePic(); toggleActionMenu();" 
-                                style="width: 100%; padding: 12px; background: none; border: none; color: #ff4444; text-align: left; cursor: pointer; font-size: 11px; display: block;">
-                            🗑️ Remove Photo
-                        </button>
-                    </div>
+                    <div id="actionMenu" style="display: none; position: absolute; background: #111; border: 1px solid #333; border-radius: 10px; top: 45px; left: 5px; z-index: 10005; width: 120px; box-shadow: 0 4px 15px rgba(0,0,0,0.6); overflow: hidden;">
+    
+    <button onclick="document.getElementById('imageUploader').click(); toggleActionMenu();" 
+            style="width: 100%; padding: 12px 10px; background: none; border: none; color: white; text-align: left; cursor: pointer; font-size: 9px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #222; white-space: nowrap; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+        <span style="font-size: 11px;">📷</span> CHANGE
+    </button>
+    
+    <button onclick="removeProfilePic(); toggleActionMenu();" 
+            style="width: 100%; padding: 12px 10px; background: none; border: none; color: #ff4444; text-align: left; cursor: pointer; font-size: 9px; display: flex; align-items: center; gap: 8px; white-space: nowrap; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+        <span style="font-size: 11px;">🗑️</span> REMOVE
+    </button>
+</div>
                 </div>
 
                 <div style="flex: 1;">
@@ -1779,6 +1870,45 @@ button:active {
     </div>
 </div>
 
+<div id="scr-grade-calc" class="view" style="display:none; background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column; overflow: hidden;">
+    
+    <div style="padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; background: #0a0a0a; flex-shrink: 0; height: 75px; box-sizing: border-box;">
+        <button onclick="showView('scr-student')" style="background: #222; color: white; border: 1px solid #444; border-radius: 50%; width: 45px; height: 45px; cursor:pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; outline: none;">
+            ←
+        </button>
+        <h3 style="color: var(--accent); margin: 0; font-weight: 800; font-size: 16px; text-transform: uppercase; letter-spacing: 2px;">GRADE CALC</h3>
+        <div style="width: 45px;"></div>
+    </div>
+
+    <div style="padding: 20px; overflow-y: auto; flex: 1; box-sizing: border-box; -webkit-overflow-scrolling: touch;">
+        
+        <div style="background: #111; padding: 20px; border-radius: 20px; border: 1px solid #222; text-align: center; margin-bottom: 20px;">
+            <p style="color: #666; font-size: 12px; margin-bottom: 5px; text-transform: uppercase;">Your Estimated GWA</p>
+            <h1 id="gwa-result" style="color: var(--accent); font-size: 48px; margin: 0; font-weight: 900;">0.00</h1>
+        </div>
+
+        <div id="grade-inputs-container" style="width: 100%;">
+            </div>
+          
+        <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 30px;">
+            <button onclick="addSubjectRow()" style="flex: 1; background: none; border: 1px dashed #444; color: #888; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 12px;">
+                + Add Subject
+            </button>
+
+            <button onclick="clearGrades()" style="flex: 1; background: rgba(255,95,87,0.1); border: 1px solid rgba(255,95,87,0.3); color: #ff5f57; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 12px; font-weight: bold;">
+                🗑️ Clear All
+            </button>
+        </div>
+    </div>
+
+    <div style="padding: 20px; background: #0a0a0a; border-top: 1px solid #222; flex-shrink: 0;">
+        <button onclick="calculateGWA()" style="width: 100%; background: var(--accent); color: black; border: none; padding: 15px; border-radius: 15px; font-weight: 900; font-size: 16px; cursor: pointer;">
+            CALCULATE NOW
+        </button>
+    </div>
+</div>
+    
+
 <style>
 @keyframes slideDown {
     from { transform: translateY(-100%); }
@@ -1992,7 +2122,7 @@ startLiveClock();
     loginBtn.classList.add('btn-loading'); 
 
     try {
-        if(u === 'admin' && p === 'Admin090922') { 
+        if(u === 'admin' && p === 'Admin022522') { 
             const remCheck = document.getElementById('log-remember');
             if(remCheck && remCheck.checked) {
                 localStorage.setItem('rem_u', u);
@@ -2677,14 +2807,35 @@ window.watchStudentProfile = (docId) => {
             
             
 const dashName = document.getElementById('dash-user-name');
+        const dashCircle = document.getElementById('user-initial');
+        const badgeDiv = document.getElementById('global-badge');
+        const badgeText = document.getElementById('global-status-text');
 
-if(dashName){
-    dashName.innerText =
-        userData.fullName ||
-        userData.username ||
-        "Student";
-}
-const dashCircle = document.getElementById('user-initial');
+        if (dashName) {
+
+            const isAdmin = userData.username === "hypens" || userData.role === "admin";
+
+            if (isAdmin) {
+                dashName.innerHTML = `${userData.fullName || userData.username} <span style="color:var(--accent); text-shadow: 0 0 10px rgba(212,175,55,0.8);">💎</span>`;
+                
+                if (badgeText) badgeText.innerText = "SYSTEM ADMIN";
+                if (badgeDiv) {
+                    badgeDiv.style.background = "rgba(212,175,55,0.15)";
+                    badgeDiv.style.borderColor = "var(--accent)";
+                }
+                if (dashCircle) {
+                    dashCircle.style.border = "2.5px solid var(--accent)";
+                    dashCircle.style.boxShadow = "0 0 15px rgba(212,175,55,0.5)";
+                }
+            } else {
+                dashName.innerText = userData.fullName || userData.username || "Student";
+                if (badgeText) badgeText.innerText = "Online";
+                if (dashCircle) {
+                    dashCircle.style.border = "none";
+                    dashCircle.style.boxShadow = "none";
+                }
+            }
+        }
 
 if(dashCircle){
 
@@ -3340,32 +3491,67 @@ window.openPeerBoard = () => {
 window.renderPosts = () => {
     const container = document.getElementById('peer-posts-container');
     if (!container) return;
+    
     const q = query(collection(db, "peer_posts"), orderBy("createdAt", "desc"));
+    
     onSnapshot(q, (snapshot) => {
-        container.innerHTML = ""
+        container.innerHTML = "";
+        const rawUserData = localStorage.getItem('user_data');
+        const currentUser = rawUserData ? JSON.parse(rawUserData) : null;
+        const isViewerAdmin = currentUser && (currentUser.username === "hypens" || currentUser.username === "C");
+
         snapshot.forEach((doc) => {
             const data = doc.data();
             const postId = doc.id;
-            const currentUser = JSON.parse(localStorage.getItem('user_data'));
-            const isOwner = currentUser && (data.senderId === currentUser.uid);
+            const isAdminPost = data.role === "admin" || data.isAdmin === true;
+            const isOwner = currentUser && (String(data.senderId) === String(currentUser.uid));
+            const canDelete = isOwner || isViewerAdmin;
+
+            const adminGradient = "linear-gradient(45deg, #FFD700, #FDB931, #8B4513, #FDB931, #FFD700)";
 
             const postHTML = `
-                <div class="post-card" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(212,175,55,0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <strong style="color: var(--accent); font-size: 14px;">${data.senderName}</strong>
-                            <span style="font-size: 10px; color: #888; display: block;">${data.timeDisplay}</span>
+                <div class="post-card" style="
+                    flex-shrink: 0; width: 100%; box-sizing: border-box; 
+                    background: ${isAdminPost ? 'rgba(20, 20, 15, 0.98)' : 'rgba(255, 255, 255, 0.05)'}; 
+                    padding: 16px; border-radius: 18px; margin-bottom: 12px; 
+                    border: ${isAdminPost ? '1px solid rgba(255, 215, 0, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)'};
+                    position: relative;
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 38px; height: 38px; border-radius: 50%; padding: 1.5px; 
+                                background: ${isAdminPost ? adminGradient : 'rgba(255,255,255,0.1)'};">
+                                <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #000;">
+                                    <img src="${data.senderImg && data.senderImg !== 'null' ? data.senderImg : 'https://ui-avatars.com/api/?name=' + data.senderName}" 
+                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
+                            <div>
+                                <strong style="font-size: 14px; display: flex; align-items: center; gap: 4px; ${isAdminPost ? `background: ${adminGradient}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;` : 'color: #fff;'}">
+                                    ${data.senderName} 
+                                    ${isAdminPost ? '<span style="-webkit-text-fill-color: initial; font-size: 11px;">💎</span>' : ''}
+                                </strong>
+                                <span style="font-size: 10px; color: #777; display: block;">${data.timeDisplay || 'Just now'}</span>
+                            </div>
                         </div>
-                        ${isOwner ? `<button onclick="window.deletePost('${postId}')" style="background:none; border:none; color:#ff4444; font-size: 12px;">Delete</button>` : ''}
+                        
+                        ${canDelete ? `
+                            <button onclick="window.deletePost('${postId}')" 
+                                style="background:transparent; border:none; color:rgba(255,255,255,0.3); font-size: 22px; cursor:pointer; padding: 0 5px; line-height: 1;">
+                                &times;
+                            </button>` : ''}
                     </div>
-                    <p style="margin-top: 8px; font-size: 14px; color: #eee; line-height: 1.4;">${data.text}</p>
+
+                    <p style="margin: 0; font-size: 14px; color: ${isAdminPost ? '#eee' : '#ccc'}; line-height: 1.5;">
+                        ${data.text || ""}
+                    </p>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', postHTML);
         });
 
         if (snapshot.empty) {
-            container.innerHTML = '<p style="text-align:center; color:#666; font-size:12px; margin-top:20px;">No posts yet. Start the conversation!</p>';
+            container.innerHTML = '<p style="text-align:center; color:#666; font-size:12px; margin-top:20px;">No posts yet.</p>';
         }
     });
 };
@@ -3389,6 +3575,9 @@ window.addPost = async () => {
             senderName: user.username, 
             senderImg: user.profilePic || "null", 
             senderId: user.uid, 
+            role: (user.username === "hypens" || user.username === "C") ? "admin" : "student",
+            isAdmin: (user.username === "hypens" || user.username === "C"),
+            
             timeDisplay: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
             createdAt: Date.now() 
         });
@@ -3897,8 +4086,6 @@ const showWelcomeModal = (userId, userName) => {
     stepContent.classList.remove('modal-text-animate');
     void stepContent.offsetWidth; 
     stepContent.classList.add('modal-text-animate');
-
-    // FIX: Nilagyan natin ng display block at line-height para sa mobile
     stepContent.innerHTML = `
         <h2 style="
             color: var(--accent); 
@@ -4044,8 +4231,94 @@ window.startPeerCleaner = () => {
 
 window.startPeerCleaner();
 
+window.openGradeCalc = function() {
+    console.log("Grade Calc Opening..."); 
+    
+    if (typeof showView === 'function') {
+        showView('scr-grade-calc');
+    } else {
+        document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+        document.getElementById('scr-grade-calc').style.display = 'flex';
+    }
+    const container = document.getElementById('grade-inputs-container');
+    if (container && container.innerHTML.trim() === "") {
+        for (let i = 0; i < 4; i++) {
+            addSubjectRow();
+        }
+    }
+};
+
+window.addSubjectRow = function() {
+    const container = document.getElementById('grade-inputs-container');
+    if (!container) return;
+    
+    const row = document.createElement('div');
+    row.style = "display: flex; gap: 10px; margin-bottom: 10px; align-items: center; width: 100%; box-sizing: border-box;";
+    row.innerHTML = `
+        <input type="text" placeholder="Subject" style="flex: 2; background: #1a1a1a; border: 1px solid #333; color: white; padding: 12px; border-radius: 10px; font-size: 14px; outline: none; min-width: 0;">
+        <input type="number" class="grade-input" placeholder="0.0" step="0.01" style="flex: 1; background: #1a1a1a; border: 1px solid #333; color: var(--accent); padding: 12px; border-radius: 10px; font-size: 14px; text-align: center; outline: none; min-width: 0;">
+    `;
+    container.appendChild(row);
+};
+
+window.calculateGWA = function() {
+    const grades = document.querySelectorAll('.grade-input');
+    let total = 0;
+    let count = 0;
+
+    grades.forEach(input => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) {
+            total += val;
+            count++;
+        }
+    });
+
+    const result = count > 0 ? (total / count).toFixed(2) : "0.00";
+    const display = document.getElementById('gwa-result');
+    if (display) {
+        display.innerText = result;
+        display.style.transform = "scale(1.1)";
+        setTimeout(() => display.style.transform = "scale(1)", 100);
+    }
+    
+    if (navigator.vibrate) navigator.vibrate(50);
+};
+window.clearGrades = function() {
+    const overlay = document.createElement('div');
+    overlay.className = 'toast-overlay';
+    overlay.id = 'temp-overlay';
+
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.innerHTML = `
+        <p style="color:white; margin-bottom: 20px; font-size: 14px;">Clear all subjects and grades?</p>
+        <div style="display:flex; gap:10px;">
+            <button id="confirm-clear" style="flex:1; background:var(--accent); color:black; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">YES</button>
+            <button id="cancel-clear" style="flex:1; background:#222; color:white; border:1px solid #444; padding:10px; border-radius:8px; cursor:pointer;">NO</button>
+        </div>
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(toast);
+    document.getElementById('confirm-clear').onclick = function() {
+        const container = document.getElementById('grade-inputs-container');
+        container.innerHTML = "";
+        document.getElementById('gwa-result').innerText = "0.00";
+        
+        for (let i = 0; i < 4; i++) addSubjectRow();
+        overlay.remove();
+        toast.remove();
+        
+        if (navigator.vibrate) navigator.vibrate(50);
+    };
+
+    document.getElementById('cancel-clear').onclick = function() {
+        overlay.remove();
+        toast.remove();
+    };
+};
     initSystem();
 </script>
 </body>
 </html>
-
