@@ -8,6 +8,7 @@
     <title>Schedly Pro | Full System</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="icon" type="image/png" href="schedly-logo.png">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -707,6 +708,180 @@ button:active {
     background: rgba(0,0,0,0.7);
     z-index: 9999;
 }
+@keyframes goldShine {
+    0% { filter: drop-shadow(0 0 2px #FFD700); transform: scale(1); opacity: 0.8; }
+    50% { filter: drop-shadow(0 0 10px #FFFACD); transform: scale(1.1); opacity: 1; }
+    100% { filter: drop-shadow(0 0 2px #FFD700); transform: scale(1); opacity: 0.8; }
+}
+@keyframes eliteGoldFrame {
+    0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); border-color: #443300; }
+    50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); border-color: #B8860B; }
+    100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.2); border-color: #443300; }
+}
+.admin-luxury-card {
+    background: #0a0a0a !important;
+    border: 1px solid #B8860B !important;
+    animation: eliteGoldFrame 4s infinite ease-in-out;
+}
+@keyframes goldShine {
+    0% { filter: drop-shadow(0 0 2px #FFD700); }
+    50% { filter: drop-shadow(0 0 8px #FFD700); transform: scale(1.05); }
+    100% { filter: drop-shadow(0 0 2px #FFD700); }
+}
+.admin-luxury-card {
+    background: #0a0a0a !important;
+    border: 1px solid #B8860B !important;
+    box-shadow: 0 0 15px rgba(184, 134, 11, 0.1);
+}
+.dev-send-btn {
+    background: linear-gradient(45deg, #B8860B, #FFD700) !important;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    animation: goldShine 2s infinite ease-in-out;
+}
+@keyframes adminFly {
+    0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100vh) scale(2) rotate(360deg); opacity: 0; }
+}
+.admin-heart {
+    position: fixed; 
+    bottom: -50px;
+    font-size: 30px; 
+    pointer-events: none;
+    z-index: 99999; 
+    user-select: none;
+    animation: adminFly 1.5s ease-out forwards;
+}
+@keyframes screenShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+.shake-effect {
+    animation: screenShake 0.4s; 
+    animation-iteration-count: 1;
+}
+@keyframes thanosSnap {
+    0% { transform: scale(1); filter: blur(0); opacity: 1; }
+    50% { transform: scale(1.05) rotate(1deg); filter: blur(2px); opacity: 0.7; }
+    100% { transform: scale(0.8) translateY(-20px) rotate(-2deg); filter: blur(10px); opacity: 0; }
+}
+.banished-post {
+    animation: thanosSnap 1.2s ease-in forwards !important;
+    pointer-events: none; 
+}
+@keyframes adminGlow {
+    0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.4); opacity: 0.8; }
+    50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 30px rgba(255, 215, 0, 0.4); opacity: 1; }
+    100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.4); opacity: 0.8; }
+}
+
+@keyframes starSparkle {
+    0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+    50% { transform: scale(1.3) rotate(15deg); filter: brightness(1.5); }
+    100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+.admin-sparkle {
+    display: inline-block;
+    animation: starSparkle 1.5s infinite ease-in-out;
+    color: #FFD700;
+    margin-left: 5px;
+}
+
+.admin-glow-text {
+    animation: adminGlow 2s infinite ease-in-out;
+}
+@keyframes borderGlow {
+    0% { border: 3px solid #FFD700; box-shadow: 0 0 5px #FFD700; }
+    50% { border: 3px solid #ffffff; box-shadow: 0 0 20px #FFD700, inset 0 0 10px #FFD700; }
+    100% { border: 3px solid #FFD700; box-shadow: 0 0 5px #FFD700; }
+}
+.admin-border-active {
+    background: none !important; 
+    border: 3px solid #FFD700 !important;
+    animation: borderGlow 2s infinite ease-in-out !important;
+    box-sizing: border-box !important;
+}
+/* I-apply ito sa #broadcast-text */
+@keyframes marquee-infinite {
+    0% { left: 100%; }
+    100% { left: -200%; } /* Siguradong lalabas sa screen */
+}
+
+body.effect-nika {
+    background-color: white !important;
+    animation: nika-bounce 1.0s ease-in-out infinite !important;
+    will-change: transform;
+}
+
+@keyframes nika-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); } 
+}
+#broadcast-text {
+    white-space: nowrap;
+    font-weight: 900;
+    font-size: 22px;
+    text-shadow: 2px 2px 0px #000; 
+    position: absolute;
+    will-change: transform;
+}
+.effect-nika {
+    background-color: #ffffff !important;
+    animation: nika-heartbeat 0.8s ease-in-out infinite !important;
+    height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+@keyframes nika-heartbeat {
+    0% { 
+        transform: scale(1); 
+        filter: brightness(1);
+    }
+    10% { 
+        transform: scale(1.03); 
+        filter: brightness(1.2); 
+    }
+    100% { 
+        transform: scale(1); 
+        filter: brightness(1);
+    }
+}
+.effect-rizz {
+    background-color: #ff69b4 !important; 
+    animation: rizz-pulse 2s ease-in-out infinite !important;
+    overflow: hidden;
+}
+@keyframes rizz-pulse {
+    0% { 
+        filter: saturate(1) brightness(1); 
+        box-shadow: inset 0 0 50px rgba(255, 20, 147, 0.5);
+    }
+    50% { 
+        filter: saturate(1.5) brightness(1.1); 
+        box-shadow: inset 0 0 100px rgba(255, 20, 147, 0.8);
+        transform: scale(1.01); 
+    }
+    100% { 
+        filter: saturate(1) brightness(1); 
+        box-shadow: inset 0 0 50px rgba(255, 20, 147, 0.5);
+    }
+}
+.effect-rizz #admin-broadcast-banner {
+    background: linear-gradient(90deg, #ff1493, #ff69b4, #ff1493) !important;
+    border-color: #fff !important;
+    box-shadow: 0 0 20px #ff1493;
+}
+
 </style>
 </style>
 </head>
@@ -977,6 +1152,18 @@ button:active {
         <textarea id="peer-input" placeholder="What's happening on campus? Post it here..." 
             style="width: 100%; height: 65px; background: none; border: none; color: white; outline: none; resize: none; font-family: inherit; font-size: 14px; padding: 5px; box-sizing: border-box;"></textarea>
         
+        <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px; padding-left: 5px;">
+            <label style="cursor: pointer; font-size: 22px;" title="Add Photo">
+                📷
+                <input type="file" id="imgUpload" accept="image/*" style="display: none;" onchange="window.previewImg(this)">
+            </label>
+
+            <div id="imgPreviewCont" style="display: none; position: relative;">
+                <img id="imgPreview" src="" style="height: 45px; width: 45px; border-radius: 8px; object-fit: cover; border: 2px solid var(--accent);">
+                <span onclick="window.removeImg()" style="position: absolute; top: -8px; right: -8px; background: #ff4444; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold;">&times;</span>
+            </div>
+        </div>
+
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
             <div id="image-upload-indicator" style="color: #666; font-size: 11px; font-style: italic;"></div>
             
@@ -985,7 +1172,7 @@ button:active {
     </div>
 
     <div id="peer-posts-container" style="flex: 1; padding: 0 15px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; -webkit-overflow-scrolling: touch;">
-        </div>
+    </div>
 </div>
 
 <div id="scr-about" class="view" style="display:none; flex-direction: column; background: #000; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
@@ -1266,12 +1453,26 @@ button:active {
                 <small style="font-size: 10px; color: #666;">Personal Lab</small>
             </div>
 
-            <div class="nav-card" onclick="showView('scr-peer'); renderPosts();" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
-                <span class="card-icon" style="font-size: 28px;">🤝</span>
-                <b style="font-size: 14px;">Peer Board</b>
-                <small style="font-size: 10px; color: #666;">Market/Borrow</small>
-            </div>
+            <div class="nav-card" onclick="showView('scr-peer'); renderPosts();" style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
+    <span class="card-icon" style="font-size: 28px;">🤝</span>
+    <b style="font-size: 14px;">Peer Board</b>
+    <small style="font-size: 10px; color: #666;">Market/Borrow</small>
 
+    <div id="peerBadge" style="
+        display: none; 
+        position: absolute; 
+        top: 8px; 
+        right: 15px; 
+        background: #ff4757; 
+        color: white; 
+        font-size: 10px; 
+        font-weight: 800; 
+        padding: 2px 6px; 
+        border-radius: 10px; 
+        border: 2px solid #1a1a1a;
+        box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
+    ">0</div>
+</div>
             <div class="nav-card" onclick="openAbout()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
                 <span class="card-icon" style="font-size: 28px;">ℹ️</span>
                 <b style="font-size: 14px;">About Us</b>
@@ -1908,17 +2109,171 @@ button:active {
     </div>
 </div>
     
+<div id="commentModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; backdrop-filter: blur(8px);">
+    <div style="width:95%; max-width:450px; background:#0a0a0a; margin: 40px auto; border-radius:20px; border:1px solid #B8860B; display:flex; flex-direction:column; height:80vh; overflow:hidden;">
+        
+        <div style="padding:15px 20px; border-bottom:1px solid rgba(184,134,11,0.2); display:flex; justify-content:space-between; align-items:center;">
+            <strong style="color:#FFD700; letter-spacing:1px; font-size:14px;">COMMENTS</strong>
+            <button onclick="window.closeCommentModal()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">&times;</button>
+        </div>
+
+        <div id="commentsList" style="
+    flex: 1 !important; 
+    overflow-y: auto !important; 
+    padding: 15px !important; 
+    background: #050505 !important; 
+    display: block !important;       /* Binago mula flex pabalik sa block */
+    text-align: left !important;     /* Siguradong sa kaliwa lahat */
+    width: 100% !important;
+">
+    </div>
+
+        <div style="padding:15px; background:#0a0a0a; border-top:1px solid rgba(255,255,255,0.05); display:flex; gap:10px;">
+            <input id="commentInput" type="text" placeholder="Write a comment..." style="flex:1; background:#111; border:1px solid #333; color:#fff; padding:12px; border-radius:12px; outline:none; font-size:14px;">
+            <button id="sendCommentBtn" style="background:#B8860B; border:none; color:#000; padding:0 20px; border-radius:12px; font-weight:900; cursor:pointer;">SEND</button>
+        </div>
+    </div>
+</div>
+
+<div id="peerUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:100000; justify-content:center; align-items:center; -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px);">
+    <div style="background:#1a1a1a; width:85%; max-width:320px; border-radius:25px; padding:20px; border:1px solid rgba(255,255,255,0.1); text-align:center; position:relative;">
+        
+        <button onclick="closePeerModal()" style="position:absolute; right:15px; top:15px; background:none; border:none; color:#555; font-size:24px; cursor:pointer;">&times;</button>
+        
+        <div id="peerModalImgContainer" style="width:90px; height:90px; border-radius:50%; margin:10px auto 15px; padding:3px; background:linear-gradient(45deg, #FFD700, #FFA500); transition: all 0.3s ease;">
+            <div style="width:100%; height:100%; border-radius:50%; overflow:hidden; background:#000;">
+                <img id="peerModalImg" src="" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+        </div>
+        
+        <h2 id="peerModalName" style="color:#fff; margin:0; font-size:18px; font-weight:800;"></h2>
+        <p id="peerModalFullName" style="color:rgba(255,255,255,0.5); margin:2px 0 0; font-size:12px; font-style:normal;"></p>
+        
+        <p id="peerModalRole" style="font-size:10px; font-weight:900; margin:10px 0 15px; letter-spacing:1px; text-transform:uppercase;"></p>
+        
+        <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:15px; margin-bottom:10px; border: 1px solid rgba(255,255,255,0.05);">
+            <p id="peerModalBio" style="color:#bbb; font-size:12px; margin:0; line-height:1.4;"></p>
+        </div>
+
+        <div id="peerAdminControls" style="display:none; border-top:1px solid rgba(255,255,255,0.08); padding-top:15px; margin-top:15px;">
+            <button id="peerMuteBtn" onclick="toggleMute()" style="width:100%; padding:14px; border-radius:15px; border:none; background:#ff4444; color:#fff; font-weight:900; font-size:12px; letter-spacing:1px; cursor:pointer; transition: 0.2s;">
+                MUTE USER
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div id="devAssistiveBtn" style="display:none; position:fixed; top:20%; right:15px; width:50px; height:50px; background:rgba(20,20,20,0.9); border:2px solid #FFD700; border-radius:50%; justify-content:center; align-items:center; z-index:999999; cursor:grab; box-shadow: 0 0 20px rgba(212,175,55,0.4); backdrop-filter:blur(10px); touch-action:none;">
+    <span style="font-size:24px;">🛠️</span>
+</div>
+
+<div id="devPanelOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000000; justify-content:center; align-items:center; backdrop-filter:blur(8px);">
+    <div style="background:#111; width:85%; max-width:340px; height:75vh; border-radius:30px; padding:25px; border:1px solid rgba(255,215,0,0.3); position:relative; display:flex; flex-direction:column; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+        
+        <div style="display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px;">
+            <button onclick="switchDevTab('users')" style="background:none; border:none; color:#FFD700; font-weight:900; cursor:pointer; font-size:12px;">USERS</button>
+            <button onclick="switchDevTab('broadcast')" style="background:none; border:none; color:#FFD700; font-weight:900; cursor:pointer; font-size:12px;">BROADCAST</button>
+        </div>
+
+        <button onclick="document.getElementById('devPanelOverlay').style.display='none'" style="position:absolute; right:20px; top:15px; background:none; border:none; color:#555; font-size:28px; cursor:pointer;">&times;</button>
+        
+        <div id="tab-users" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:12px;">
+            <div id="devUserList" style="display:flex; flex-direction:column; gap:12px;">
+                <p style="color:#555; text-align:center; font-size:12px;">Initializing users...</p>
+            </div>
+        </div>
+
+        <div id="tab-broadcast" style="display:none; flex:1; flex-direction:column; gap:15px;">
+            <h4 style="color:#FFD700; margin:0; font-size:14px; text-align:center; letter-spacing:1px;">SYSTEM OVERRIDE</h4>
+            
+            <textarea id="bc-input" placeholder="Type your long abuse message here..." 
+                style="width:100%; height:100px; background:#000; border:1px solid #333; color:white; border-radius:15px; padding:10px; font-family:inherit; resize:none; outline:none; font-size:13px;"></textarea>
+
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label style="color: #555; font-size: 10px; font-weight: 800; padding-left: 5px;">SELECT OVERRIDE MODE:</label>
+                <select id="bc-effect" style="width:100%; background:#000; border:1px solid #333; color:#FFD700; border-radius:10px; padding:10px; font-size:12px; outline:none; cursor:pointer;">
+                    <option value="normal">NORMAL (CLEAN)</option>
+                    <option value="nika">☀️ SUN GOD NIKA</option>
+                    <option value="glitch">👾 GLITCH SYSTEM</option>
+                    <option value="rizz">😏 RIZZ MODE</option>
+                    <option value="action">🔥 ACTION (SCREEN SHAKE)</option>
+                    <option value="flash">⚡ FLASH BANG (WHITE BLIND)</option>
+                </select>
+            </div>
+            
+            <button onclick="handleBroadcastPush()" 
+                style="background:#FFD700; color:black; border:none; padding:12px; border-radius:12px; font-weight:900; cursor:pointer; font-size:12px;">
+                🚀 PUSH BROADCAST
+            </button>
+            
+            <button onclick="stopBroadcast()" 
+                style="background:rgba(255,0,0,0.1); color:#ff4444; border:1px solid #ff4444; padding:10px; border-radius:12px; font-weight:800; cursor:pointer; font-size:11px;">
+                🛑 STOP ANNOUNCEMENT
+            </button>
+
+            <p style="color:#444; font-size:10px; text-align:center; font-style:italic;">Override status will be sent to all active users.</p>
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; cursor: pointer;" onclick="this.style.display='none'">
+    <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 35px; font-weight: bold;">&times;</span>
+    <img id="modalImg" style="max-width: 95%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+</div>
+
+<div id="admin-broadcast-banner" style="display: none; position: fixed; top: 20px; left: 5%; width: 90%; height: 55px; z-index: 2147483647; background: rgba(0,0,0,0.9); border-radius: 50px; border: 1.5px solid gold; overflow: hidden; align-items: center; pointer-events: none;">
+    <div style="width: 100%; overflow: hidden; display: flex; align-items: center; padding: 0 20px;">
+        <div id="broadcast-text" style="display: inline-block; white-space: nowrap; font-weight: 900; font-size: 18px; color: gold; text-transform: uppercase;">
+            </div>
+    </div>
+</div>
 
 <style>
 @keyframes slideDown {
     from { transform: translateY(-100%); }
     to { transform: translateY(0); }
 }
+body.effect-action { animation: shake-screen 0.1s infinite !important; }
+@keyframes shake-screen {
+    0% { transform: translate(2px, 2px); }
+    100% { transform: translate(-2px, -2px); }
+}
+body.effect-nika { 
+    background: white !important; 
+    animation: nika-glow 2s infinite alternate !important; 
+}
+@keyframes nika-glow {
+    from { filter: brightness(1) drop-shadow(0 0 10px gold); }
+    to { filter: brightness(1.3) drop-shadow(0 0 30px orange); }
+}
+body.effect-glitch { animation: glitch-anim 0.2s infinite !important; }
+@keyframes glitch-anim {
+    0% { transform: translate(0); filter: hue-rotate(0deg); }
+    20% { transform: translate(-5px, 5px); filter: invert(1); }
+    40% { transform: translate(5px, -5px); filter: hue-rotate(90deg); }
+    60% { transform: translate(-5px, -5px); }
+    100% { transform: translate(0); }
+}
+body.effect-rizz { background: #ff69b4 !important; animation: rizz-pulse 1s infinite; }
+@keyframes rizz-pulse {
+    0% { filter: saturate(1); }
+    50% { filter: saturate(2) brightness(1.2); }
+    100% { filter: saturate(1); }
+}
+
+body.effect-flash { animation: flash-bang 1.5s ease-out forwards !important; }
+@keyframes flash-bang {
+    0% { filter: brightness(20); background: white; }
+    100% { filter: brightness(1); }
+}
 </style>
 
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, addDoc, setDoc, deleteDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, collection, query, where, getDocs, updateDoc, addDoc, setDoc, deleteDoc, serverTimestamp, orderBy, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    window.currentPostId = null;
 
     const firebaseConfig = {
         apiKey: "AIzaSyD_4YemXc1kELejpQizgg2AFeYiPDHUEGM",
@@ -1935,10 +2290,14 @@ button:active {
 
 const alarmSound = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'); 
 const finalAlarm = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock_beeping.ogg');
-
+const adminCheerSound = new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3');
+adminCheerSound.load();
 const peerCollection = collection(db, "peer_posts");
-
-
+let selectedUserIdForAdmin = null;
+let isReacting = false;
+let lastPostTime = Date.now();
+let notifiedPostIds = new Set();
+let unreadCount = 0
 let userRole = 'none';
 let loggedInUserDoc = ""; 
 let currentSubId = "";
@@ -1952,7 +2311,27 @@ let activeNoteId = null;
 let posts = JSON.parse(localStorage.getItem('schedly_posts')) || [];
 let html5QrCode;
 let isMusicActive = false;
+let selectedImgFile = null; 
+let abuseBGM = null;
+async function uploadToCloudinary(file) {
+    const cloudName = 'dp1hqckhq'; 
+    const uploadPreset = 'ml_default'; 
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
 
+    try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        return data.secure_url; 
+    } catch (e) {
+        console.error("Cloudinary Error:", e);
+        return null;
+    }
+}
 
 onSnapshot(peerCollection, (snapshot) => {
     const feed = document.getElementById('peer-feed');
@@ -3413,7 +3792,7 @@ window.openNoteEditor = (id) => {
     
     document.getElementById('notes-list-container').style.display = 'none';
     document.getElementById('notes-editor-container').style.display = 'flex';
-    document.getElementById('add-note-btn').style.display = 'none'; // Itago muna yung +NEW button
+    document.getElementById('add-note-btn').style.display = 'none';
     
     document.getElementById('edit-note-title').value = note.title;
     document.getElementById('edit-note-body').innerHTML = note.content;
@@ -3492,9 +3871,40 @@ window.renderPosts = () => {
     const container = document.getElementById('peer-posts-container');
     if (!container) return;
     
+    const badge = document.getElementById('peerBadge');
+    if (badge) {
+        unreadCount = 0;
+        badge.style.display = "none";
+    }
+
     const q = query(collection(db, "peer_posts"), orderBy("createdAt", "desc"));
     
     onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+                const data = change.doc.data();
+                const postId = change.doc.id;
+                const rawUserData = localStorage.getItem('user_data');
+                const currentUser = rawUserData ? JSON.parse(rawUserData) : null;
+                
+                if (data.createdAt > lastPostTime && currentUser && String(data.senderId) !== String(currentUser.uid) && !notifiedPostIds.has(postId)) {
+                    
+                    notifiedPostIds.add(postId);
+                    const sound = document.getElementById('notif-sound');
+                    if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+                    if (typeof showEmergencyBanner === "function") {
+                        showEmergencyBanner(data.senderName, data.text);
+                    }
+                    if (container.offsetParent === null) {
+                        unreadCount++;
+                        if (badge) {
+                            badge.innerText = "+" + unreadCount;
+                            badge.style.display = "block";
+                        }
+                    }
+                }
+            }
+        });
         container.innerHTML = "";
         const rawUserData = localStorage.getItem('user_data');
         const currentUser = rawUserData ? JSON.parse(rawUserData) : null;
@@ -3503,50 +3913,127 @@ window.renderPosts = () => {
         snapshot.forEach((doc) => {
             const data = doc.data();
             const postId = doc.id;
+            const isBanished = data.isBanished === true;
+            const isMuted = data.isMuted === true; 
+            const censoredText = isMuted ? "****************" : (data.text || "");
+            const mutedBadge = isMuted ? `<span style="font-size: 8px; color: #ff4757; background: rgba(255, 71, 87, 0.1); padding: 1px 5px; border-radius: 4px; border: 1px solid rgba(255, 71, 87, 0.2); margin-left: 5px; vertical-align: middle; font-weight: 900;">MUTED 🔇</span>` : "";
+
+            if (isBanished) {
+                const snapSound = new Audio('./snap.mp3');
+                snapSound.volume = 0.4;
+                snapSound.play().catch(e => {});
+            }
+
             const isAdminPost = data.role === "admin" || data.isAdmin === true;
             const isOwner = currentUser && (String(data.senderId) === String(currentUser.uid));
             const canDelete = isOwner || isViewerAdmin;
+            const counterId = `count-${postId}`;
+            
+            onSnapshot(collection(db, "peer_posts", postId, "comments"), (cSnap) => {
+                const el = document.getElementById(counterId);
+                if (el) el.innerText = cSnap.size;
+            });
 
             const adminGradient = "linear-gradient(45deg, #FFD700, #FDB931, #8B4513, #FDB931, #FFD700)";
-
             const postHTML = `
-                <div class="post-card" style="
-                    flex-shrink: 0; width: 100%; box-sizing: border-box; 
-                    background: ${isAdminPost ? 'rgba(20, 20, 15, 0.98)' : 'rgba(255, 255, 255, 0.05)'}; 
-                    padding: 16px; border-radius: 18px; margin-bottom: 12px; 
-                    border: ${isAdminPost ? '1px solid rgba(255, 215, 0, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)'};
-                    position: relative;
-                ">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 38px; height: 38px; border-radius: 50%; padding: 1.5px; 
-                                background: ${isAdminPost ? adminGradient : 'rgba(255,255,255,0.1)'};">
-                                <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #000;">
-                                    <img src="${data.senderImg && data.senderImg !== 'null' ? data.senderImg : 'https://ui-avatars.com/api/?name=' + data.senderName}" 
-                                         style="width: 100%; height: 100%; object-fit: cover;">
-                                </div>
-                            </div>
-                            <div>
-                                <strong style="font-size: 14px; display: flex; align-items: center; gap: 4px; ${isAdminPost ? `background: ${adminGradient}; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;` : 'color: #fff;'}">
-                                    ${data.senderName} 
-                                    ${isAdminPost ? '<span style="-webkit-text-fill-color: initial; font-size: 11px;">💎</span>' : ''}
-                                </strong>
-                                <span style="font-size: 10px; color: #777; display: block;">${data.timeDisplay || 'Just now'}</span>
-                            </div>
-                        </div>
-                        
-                        ${canDelete ? `
-                            <button onclick="window.deletePost('${postId}')" 
-                                style="background:transparent; border:none; color:rgba(255,255,255,0.3); font-size: 22px; cursor:pointer; padding: 0 5px; line-height: 1;">
-                                &times;
-                            </button>` : ''}
+    <div id="post-card-${postId}" class="post-card ${isAdminPost ? 'admin-luxury-card' : ''} ${isBanished ? 'banished-post' : ''}" style="
+        flex-shrink: 0; width: 100%; box-sizing: border-box; 
+        background: ${isAdminPost ? 'linear-gradient(145deg, rgba(184, 134, 11, 0.2), rgba(10, 10, 10, 0.95))' : 'rgba(255,255,255,0.03)'} !important;
+        padding: 16px; border-radius: 18px; margin-bottom: 15px; 
+        /* INAYOS NA BORDER PARA WALANG GUHIT NA PANGIT */
+        border: ${isAdminPost ? '1px solid rgba(255, 215, 0, 0.4)' : '1px solid rgba(255,255,255,0.08)'} !important;
+        box-shadow: ${isAdminPost ? '0 0 15px rgba(184, 134, 11, 0.3)' : 'none'} !important;
+        position: relative;
+    ">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 42px; height: 42px; border-radius: 50%; padding: 1.5px; 
+                    background: ${isAdminPost ? 'linear-gradient(45deg, #B8860B, #FFD700)' : 'rgba(255,255,255,0.1)'};">
+                    <div style="width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #000;">
+                        <img src="${data.senderImg && data.senderImg !== 'null' ? data.senderImg : 'https://ui-avatars.com/api/?name=' + data.senderName}" 
+                             onclick="window.viewPeerProfile('${data.senderId}')"
+                             style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;">
                     </div>
-
-                    <p style="margin: 0; font-size: 14px; color: ${isAdminPost ? '#eee' : '#ccc'}; line-height: 1.5;">
-                        ${data.text || ""}
-                    </p>
                 </div>
-            `;
+                <div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <strong style="font-size: 14px; color: ${isAdminPost ? '#FFD700' : '#fff'}; font-weight: 800; text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);">
+                            ${data.senderName}${mutedBadge} 
+                        </strong>
+                        ${isAdminPost ? `
+                            <span style="font-size: 14px; animation: goldShine 2s infinite ease-in-out; display: inline-block;">
+                                ✦
+                            </span>
+                        ` : ''}
+                    </div>
+                    ${isAdminPost ? `
+                        <span style="font-size: 10px; color: #B8860B; font-weight: 900; letter-spacing: 2px; display: block; margin-top: -2px;">
+                            DEV
+                        </span>
+                    ` : `
+                        <span style="font-size: 10px; color: #555; display: block;">${data.timeDisplay || 'Just now'}</span>
+                    `}
+                </div>
+            </div>
+
+            ${canDelete ? `
+                <button onclick="window.deletePost('${postId}')" style="background:transparent; border:none; color:${isAdminPost ? '#B8860B' : 'rgba(255,255,255,0.2)'}; font-size: 20px; cursor:pointer; line-height: 1;">
+                    &times;
+                </button>
+            ` : ''}
+        </div>
+
+        <p style="
+            margin: 0; font-size: 14px; 
+            color: ${isMuted ? 'rgba(255,255,255,0.2)' : '#eee'}; line-height: 1.5;
+            word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;
+            ${isMuted ? 'letter-spacing: 2px; font-style: italic;' : ''}
+        ">
+            ${censoredText}
+        </p>
+
+       ${data.image ? `
+    <div style="
+        margin-top: 10px; 
+        display: flex;
+        justify-content: flex-start; /* Naka-align sa kaliwa para malinis */
+    ">
+        <div style="
+            max-width: 85%; /* Hindi sasakop sa buong lapad ng phone */
+            max-height: 250px; /* Limitadong taas para hindi kailangang mag-scroll nang malayo */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #000; /* Balik natin pero hidden pag saktong-sakto ang pic */
+        ">
+            <img src="${data.image}" 
+     style="
+        display: block;
+        max-width: 100%;
+        max-height: 250px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        cursor: pointer;
+        " 
+        onclick="window.viewFullImage('${data.image}')">
+        </div>
+    </div>
+` : ''}
+
+        <div style="display: flex; gap: 20px; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div onclick="window.reactToPost('${postId}')" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+                <span style="font-size: 16px; filter: ${isViewerAdmin ? 'drop-shadow(0 0 5px #FFD700)' : 'none'};">❤️</span>
+                <span style="font-size: 12px; color: ${isAdminPost ? '#FFD700' : '#888'}; font-weight: bold;">${data.likes || 0}</span>
+            </div>
+
+            <div onclick="window.openCommentModal('${postId}')" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+                <span style="font-size: 16px;">💬</span>
+                <span id="${counterId}" style="font-size: 12px; color: #B8860B; font-weight: 900; background: rgba(184, 134, 11, 0.15); padding: 1px 6px; border-radius: 6px;">0</span>
+            </div>
+        </div>
+    </div>
+`;
             container.insertAdjacentHTML('beforeend', postHTML);
         });
 
@@ -3558,11 +4045,6 @@ window.renderPosts = () => {
 
 window.addPost = async () => {
     const input = document.getElementById('peer-input');
-    if (!input || input.value.trim() === "") {
-        if (navigator.vibrate) navigator.vibrate(20); 
-        return;
-    }
-
     const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
     if (!user || !user.username) {
         if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
@@ -3570,8 +4052,29 @@ window.addPost = async () => {
     }
 
     try {
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const userSnap = await getDoc(doc(db, "users", user.uid));
+        
+        if (userSnap.exists() && userSnap.data().isMuted) {
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            return showToast("You are muted by the Developer and cannot post. 🔇");
+        }
+    } catch (e) {
+        console.error("Mute Check Error:", e);
+    }
+    let imageUrl = null;
+    if (window.selectedImgFile) { 
+        showToast("Uploading photo... 📸");
+        imageUrl = await uploadToCloudinary(window.selectedImgFile);
+    }
+    if ((!input || input.value.trim() === "") && !imageUrl) {
+        if (navigator.vibrate) navigator.vibrate(20); 
+        return;
+    }
+    try {
         await addDoc(collection(db, "peer_posts"), {
             text: input.value,
+            image: imageUrl, 
             senderName: user.username, 
             senderImg: user.profilePic || "null", 
             senderId: user.uid, 
@@ -3583,6 +4086,8 @@ window.addPost = async () => {
         });
 
         input.value = "";
+        if (typeof window.removeImg === "function") window.removeImg(); 
+        
         if (navigator.vibrate) navigator.vibrate(40); 
         showToast("Post shared! 🚀");
         
@@ -3591,20 +4096,27 @@ window.addPost = async () => {
         showToast("Post failed. Check connection. 🌐");
     }
 };
-
 window.deletePost = async (id) => {
-    try {
+    const rawData = localStorage.getItem('user_data');
+    const user = rawData ? JSON.parse(rawData) : null;
+    const isActuallyAdmin = user && (user.username === "hypens" || user.username === "C");
+
+    if (isActuallyAdmin) {
+        const snapSound = new Audio('./snap.mp3');
+        snapSound.play().catch(e => {});
+
+        try {
+            const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                        await updateDoc(doc(db, "peer_posts", id), { isBanished: true });
+            setTimeout(async () => {
+                const { deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+                await deleteDoc(doc(db, "peer_posts", id));
+            }, 2000);
+
+        } catch (e) { console.error("Banish error:", e); }
+    } else {
+        const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
         await deleteDoc(doc(db, "peer_posts", id));
-        
-        if (window.showToast) {
-            showToast("Post deleted for everyone", "🗑️");
-        }
-        
-        if (navigator.vibrate) navigator.vibrate([40, 30, 40]);
-        
-    } catch (e) {
-        console.error("Delete error: ", e);
-        if (window.showToast) showToast("Error deleting post", "❌");
     }
 };
 
@@ -4318,7 +4830,684 @@ window.clearGrades = function() {
         toast.remove();
     };
 };
-    initSystem();
+function showEmergencyBanner(sender, text) {
+    const banner = document.createElement('div');
+    banner.style = `position:fixed; top:20px; left:50%; transform:translateX(-50%); background:rgba(15,15,10,0.98); border:1.5px solid gold; padding:12px 18px; border-radius:15px; width:85%; max-width:350px; z-index:10000; display:flex; align-items:center; gap:12px; box-shadow:0 10px 40px rgba(0,0,0,0.6); color:white; font-family:sans-serif;`;
+    banner.innerHTML = `<div style="font-size:24px;">🤝</div><div style="flex:1; overflow:hidden;"><div style="font-size:10px; color:gold; font-weight:800; letter-spacing:1px;">PEER BOARD UPDATE</div><div style="font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><b>${sender}:</b> ${text}</div></div>`;
+    document.body.appendChild(banner);
+    setTimeout(() => {
+        banner.style.opacity = "0"; banner.style.transition = "0.5s";
+        setTimeout(() => banner.remove(), 500);
+    }, 4000);
+}
+
+const qPeerBackground = query(collection(db, "peer_posts"), orderBy("createdAt", "desc"));
+onSnapshot(qPeerBackground, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+            const data = change.doc.data();
+            const postId = change.doc.id;
+            const rawUserData = localStorage.getItem('user_data');
+            const currentUser = rawUserData ? JSON.parse(rawUserData) : null;
+            if (data.createdAt > lastPostTime && currentUser && String(data.senderId) !== String(currentUser.uid) && !notifiedPostIds.has(postId)) {
+                notifiedPostIds.add(postId);
+                const sound = document.getElementById('notif-sound');
+                if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+                showEmergencyBanner(data.senderName, data.text);
+                unreadCount++;
+                const badge = document.getElementById('peerBadge');
+                if (badge) {
+                    badge.innerText = "+" + unreadCount;
+                    badge.style.display = "block";
+                }
+            }
+        }
+    });
+
+    const container = document.getElementById('peer-posts-container');
+    if (container && container.offsetParent !== null) {
+    }
+});
+
+window.reactToPost = async function(postId) {
+    const rawData = localStorage.getItem('user_data');
+    const user = rawData ? JSON.parse(rawData) : null;
+    const isActuallyAdmin = user && (user.username === "hypens" || user.username === "C");
+
+    if (!isActuallyAdmin && isReacting) return; 
+    
+    if (!isActuallyAdmin) isReacting = true; 
+
+    try {
+        const { getDoc, setDoc, deleteDoc, updateDoc, increment, doc, collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        
+        const postRef = doc(db, "peer_posts", postId);
+        const likeRef = doc(db, "peer_posts", postId, "user_likes", user.uid);
+
+        if (isActuallyAdmin) {
+            await updateDoc(postRef, { likes: increment(1) });
+            
+            const postSnap = await getDoc(postRef);
+            const postData = postSnap.data();
+            if (postData.senderId !== user.uid) {
+                await addDoc(collection(db, "notifications"), {
+                    targetUid: postData.senderId,
+                    senderName: user.username,
+                    message: `${user.username} is spamming love to your post! ❤️🔥`,
+                    type: "react",
+                    status: "unread",
+                    timestamp: serverTimestamp()
+                });
+            }
+        } else {
+            const likeSnap = await getDoc(likeRef);
+            if (likeSnap.exists()) {
+                await deleteDoc(likeRef);
+                await updateDoc(postRef, { likes: increment(-1) });
+            } else {
+                await setDoc(likeRef, { uid: user.uid });
+                await updateDoc(postRef, { likes: increment(1) });
+                
+                const postSnap = await getDoc(postRef);
+                const postData = postSnap.data();
+                if (postData.senderId !== user.uid) {
+                    await addDoc(collection(db, "notifications"), {
+                        targetUid: postData.senderId,
+                        senderName: user.username,
+                        message: `${user.username} reacted to your post ❤️`,
+                        type: "react",
+                        status: "unread",
+                        timestamp: serverTimestamp()
+                    });
+                }
+            }
+        }
+    } catch (e) { 
+        console.error("React Error:", e); 
+    } finally {
+        isReacting = false; 
+    }
+};
+
+window.openCommentModal = function(postId) {
+    window.currentPostId = postId;
+    const modal = document.getElementById('commentModal');
+    if (modal) {
+        modal.style.display = 'block';
+        window.loadComments(postId);
+                if (window.isAdmin) {
+            document.getElementById('sendCommentBtn').classList.add('dev-send-btn');
+        }
+    }
+};
+
+window.closeCommentModal = function() {
+    document.getElementById('commentModal').style.display = 'none';
+};
+
+window.loadComments = function(postId) {
+    const q = query(collection(db, "peer_posts", postId, "comments"), orderBy("timestamp", "asc"));
+    onSnapshot(q, (snapshot) => {
+        const list = document.getElementById('commentsList');
+        if (!list) return;
+        list.innerHTML = "";
+        
+        snapshot.forEach((docSnap) => {
+            const c = docSnap.data(); 
+            const cid = docSnap.id;   
+            const currentUser = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data')) || {};
+            
+            const isCommentAdmin = (c.senderName === "hypens" || c.senderName === "C");
+            const canDelete = (currentUser.username === "hypens" || currentUser.username === "C") || (c.senderId === currentUser.uid);
+
+            list.innerHTML += `
+                <div style="
+                    margin-bottom: 12px !important; 
+                    padding: 12px !important; 
+                    background: ${isCommentAdmin ? 'linear-gradient(145deg, rgba(184, 134, 11, 0.2), rgba(10, 10, 10, 0.95))' : 'rgba(255,255,255,0.03)'} !important;
+                    border: 1px solid ${isCommentAdmin ? '#FFD700' : 'rgba(255,255,255,0.08)'} !important;
+                    box-shadow: ${isCommentAdmin ? '0 0 15px rgba(184, 134, 11, 0.3)' : 'none'} !important;
+                    display: block !important; 
+                    text-align: left !important;
+                ">
+                    <div style="display: flex !important; justify-content: space-between !important; align-items: flex-start !important;">
+                        <div style="display: flex !important; align-items: center !important; gap: 10px !important;">
+                            
+                            <img src="${c.senderImg !== 'null' && c.senderImg ? c.senderImg : 'https://ui-avatars.com/api/?name='+c.senderName}" 
+                                 style="
+                                    width: 28px !important; 
+                                    height: 28px !important; 
+                                    min-width: 28px !important; 
+                                    min-height: 28px !important; 
+                                    max-width: 28px !important; 
+                                    max-height: 28px !important; 
+                                    border-radius: 50% !important; 
+                                    object-fit: cover !important; 
+                                    border: 1.5px solid ${isCommentAdmin ? '#FFD700' : 'transparent'} !important;
+                                    flex-shrink: 0 !important; /* Ito ang pumipigil sa pag-stretch */
+                                 ">
+                            
+                            <div style="display: flex !important; flex-direction: column !important; align-items: flex-start !important;">
+                                <div style="display: flex !important; align-items: center !important; gap: 4px !important;">
+                                    <strong style="color: ${isCommentAdmin ? '#FFD700' : '#fff'} !important; font-size: 13px !important; font-weight: 800 !important;">
+                                        ${c.senderName}
+                                    </strong>
+                                    ${isCommentAdmin ? `<span style="font-size: 11px !important; color: #FFD700 !important; animation: goldShine 1.5s infinite !important;">✦</span>` : ''}
+                                </div>
+                                ${isCommentAdmin ? `<span style="font-size: 8px !important; color: #B8860B !important; font-weight: 900 !important; letter-spacing: 1px !important; margin-top: -2px !important;">DEV</span>` : ''}
+                            </div>
+                        </div>
+
+                        ${canDelete ? `
+                            <button onclick="window.deleteComment('${postId}', '${cid}')" style="background:none !important; border:none !important; color:rgba(255,68,68,0.7) !important; font-size:22px !important; cursor:pointer !important;">&times;</button>
+                        ` : ''}
+                    </div>
+
+                    <p style="
+                        color: #ddd !important; 
+                        margin: 6px 0 0 38px !important; 
+                        font-size: 13.5px !important; 
+                        line-height: 1.5 !important;
+                        text-align: left !important;
+                        display: block !important;
+                        word-break: break-all !important;
+                    ">
+                        ${c.text}
+                    </p>
+                </div>
+            `;
+        });
+        list.scrollTop = list.scrollHeight;
+    });
+};
+window.deleteComment = async function(postId, commentId) {    
+    try { 
+        const commentRef = doc(db, "peer_posts", postId, "comments", commentId);
+        await deleteDoc(commentRef); 
+        if (navigator.vibrate) navigator.vibrate(50); 
+        showToast("Comment deleted successfully! 🗑️"); 
+    } catch (e) { 
+        console.error("Delete Error:", e);
+        showToast("Failed to delete comment. ❌");
+    }
+};
+
+document.getElementById('sendCommentBtn').onclick = async () => {
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
+
+    if (!text || !window.currentPostId) return;
+
+    try {
+        await addDoc(collection(db, "peer_posts", window.currentPostId, "comments"), {
+            text: text,
+            senderName: window.userName || "Student",
+            senderImg: window.userImg || "", 
+            isAdmin: window.isAdmin || false,
+            timestamp: serverTimestamp()
+        });
+        input.value = ""; 
+    } catch (e) { 
+        console.error("Send Error:", e);
+        alert("Error sending comment!");
+    }
+};
+
+document.getElementById('sendCommentBtn').onclick = async () => {
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
+    if (!text || !window.currentPostId) return;
+
+    const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
+
+    try {
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const userSnap = await getDoc(doc(db, "users", user.uid));
+        
+        if (userSnap.exists() && userSnap.data().isMuted === true) {
+            showToast("🔇 You are muted and cannot comment.");
+            input.value = ""; 
+            return; 
+        }
+    } catch (e) { console.error("Mute check error:", e); }
+
+    try {
+        await addDoc(collection(db, "peer_posts", window.currentPostId, "comments"), {
+            text: text,
+            senderName: user.username,
+            senderImg: user.profilePic || "null",
+            senderId: user.uid,
+            timestamp: serverTimestamp()
+        });
+        const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const postSnap = await getDoc(doc(db, "peer_posts", window.currentPostId));
+        const postData = postSnap.data();
+        if (postData.senderId !== user.uid) {
+            await addDoc(collection(db, "notifications"), {
+                targetUid: postData.senderId, 
+                senderName: user.username,
+                message: `${user.username} commented on your post: "${text.substring(0, 15)}..."`,
+                type: "comment",
+                status: "unread",
+                timestamp: serverTimestamp()
+            });
+        }
+
+        input.value = "";
+    } catch (e) { console.error(e); }
+};
+function initNotificationSystem() {
+    const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
+    if (!user) return;
+
+    const q = query(
+        collection(db, "notifications"), 
+        where("targetUid", "==", user.uid), 
+        where("status", "==", "unread")
+    );
+
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+                const notif = change.doc.data();
+                                const isAdmin = (notif.senderName === "hypens" || notif.senderName === "C");
+                const isSpamLove = notif.message.includes("spamming love");
+
+                if (isAdmin && isSpamLove) {
+                    if (typeof window.fireAdminCheer === "function") {
+                        window.fireAdminCheer(); 
+                    }
+                }
+                const sound = document.getElementById('notif-sound');
+                if (sound) { 
+                    sound.currentTime = 0; 
+                    sound.play().catch(e => {}); 
+                }
+
+                showToast(`🔔 ${notif.message}`);
+                updateDoc(doc(db, "notifications", change.doc.id), { status: "read" });
+            }
+        });
+    });
+}
+window.fireAdminCheer = () => {
+    adminCheerSound.currentTime = 0;
+    adminCheerSound.play().catch(e => {});
+    const body = document.body;
+    body.classList.add('shake-effect');
+        setTimeout(() => {
+        body.classList.remove('shake-effect');
+    }, 400);
+    const emojis = ['❤️', '🔥', '👑', '✨'];
+    for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'admin-heart';
+            heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 0.5 + 1) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        }, i * 40);
+    }
+};
+
+window.viewPeerProfile = async (uid) => {
+    window.currentTargetUid = uid; 
+    if (!uid) return;
+    const modal = document.getElementById('peerUserModal');
+    const currentUser = JSON.parse(localStorage.getItem('user_data'));
+    const imgContainer = document.getElementById('peerModalImgContainer'); 
+
+    try {
+        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const userSnap = await getDoc(doc(db, "users", uid));
+        
+        if (userSnap.exists()) {
+            const uData = userSnap.data();
+            
+            document.getElementById('peerModalImg').src = uData.profilePic || 'https://ui-avatars.com/api/?name=' + uData.username;
+            document.getElementById('peerModalName').innerText = uData.username;
+            
+            const fullNm = document.getElementById('peerModalFullName');
+            if(fullNm) fullNm.innerText = uData.fullName || "";
+            const roleEl = document.getElementById('peerModalRole');
+            const isTargetAdmin = uData.username === "hypens" || uData.username === "C" || uData.role === "admin";
+            
+            if (isTargetAdmin) {
+                roleEl.innerHTML = `<span class="admin-glow-text">DEVELOPER</span> <span class="admin-sparkle">✦</span>`;
+                roleEl.style.color = "#FFD700";
+                roleEl.style.fontWeight = "900";
+                
+                if(imgContainer) {
+                    imgContainer.classList.add('admin-border-active');
+                    imgContainer.style.background = "none"; 
+                }
+            } else {
+                roleEl.innerText = uData.level || "Student";
+                roleEl.className = ""; 
+                roleEl.style.color = "#aaa";
+                roleEl.style.fontWeight = "bold";
+                
+                if(imgContainer) {
+                    imgContainer.classList.remove('admin-border-active');
+                    imgContainer.style.background = "linear-gradient(45deg, #FFD700, #FFA500)"; 
+                }
+            }
+
+            document.getElementById('peerModalBio').innerText = uData.bio || "No bio set.";
+            const isAdmin = currentUser && (currentUser.username === "hypens" || currentUser.username === "C");
+            const adminArea = document.getElementById('peerAdminControls');
+            
+            if (isAdmin && currentUser.uid !== uid) {
+                adminArea.style.display = 'block';
+                const muteBtn = document.getElementById('peerMuteBtn');
+                muteBtn.innerText = uData.isMuted ? "Unmute User" : "Mute User";
+                muteBtn.style.background = uData.isMuted ? "#44bb44" : "#ff4444";
+            } else {
+                adminArea.style.display = 'none';
+            }
+
+            modal.style.display = 'flex';
+        }
+    } catch (e) { console.error(e); }
+};
+
+window.closePeerModal = () => {
+    document.getElementById('peerUserModal').style.display = 'none';
+};
+
+window.toggleMute = async () => {
+    if (!window.currentTargetUid) return;
+
+    try {
+        const { doc, updateDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const userRef = doc(db, "users", window.currentTargetUid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+            const currentStatus = userSnap.data().isMuted || false;
+            const newStatus = !currentStatus;
+            await updateDoc(userRef, { isMuted: newStatus });
+            const muteBtn = document.getElementById('peerMuteBtn');
+            muteBtn.innerText = newStatus ? "UNMUTE USER" : "MUTE USER";
+            muteBtn.style.background = newStatus ? "#44bb44" : "#ff4444";
+            if (window.showToast) {
+                showToast(newStatus ? "User has been muted 🔇" : "User has been unmuted 🔊");
+            }
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+    } catch (e) { 
+        console.error("Mute Error:", e);
+        if (window.showToast) showToast("Error updating mute status ❌");
+    }
+};
+window.initDevAssistive = () => {
+    const user = JSON.parse(localStorage.getItem('user_data'));
+    const btn = document.getElementById('devAssistiveBtn');
+        const isAdmin = user && (user.username === "hypens" || user.username === "C");
+    if (!isAdmin) {
+        if(btn) btn.remove(); 
+        return;
+    }
+
+    btn.style.display = 'flex'; 
+
+    let isDragging = false;
+    let startX, startY;
+
+    btn.onpointerdown = (e) => {
+        isDragging = false;
+        startX = e.clientX - btn.offsetLeft;
+        startY = e.clientY - btn.offsetTop;
+        btn.style.cursor = 'grabbing';
+
+        document.onpointermove = (e) => {
+            isDragging = true;
+            let newX = e.clientX - startX;
+            let newY = e.clientY - startY;
+            btn.style.left = newX + 'px';
+            btn.style.top = newY + 'px';
+            btn.style.right = 'auto'; 
+        };
+
+        document.onpointerup = () => {
+            btn.style.cursor = 'grab';
+            document.onpointermove = null;
+            document.onpointerup = null;
+        };
+    };
+
+    btn.onclick = () => {
+        if (!isDragging) {
+            document.getElementById('devPanelOverlay').style.display = 'flex';
+            loadDevUsers(); 
+        }
+    };
+};
+
+window.loadDevUsers = async () => {
+    const container = document.getElementById('devUserList');
+    try {
+        const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        const querySnapshot = await getDocs(collection(db, "users"));
+        
+        container.innerHTML = "";
+        querySnapshot.forEach((docSnap) => {
+            const u = docSnap.data();
+            const isMuted = u.isMuted || false;
+            
+            const row = document.createElement('div');
+            row.style = "display:flex; align-items:center; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.03); border-radius:15px; cursor:pointer; border:1px solid rgba(255,255,255,0.05);";
+            
+            row.onclick = () => {
+                document.getElementById('devPanelOverlay').style.display = 'none';
+                viewPeerProfile(docSnap.id); 
+            };
+            
+            row.innerHTML = `
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <img src="${u.profilePic || 'https://ui-avatars.com/api/?name='+u.username}" style="width:32px; height:32px; border-radius:50%; border:1px solid #FFD700;">
+                    <span style="color:#eee; font-size:13px; font-weight:bold;">${u.username}</span>
+                </div>
+                <span>${isMuted ? "🔇" : "✅"}</span>
+            `;
+            container.appendChild(row);
+        });
+    } catch (e) { console.error(e); }
+};
+setTimeout(initDevAssistive, 2000);
+
+window.previewImg = (input) => {
+    if (input.files && input.files[0]) {
+        window.selectedImgFile = input.files[0]; 
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            const preview = document.getElementById('imgPreview');
+            const cont = document.getElementById('imgPreviewCont');
+            
+            if (preview && cont) {
+                preview.src = e.target.result;
+                cont.style.display = 'block'; 
+                console.log("Preview loaded!"); 
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+};
+window.removeImg = () => {
+    window.selectedImgFile = null;
+    const input = document.getElementById('imgUpload');
+    const cont = document.getElementById('imgPreviewCont');
+    
+    if (input) input.value = ""; 
+    if (cont) cont.style.display = 'none'; 
+};
+window.viewFullImage = (url) => {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImg');
+    if (modal && modalImg) {
+        modalImg.src = url;
+        modal.style.display = 'flex';
+    }
+};
+
+window.switchDevTab = (tab) => {
+    const userTab = document.getElementById('tab-users');
+    const broadcastTab = document.getElementById('tab-broadcast');
+    
+    if (tab === 'users') {
+        userTab.style.display = 'flex';
+        broadcastTab.style.display = 'none';
+    } else {
+        userTab.style.display = 'none';
+        broadcastTab.style.display = 'flex';
+    }
+};
+window.handleBroadcastPush = () => {
+    const msg = document.getElementById('bc-input').value;
+    const effect = document.getElementById('bc-effect').value;
+    
+    if(!msg.trim()) return alert("Maglagay ka muna ng message!");
+    
+    window.sendAdminAbuse(msg, effect);
+};
+
+window.sendAdminAbuse = async (msg, effectType) => {
+    try {
+        await setDoc(doc(db, "system", "broadcast"), {
+            adminName: "HYPENS", 
+            message: msg.toUpperCase(),
+            effect: effectType, 
+            active: true,
+            timestamp: Date.now()
+        });
+        alert(`SYSTEM OVERRIDE: ${effectType.toUpperCase()} LIVE! 🚀`);
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+};
+
+window.stopBroadcast = async () => {
+    try {
+        await updateDoc(doc(db, "system", "broadcast"), { active: false });
+    } catch (e) { console.error(e); }
+};
+
+onSnapshot(doc(db, "system", "broadcast"), (snap) => {
+    const banner = document.getElementById('admin-broadcast-banner');
+    const textEl = document.getElementById('broadcast-text');
+    const mainBGM = document.getElementById('bg-music'); 
+
+    if (snap.exists() && snap.data().active) {
+        const data = snap.data();
+        const mode = data.effect || 'normal'; 
+
+        if (mainBGM) mainBGM.pause();
+        if (abuseBGM) { abuseBGM.pause(); abuseBGM = null; }
+        try {
+            const sfx = new Audio(`sounds/${mode}_notif.mp3`);
+            sfx.play().catch(() => {});
+            setTimeout(() => {
+                abuseBGM = new Audio(`sounds/${mode}_loop.mp3`);
+                abuseBGM.loop = true;
+                abuseBGM.play().catch(() => {});
+            }, 600);
+        } catch (e) {}
+
+        if (banner) {
+            banner.style.setProperty('display', 'flex', 'important');
+            banner.style.zIndex = "2147483647";
+            
+            if (mode === 'nika') {
+                banner.style.background = "linear-gradient(90deg, #fff, #ffd700, #fff)";
+                textEl.style.color = "#ff4500"; 
+                banner.style.borderColor = "#ffd700";
+            } else if (mode === 'glitch') {
+                banner.style.background = "black";
+                textEl.style.color = "#0f0";
+                banner.style.borderColor = "#0f0";
+            } else if (mode === 'action') {
+                banner.style.background = "#8b0000"; 
+                textEl.style.color = "white";
+                banner.style.borderColor = "white";
+            } else {
+                banner.style.background = "rgba(0,0,0,0.95)";
+                textEl.style.color = "gold";
+                banner.style.borderColor = "gold";
+            }
+        }
+        if (textEl) {
+            textEl.style.animation = "none"; 
+            void textEl.offsetWidth;
+            textEl.innerHTML = `&nbsp;&nbsp;&nbsp; ${data.adminName}: ${data.message} // `.repeat(10);
+            textEl.style.animation = "marquee-infinite 30s linear infinite";
+        }
+        document.body.className = '';
+        document.documentElement.className = ''; 
+        document.body.classList.add(`effect-${mode}`);
+        document.documentElement.classList.add(`effect-${mode}`); 
+
+    } else {
+        if (banner) banner.style.setProperty('display', 'none', 'important');
+        if (abuseBGM) { abuseBGM.pause(); abuseBGM = null; }
+        if (mainBGM) mainBGM.play().catch(() => {});
+        document.body.className = '';
+        document.documentElement.className = '';
+    }
+});
+const checkDevAccess = () => {
+    const rawUserData = localStorage.getItem('user_data');
+    if (rawUserData) {
+        const user = JSON.parse(rawUserData);
+        if (user.username && user.username.toLowerCase() === 'hypens') {
+            document.getElementById('devAssistiveBtn').style.display = 'flex';
+        }
+    }
+};
+
+checkDevAccess();
+const devBtn = document.getElementById('devAssistiveBtn');
+let isDragging = false;
+let startX, startY;
+
+devBtn.addEventListener('mousedown', (e) => {
+    isDragging = false;
+    startX = e.clientX;
+    startY = e.clientY;
+});
+
+devBtn.addEventListener('mousemove', () => { isDragging = true; });
+
+devBtn.addEventListener('mouseup', (e) => {
+    if (!isDragging) {
+        document.getElementById('devPanelOverlay').style.display = 'flex';
+    }
+});
+
+devBtn.addEventListener('touchstart', (e) => {
+    isDragging = false;
+    const touch = e.touches[0];
+    const offset = devBtn.getBoundingClientRect();
+    devBtn.style.transition = 'none';
+}, {passive: true});
+
+devBtn.addEventListener('touchmove', (e) => {
+    isDragging = true;
+    const touch = e.touches[0];
+    devBtn.style.left = (touch.clientX - 25) + 'px';
+    devBtn.style.top = (touch.clientY - 25) + 'px';
+    devBtn.style.right = 'auto';
+}, {passive: true});
+
+devBtn.addEventListener('touchend', (e) => {
+    if (!isDragging) {
+        document.getElementById('devPanelOverlay').style.display = 'flex';
+    }
+});
+initNotificationSystem();
+initSystem();
 </script>
 </body>
 </html>
