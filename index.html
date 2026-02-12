@@ -810,10 +810,9 @@ button:active {
     animation: borderGlow 2s infinite ease-in-out !important;
     box-sizing: border-box !important;
 }
-/* I-apply ito sa #broadcast-text */
 @keyframes marquee-infinite {
     0% { left: 100%; }
-    100% { left: -200%; } /* Siguradong lalabas sa screen */
+    100% { left: -200%; }
 }
 
 body.effect-nika {
@@ -855,6 +854,59 @@ body.effect-nika {
         transform: scale(1); 
         filter: brightness(1);
     }
+}
+.effect-system {
+    animation: alert-shake 0.2s infinite !important;
+    background-color: #ff0000 !important;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.5) 0%, transparent 70%) !important;
+    color: white !important;
+    z-index: 999;
+}
+
+@keyframes alert-shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(5px, 5px); }
+    50% { transform: translate(-5px, 5px); }
+    75% { transform: translate(5px, -5px); }
+    100% { transform: translate(0,0); }
+}
+
+.effect-cyber {
+    filter: invert(1) hue-rotate(180deg) !important;
+    background: #000 !important;
+    transition: 0.1s;
+}
+
+.effect-rizz {
+    animation: rizz-pulse 1s infinite !important;
+    box-shadow: inset 0 0 100px #d4af37 !important;
+    border: 5px solid #d4af37 !important;
+}
+
+@keyframes rizz-pulse {
+    0% { filter: brightness(1) contrast(1.2); }
+    50% { filter: brightness(1.5) contrast(1.5); }
+    100% { filter: brightness(1) contrast(1.2); }
+}
+#flashbang-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: white;
+    z-index: 999999; 
+    display: none; 
+    pointer-events: none;
+}
+
+.flash-active {
+    display: block !important;
+    animation: flash-out 2.5s forwards;
+}
+
+@keyframes flash-out {
+    0% { opacity: 1; }
+    30% { opacity: 1; }
+    100% { opacity: 0; }
 }
 </style>
 </style>
@@ -1397,17 +1449,21 @@ body.effect-nika {
                 </div>
             </div>
 
-            <div class="nav-card" onclick="openTasks()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
-                <span class="card-icon" style="font-size: 28px;">📋</span>
-                <b style="font-size: 14px;">Tasks</b>
-                <small style="font-size: 10px; color: #666;">Reminders</small>
-            </div>
+            <div class="nav-card" onclick="openTasks()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px; position: relative;">
+    <span id="task-badge" style="position: absolute; top: 10px; right: 20px; background: #ff4444; color: white; font-size: 10px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: none; justify-content: center; align-items: center; border: 2px solid #000;">0</span>
+    
+    <span class="card-icon" style="font-size: 28px;">📋</span>
+    <b style="font-size: 14px;">Tasks</b>
+    <small style="font-size: 10px; color: #666;">Reminders</small>
+</div>
 
-            <div class="nav-card" onclick="openSchedules()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
-                <span class="card-icon" style="font-size: 28px;">⏰</span>
-                <b style="font-size: 14px;">Schedules</b>
-                <small style="font-size: 10px; color: #666;">Room & Time</small>
-            </div>
+            <div class="nav-card" onclick="openSchedules()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px; position: relative;">
+    <span id="sched-badge" style="position: absolute; top: 10px; right: 20px; background: var(--accent, #d4af37); color: white; font-size: 10px; font-weight: bold; min-width: 18px; height: 18px; border-radius: 50%; display: none; justify-content: center; align-items: center; border: 2px solid #000;">0</span>
+    
+    <span class="card-icon" style="font-size: 28px;">⏰</span>
+    <b style="font-size: 14px;">Schedules</b>
+    <small style="font-size: 10px; color: #666;">Room & Time</small>
+</div>
                
             <div class="nav-card" onclick="openGradeCalc()" style="display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 20px;">
                 <span class="card-icon" style="font-size: 28px;">🧮</span>
@@ -2203,44 +2259,6 @@ body.effect-nika {
     </div>
 </div>
 
-<style>
-@keyframes slideDown {
-    from { transform: translateY(-100%); }
-    to { transform: translateY(0); }
-}
-body.effect-action { animation: shake-screen 0.1s infinite !important; }
-@keyframes shake-screen {
-    0% { transform: translate(2px, 2px); }
-    100% { transform: translate(-2px, -2px); }
-}
-body.effect-nika { 
-    background: white !important; 
-    animation: nika-glow 2s infinite alternate !important; 
-}
-@keyframes nika-glow {
-    from { filter: brightness(1) drop-shadow(0 0 10px gold); }
-    to { filter: brightness(1.3) drop-shadow(0 0 30px orange); }
-}
-body.effect-glitch { animation: glitch-anim 0.2s infinite !important; }
-@keyframes glitch-anim {
-    0% { transform: translate(0); filter: hue-rotate(0deg); }
-    20% { transform: translate(-5px, 5px); filter: invert(1); }
-    40% { transform: translate(5px, -5px); filter: hue-rotate(90deg); }
-    60% { transform: translate(-5px, -5px); }
-    100% { transform: translate(0); }
-}
-body.effect-rizz { background: #ff69b4 !important; animation: rizz-pulse 1s infinite; }
-@keyframes rizz-pulse {
-    0% { filter: saturate(1); }
-    50% { filter: saturate(2) brightness(1.2); }
-    100% { filter: saturate(1); }
-}
-
-body.effect-flash { animation: flash-bang 1.5s ease-out forwards !important; }
-@keyframes flash-bang {
-    0% { filter: brightness(20); background: white; }
-    100% { filter: brightness(1); }
-}
 </style>
 
     <script type="module">
@@ -3214,8 +3232,9 @@ if(dashCircle){
             .toUpperCase();
 
         dashCircle.innerText = letter;
-    }
-}
+    }console.log("Profile Active: Triggering Counters...");
+        window.startNavCounters(docId);  
+}; 
 
         if(document.getElementById('st-name')) document.getElementById('st-name').innerText = userData.fullName.toUpperCase();
         if(document.getElementById('st-level')) document.getElementById('st-level').innerText = userData.level || "No Level Set";
@@ -3391,7 +3410,7 @@ window.handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
         
-        if (file.size > 800000) return showToast("Masyadong malaki ang file. Choose a smaller photo (under 800kb).", "🖼️");
+        if (file.size > 800000) return showToast("Choose a smaller photo (under 800kb).", "🖼️");
 
         const reader = new FileReader();
         reader.onload = async (e) => {
@@ -3846,9 +3865,13 @@ window.renderPosts = () => {
     if (!container) return;
     
     const badge = document.getElementById('peerBadge');
-    if (badge) {
+
+    if (container.offsetParent !== null) {
         unreadCount = 0;
-        badge.style.display = "none";
+        if (badge) {
+            badge.innerText = "";
+            badge.style.display = "none";
+        }
     }
 
     const q = query(collection(db, "peer_posts"), orderBy("createdAt", "desc"));
@@ -3861,11 +3884,14 @@ window.renderPosts = () => {
                 const rawUserData = localStorage.getItem('user_data');
                 const currentUser = rawUserData ? JSON.parse(rawUserData) : null;
                 
-                if (data.createdAt > lastPostTime && currentUser && String(data.senderId) !== String(currentUser.uid) && !notifiedPostIds.has(postId)) {
+                const postTime = data.createdAt?.toMillis ? data.createdAt.toMillis() : (data.createdAt || Date.now());
+
+                if (postTime > lastPostTime && currentUser && String(data.senderId) !== String(currentUser.uid) && !notifiedPostIds.has(postId)) {
                     
                     notifiedPostIds.add(postId);
                     const sound = document.getElementById('notif-sound');
                     if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+                    
                     if (typeof showEmergencyBanner === "function") {
                         showEmergencyBanner(data.senderName, data.text);
                     }
@@ -3875,10 +3901,22 @@ window.renderPosts = () => {
                             badge.innerText = "+" + unreadCount;
                             badge.style.display = "block";
                         }
+                    } else {
+                        unreadCount = 0;
+                        if (badge) {
+                            badge.innerText = "";
+                            badge.style.display = "none";
+                        }
                     }
                 }
             }
         });
+
+        if (!snapshot.empty && snapshot.docs[0].data().createdAt) {
+            const latest = snapshot.docs[0].data().createdAt;
+            lastPostTime = latest.toMillis ? latest.toMillis() : latest;
+        }
+
         container.innerHTML = "";
         const rawUserData = localStorage.getItem('user_data');
         const currentUser = rawUserData ? JSON.parse(rawUserData) : null;
@@ -3908,13 +3946,11 @@ window.renderPosts = () => {
                 if (el) el.innerText = cSnap.size;
             });
 
-            const adminGradient = "linear-gradient(45deg, #FFD700, #FDB931, #8B4513, #FDB931, #FFD700)";
             const postHTML = `
     <div id="post-card-${postId}" class="post-card ${isAdminPost ? 'admin-luxury-card' : ''} ${isBanished ? 'banished-post' : ''}" style="
         flex-shrink: 0; width: 100%; box-sizing: border-box; 
         background: ${isAdminPost ? 'linear-gradient(145deg, rgba(184, 134, 11, 0.2), rgba(10, 10, 10, 0.95))' : 'rgba(255,255,255,0.03)'} !important;
         padding: 16px; border-radius: 18px; margin-bottom: 15px; 
-        /* INAYOS NA BORDER PARA WALANG GUHIT NA PANGIT */
         border: ${isAdminPost ? '1px solid rgba(255, 215, 0, 0.4)' : '1px solid rgba(255,255,255,0.08)'} !important;
         box-shadow: ${isAdminPost ? '0 0 15px rgba(184, 134, 11, 0.3)' : 'none'} !important;
         position: relative;
@@ -3934,80 +3970,32 @@ window.renderPosts = () => {
                         <strong style="font-size: 14px; color: ${isAdminPost ? '#FFD700' : '#fff'}; font-weight: 800; text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);">
                             ${data.senderName}${mutedBadge} 
                         </strong>
-                        ${isAdminPost ? `
-                            <span style="font-size: 14px; animation: goldShine 2s infinite ease-in-out; display: inline-block;">
-                                ✦
-                            </span>
-                        ` : ''}
+                        ${isAdminPost ? `<span style="font-size: 14px; animation: goldShine 2s infinite ease-in-out; display: inline-block;">✦</span>` : ''}
                     </div>
-                    ${isAdminPost ? `
-                        <span style="font-size: 10px; color: #B8860B; font-weight: 900; letter-spacing: 2px; display: block; margin-top: -2px;">
-                            DEV
-                        </span>
-                    ` : `
-                        <span style="font-size: 10px; color: #555; display: block;">${data.timeDisplay || 'Just now'}</span>
-                    `}
+                    ${isAdminPost ? `<span style="font-size: 10px; color: #B8860B; font-weight: 900; letter-spacing: 2px; display: block; margin-top: -2px;">DEV</span>` 
+                    : `<span style="font-size: 10px; color: #555; display: block;">${data.timeDisplay || 'Just now'}</span>`}
                 </div>
             </div>
-
-            ${canDelete ? `
-                <button onclick="window.deletePost('${postId}')" style="background:transparent; border:none; color:${isAdminPost ? '#B8860B' : 'rgba(255,255,255,0.2)'}; font-size: 20px; cursor:pointer; line-height: 1;">
-                    &times;
-                </button>
-            ` : ''}
+            ${canDelete ? `<button onclick="window.deletePost('${postId}')" style="background:transparent; border:none; color:${isAdminPost ? '#B8860B' : 'rgba(255,255,255,0.2)'}; font-size: 20px; cursor:pointer;">&times;</button>` : ''}
         </div>
-
-        <p style="
-            margin: 0; font-size: 14px; 
-            color: ${isMuted ? 'rgba(255,255,255,0.2)' : '#eee'}; line-height: 1.5;
-            word-wrap: break-word; overflow-wrap: break-word; word-break: break-all;
-            ${isMuted ? 'letter-spacing: 2px; font-style: italic;' : ''}
-        ">
+        <p style="margin: 0; font-size: 14px; color: ${isMuted ? 'rgba(255,255,255,0.2)' : '#eee'}; line-height: 1.5; word-wrap: break-word;">
             ${censoredText}
         </p>
-
-       ${data.image ? `
-    <div style="
-        margin-top: 10px; 
-        display: flex;
-        justify-content: flex-start; /* Naka-align sa kaliwa para malinis */
-    ">
-        <div style="
-            max-width: 85%; /* Hindi sasakop sa buong lapad ng phone */
-            max-height: 250px; /* Limitadong taas para hindi kailangang mag-scroll nang malayo */
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: #000; /* Balik natin pero hidden pag saktong-sakto ang pic */
-        ">
-            <img src="${data.image}" 
-     style="
-        display: block;
-        max-width: 100%;
-        max-height: 250px;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        cursor: pointer;
-        " 
-        onclick="window.viewFullImage('${data.image}')">
-        </div>
-    </div>
-` : ''}
-
+        ${data.image ? `
+            <div style="margin-top: 10px; display: flex; justify-content: flex-start;">
+                <div style="max-width: 85%; max-height: 250px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #000;">
+                    <img src="${data.image}" style="display: block; max-width: 100%; max-height: 250px; object-fit: contain; cursor: pointer;" onclick="window.viewFullImage('${data.image}')">
+                </div>
+            </div>` : ''}
         <div style="display: flex; gap: 20px; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">
-            <div onclick="window.reactToPost('${postId}')" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
-                <span style="font-size: 16px; filter: ${isViewerAdmin ? 'drop-shadow(0 0 5px #FFD700)' : 'none'};">❤️</span>
-                <span style="font-size: 12px; color: ${isAdminPost ? '#FFD700' : '#888'}; font-weight: bold;">${data.likes || 0}</span>
+            <div onclick="window.reactToPost('${postId}')" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <span>❤️</span> <span style="font-size: 12px; color: ${isAdminPost ? '#FFD700' : '#888'}; font-weight: bold;">${data.likes || 0}</span>
             </div>
-
-            <div onclick="window.openCommentModal('${postId}')" style="display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
-                <span style="font-size: 16px;">💬</span>
-                <span id="${counterId}" style="font-size: 12px; color: #B8860B; font-weight: 900; background: rgba(184, 134, 11, 0.15); padding: 1px 6px; border-radius: 6px;">0</span>
+            <div onclick="window.openCommentModal('${postId}')" style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <span>💬</span> <span id="${counterId}" style="font-size: 12px; color: #B8860B; font-weight: 900; background: rgba(184, 134, 11, 0.15); padding: 1px 6px; border-radius: 6px;">0</span>
             </div>
         </div>
-    </div>
-`;
+    </div>`;
             container.insertAdjacentHTML('beforeend', postHTML);
         });
 
@@ -4019,57 +4007,37 @@ window.renderPosts = () => {
 
 window.addPost = async () => {
     const input = document.getElementById('peer-input');
-    const user = loggedInUserDoc || JSON.parse(localStorage.getItem('user_data'));
-    if (!user || !user.username) {
-        if (navigator.vibrate) navigator.vibrate([50, 50, 50]); 
-        return showToast("Error: User data not found. Please re-login. ❌");
-    }
+    const user = JSON.parse(localStorage.getItem('user_data'));
+    if (!user) return showToast("Login first! ❌");
 
-    try {
-        const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        const userSnap = await getDoc(doc(db, "users", user.uid));
-        
-        if (userSnap.exists() && userSnap.data().isMuted) {
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-            return showToast("You are muted by the Developer and cannot post. 🔇");
-        }
-    } catch (e) {
-        console.error("Mute Check Error:", e);
-    }
     let imageUrl = null;
-    if (window.selectedImgFile) { 
-        showToast("Uploading photo... 📸");
+    if (window.selectedImgFile) {
+        showToast("Uploading... 📸");
         imageUrl = await uploadToCloudinary(window.selectedImgFile);
     }
-    if ((!input || input.value.trim() === "") && !imageUrl) {
-        if (navigator.vibrate) navigator.vibrate(20); 
-        return;
-    }
+    if (!input.value.trim() && !imageUrl) return;
+
     try {
         await addDoc(collection(db, "peer_posts"), {
             text: input.value,
-            image: imageUrl, 
-            senderName: user.username, 
-            senderImg: user.profilePic || "null", 
-            senderId: user.uid, 
+            image: imageUrl,
+            senderName: user.username,
+            senderImg: user.profilePic || "null",
+            senderId: user.uid,
             role: (user.username === "hypens" || user.username === "C") ? "admin" : "student",
             isAdmin: (user.username === "hypens" || user.username === "C"),
-            
             timeDisplay: new Date().toLocaleString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
-            createdAt: Date.now() 
+            createdAt: serverTimestamp()
         });
-
         input.value = "";
-        if (typeof window.removeImg === "function") window.removeImg(); 
-        
-        if (navigator.vibrate) navigator.vibrate(40); 
+        if (window.removeImg) window.removeImg();
         showToast("Post shared! 🚀");
-        
     } catch (e) {
-        console.error("Firebase Post Error:", e);
-        showToast("Post failed. Check connection. 🌐");
+        console.error(e);
+        showToast("Post failed ❌");
     }
 };
+
 window.deletePost = async (id) => {
     const rawData = localStorage.getItem('user_data');
     const user = rawData ? JSON.parse(rawData) : null;
@@ -4694,29 +4662,6 @@ window.showToast = function(message, icon = "👋") {
     }, 3000);
 };
 
-window.startPeerCleaner = () => {
-    setInterval(async () => {
-        const sampungMinuto = 10 * 60 * 1000; 
-        const limitTime = Date.now() - sampungMinuto;
-
-        try {
-            const q = query(collection(db, "peer_posts"), where("createdAt", "<=", limitTime));
-            const snap = await getDocs(q);
-
-            if (!snap.empty) {
-                console.log(`Cleaning up ${snap.size} expired posts...`);
-                snap.forEach(async (d) => {
-                    await deleteDoc(doc(db, "peer_posts", d.id));
-                });
-            }
-        } catch (e) {
-            console.error("Cleaner Error:", e);
-        }
-    }, 60000);
-};
-
-window.startPeerCleaner();
-
 window.openGradeCalc = function() {
     console.log("Grade Calc Opening..."); 
     
@@ -4804,6 +4749,7 @@ window.clearGrades = function() {
         toast.remove();
     };
 };
+
 function showEmergencyBanner(sender, text) {
     const banner = document.createElement('div');
     banner.style = `position:fixed; top:20px; left:50%; transform:translateX(-50%); background:rgba(15,15,10,0.98); border:1.5px solid gold; padding:12px 18px; border-radius:15px; width:85%; max-width:350px; z-index:10000; display:flex; align-items:center; gap:12px; box-shadow:0 10px 40px rgba(0,0,0,0.6); color:white; font-family:sans-serif;`;
@@ -5373,6 +5319,7 @@ onSnapshot(doc(db, "system", "broadcast"), (snap) => {
     const banner = document.getElementById('admin-broadcast-banner');
     const textEl = document.getElementById('broadcast-text');
     const mainBGM = document.getElementById('bg-music'); 
+        const broadcastEffects = ['effect-nika', 'effect-glitch', 'effect-action', 'effect-normal'];
 
     if (snap.exists() && snap.data().active) {
         const data = snap.data();
@@ -5380,6 +5327,7 @@ onSnapshot(doc(db, "system", "broadcast"), (snap) => {
 
         if (mainBGM) mainBGM.pause();
         if (abuseBGM) { abuseBGM.pause(); abuseBGM = null; }
+        
         try {
             const sfx = new Audio(`sounds/${mode}_notif.mp3`);
             sfx.play().catch(() => {});
@@ -5393,7 +5341,6 @@ onSnapshot(doc(db, "system", "broadcast"), (snap) => {
         if (banner) {
             banner.style.setProperty('display', 'flex', 'important');
             banner.style.zIndex = "2147483647";
-            
             if (mode === 'nika') {
                 banner.style.background = "linear-gradient(90deg, #fff, #ffd700, #fff)";
                 textEl.style.color = "#ff4500"; 
@@ -5412,23 +5359,24 @@ onSnapshot(doc(db, "system", "broadcast"), (snap) => {
                 banner.style.borderColor = "gold";
             }
         }
+
         if (textEl) {
             textEl.style.animation = "none"; 
             void textEl.offsetWidth;
             textEl.innerHTML = `&nbsp;&nbsp;&nbsp; ${data.adminName}: ${data.message} // `.repeat(10);
             textEl.style.animation = "marquee-infinite 30s linear infinite";
         }
-        document.body.className = '';
-        document.documentElement.className = ''; 
+
+        document.body.classList.remove(...broadcastEffects);
         document.body.classList.add(`effect-${mode}`);
-        document.documentElement.classList.add(`effect-${mode}`); 
 
     } else {
         if (banner) banner.style.setProperty('display', 'none', 'important');
         if (abuseBGM) { abuseBGM.pause(); abuseBGM = null; }
         if (mainBGM) mainBGM.play().catch(() => {});
-        document.body.className = '';
-        document.documentElement.className = '';
+
+        document.body.classList.remove(...broadcastEffects);
+        document.documentElement.classList.remove(...broadcastEffects);
     }
 });
 const checkDevAccess = () => {
@@ -5480,6 +5428,36 @@ devBtn.addEventListener('touchend', (e) => {
         document.getElementById('devPanelOverlay').style.display = 'flex';
     }
 });
+
+window.startNavCounters = (uid) => {
+    if (!uid) return;
+
+    const qSubs = query(collection(db, "subjects"), where("studentId", "==", uid));
+    onSnapshot(qSubs, (subSnap) => {
+        const sBadge = document.getElementById('sched-badge');
+        if (sBadge) {
+            sBadge.innerText = subSnap.size;
+            sBadge.style.display = subSnap.size > 0 ? "flex" : "none";
+        }
+
+        const mySubIds = [];
+        subSnap.forEach(d => mySubIds.push(d.id));
+
+        const tBadge = document.getElementById('task-badge');
+        if (mySubIds.length > 0) {
+            const qTasks = query(collection(db, "student_tasks"), where("subjectId", "in", mySubIds));
+            onSnapshot(qTasks, (taskSnap) => {
+                if (tBadge) {
+                    const pending = taskSnap.docs.filter(d => d.data().status !== "completed").length;
+                    tBadge.innerText = pending;
+                    tBadge.style.display = pending > 0 ? "flex" : "none";
+                }
+            });
+        } else {
+            if (tBadge) tBadge.style.display = "none";
+        }
+    });
+};
 initNotificationSystem();
 initSystem();
 </script>
